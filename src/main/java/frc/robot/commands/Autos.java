@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public final class Autos {
+
   /** Example static factory for an autonomous command. */
   public static CommandBase swerveAutoTest(DrivetrainSubsystem swerve) {
 
@@ -19,7 +20,7 @@ public final class Autos {
       new AutoDriveCommand(swerve, 0, 0, 0)
     );
 
-  }
+  } 
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
