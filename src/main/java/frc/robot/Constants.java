@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -47,4 +51,17 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 0; // FIXME Set back right steer motor ID
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 0; // FIXME Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back right steer offset
+
+     //LIMELIGHT
+     public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    
+    
+     public static final NetworkTableEntry tx = table.getEntry("tx");
+     public static final NetworkTableEntry ty = table.getEntry("ty");
+     public static final NetworkTableEntry ta = table.getEntry("ta");
+     public static final NetworkTableEntry tv = table.getEntry("tv");
+     public static final NetworkTableEntry ledMode = table.getEntry("ledMode");
+     public static final NetworkTableEntry camMode = table.getEntry("camMode");
+     public static final NetworkTableEntry pipeline = table.getEntry("pipeline");
+     public static final NetworkTableEntry stream = table.getEntry("stream");
 }
