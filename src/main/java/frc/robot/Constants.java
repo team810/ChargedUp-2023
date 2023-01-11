@@ -23,6 +23,8 @@ public final class Constants {
      * Should be measured from center to center.
      */
     public static final double DRIVETRAIN_TRACKWIDTH_METERS = 1.0; // FIXME Measure and set trackwidth
+
+    public static final int CONTROLLER = 0;
     /**
      * The front-to-back distance between the drivetrain wheels.
      *
