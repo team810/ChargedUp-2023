@@ -92,6 +92,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.swerveAutoTest(m_drivetrainSubsystem);
+    // return Autos.swerveAutoTest(m_drivetrainSubsystem);
+    return null;
   }
 }
