@@ -32,7 +32,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * useful during initial testing of the robot.
          */
         public static final double MAX_VOLTAGE = 12.0;
-        // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
+        // Measure the drivetrain's maximum velocity or calculate the theoretical.
         // The formula for calculating the theoretical maximum velocity is:
         // <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
         // pi
@@ -47,7 +47,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * This is a measure of how fast the robot should be able to drive in a straight
          * line.
          */
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
                         SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
                         SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
         /**
@@ -75,7 +75,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // The important thing about how you configure your gyroscope is that rotating
         // the robot counter-clockwise should
         // cause the angle reading to increase until it wraps back over to zero.
-        // FIXME Uncomment if you are using a NavX
+        // Uncomment if you are using a NavX
         private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX
         // connected over MXP
 
@@ -93,28 +93,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 // There are 4 methods you can call to create your swerve modules.
                 // The method you use depends on what motors you are using.
                 //
-                // Mk3SwerveModuleHelper.createFalcon500(...)
-                // Your module has two Falcon 500s on it. One for steering and one for driving.
-                //
                 // Mk3SwerveModuleHelper.createNeo(...)
                 // Your module has two NEOs on it. One for steering and one for driving.
-                //
-                // Mk3SwerveModuleHelper.createFalcon500Neo(...)
-                // Your module has a Falcon 500 and a NEO on it. The Falcon 500 is for driving
-                // and the NEO is for steering.
-                //
-                // Mk3SwerveModuleHelper.createNeoFalcon500(...)
-                // Your module has a NEO and a Falcon 500 on it. The NEO is for driving and the
-                // Falcon 500 is for steering.
-                //
-                // Similar helpers also exist for Mk4 modules using the Mk4SwerveModuleHelper
-                // class.
-
-                // By default we will use Falcon 500s in standard configuration. But if you use
-                // a different configuration or motors
-                // you MUST change it. If you do not, your code will crash on startup.
-                // FIXME Setup motor configuration
-                m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+                
+                //Setup motor configuration
+                m_frontLeftModule = Mk3SwerveModuleHelper.createNeo(
                                 // This parameter is optional, but will allow you to see the current state of
                                 // the module on the dashboard.
                                 tab.getLayout("Front Left Module", BuiltInLayouts.kList)
@@ -133,7 +116,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 Constants.FRONT_LEFT_MODULE_STEER_OFFSET);
 
                 // We will do the same for the other modules
-                m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
+                m_frontRightModule = Mk3SwerveModuleHelper.createNeo(
                                 tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(2, 0),
@@ -142,8 +125,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR,
                                 Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
                                 Constants.FRONT_RIGHT_MODULE_STEER_OFFSET);
-
-                m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+                
+                m_backLeftModule = Mk3SwerveModuleHelper.createNeo(
                                 tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(4, 0),
@@ -153,7 +136,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 Constants.BACK_LEFT_MODULE_STEER_ENCODER,
                                 Constants.BACK_LEFT_MODULE_STEER_OFFSET);
 
-                m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
+                m_backRightModule = Mk3SwerveModuleHelper.createNeo(
                                 tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(6, 0),
@@ -172,7 +155,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * @return
          */
         public void zeroGyroscope() {
-                // FIXME Uncomment if you are using a NavX
                 m_navx.zeroYaw();
         }
 
