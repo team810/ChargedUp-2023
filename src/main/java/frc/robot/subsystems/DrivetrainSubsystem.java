@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -76,7 +77,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // the robot counter-clockwise should
         // cause the angle reading to increase until it wraps back over to zero.
         // Uncomment if you are using a NavX
-        private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX
+        private final AHRS m_navx = new AHRS(SerialPort.Port.kMXP); // NavX
         // connected over MXP
 
         // These are our modules. We initialize them in the constructor.
@@ -154,6 +155,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * 
          * @return
          */
+
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
         }
