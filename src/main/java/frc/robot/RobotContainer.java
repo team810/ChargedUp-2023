@@ -5,11 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.Autos;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.Limelight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -22,10 +24,10 @@ import frc.robot.subsystems.Limelight;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  private final Limelight m_lime = new Limelight();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  // private final Limelight m_lime = new Limelight();
 
-  // private final Joystick RIGHT = new Joystick(0);
+  private final Joystick RIGHT = new Joystick(0);
   // private final Joystick LEFT = new Joystick(1);
 
   /**
@@ -37,15 +39,15 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
-    // modifyAxis(0);
-    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-    //     m_drivetrainSubsystem,
-    //     () -> -RIGHT.getY() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -RIGHT.getX() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -LEFT.getX() * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
-
-    // // Configure the button bindings
-    // configureButtonBindings();
+    modifyAxis(0);
+    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        ()-> -RIGHT.getY() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -RIGHT.getX() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -RIGHT.getZ() * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+      
+    // Configure the button bindings
+    configureButtonBindings();
   }
 
   /**
@@ -58,7 +60,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
   }
 
   /**

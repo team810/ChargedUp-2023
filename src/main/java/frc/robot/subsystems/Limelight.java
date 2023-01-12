@@ -4,25 +4,15 @@
 
 package frc.robot.subsystems;
 
-import java.util.List;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 
 public class Limelight extends SubsystemBase {
@@ -33,26 +23,26 @@ public class Limelight extends SubsystemBase {
 
   private PhotonPipelineResult result;
 
-  private boolean hasTargets;
-  private List<PhotonTrackedTarget> targets;
-  private PhotonTrackedTarget target;
+  // private boolean hasTargets;
+  // private List<PhotonTrackedTarget> targets;
+  // private PhotonTrackedTarget target;
 
-  private double yaw;
-  private double pitch;
-  private double area;
-  private double poseAmbiguity;
+  // private double yaw;
+  // private double pitch;
+  // private double area;
+  // private double poseAmbiguity;
 
-  private int targetID;
+  // private int targetID;
 
-  private Transform3d bestCameraToTarget;
-  private Transform3d alternateCameraToTarget;
+  // private Transform3d bestCameraToTarget;
+  // private Transform3d alternateCameraToTarget;
 
-  private double rangeToTarget; 
-  private double distanceToTarget;
+  // private double rangeToTarget; 
+  // private double distanceToTarget;
 
-  private Translation2d translation;
+  // private Translation2d translation;
 
-  private Pose3d robotPose;
+  // private Pose3d robotPose;
   
   HttpCamera feed;
   // AprilTagFieldLayout aprilTagFieldLayout = new
@@ -62,7 +52,6 @@ public class Limelight extends SubsystemBase {
 
   PhotonCamera m_camera;
   DrivetrainSubsystem m_drivetrain;
-  CommandXboxController m_controller;
 
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
@@ -78,24 +67,24 @@ public class Limelight extends SubsystemBase {
   public void shuffleUpdate()
   {
     result = m_camera.getLatestResult();
-    target = result.getBestTarget();
+    // target = result.getBestTarget();
   }
 
   public void aprilTagData() {
-    hasTargets = result.hasTargets();
+    // hasTargets = result.hasTargets();
 
-    targets = result.getTargets();
+    // targets = result.getTargets();
 
-    target = result.getBestTarget();
+    // target = result.getBestTarget();
 
-    yaw = target.getYaw();
-    pitch = target.getPitch();
-    area = target.getArea();
+    // yaw = target.getYaw();
+    // pitch = target.getPitch();
+    // area = target.getArea();
 
-    targetID = target.getFiducialId();
-    poseAmbiguity = target.getPoseAmbiguity();
-    bestCameraToTarget = target.getBestCameraToTarget();
-    alternateCameraToTarget = target.getAlternateCameraToTarget();
+    // targetID = target.getFiducialId();
+    // poseAmbiguity = target.getPoseAmbiguity();
+    // bestCameraToTarget = target.getBestCameraToTarget();
+    // alternateCameraToTarget = target.getAlternateCameraToTarget();
 
     if(result.hasTargets()){
       PhotonUtils.calculateDistanceToTargetMeters(
@@ -105,14 +94,14 @@ public class Limelight extends SubsystemBase {
               Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
      
-    translation = PhotonUtils.estimateCameraToTargetTranslation(
-                  Constants.TEST_TARGET_HEIGHT_METERS, 
-                  Rotation2d.fromDegrees(-target.getYaw()));
+    // translation = PhotonUtils.estimateCameraToTargetTranslation(
+    //               Constants.TEST_TARGET_HEIGHT_METERS, 
+    //               Rotation2d.fromDegrees(-target.getYaw()));
 
-    robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-                            null,
-                            null,
-                            bestCameraToTarget); 
+    // robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+    //                         null,
+    //                         null,
+    //                         bestCameraToTarget); 
 
   }
 

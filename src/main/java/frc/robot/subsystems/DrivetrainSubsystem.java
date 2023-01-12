@@ -76,7 +76,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // the robot counter-clockwise should
         // cause the angle reading to increase until it wraps back over to zero.
         // Uncomment if you are using a NavX
-        private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX
+        private final AHRS m_navx = new AHRS(SPI.Port.kMXP); // NavX
         // connected over MXP
 
         // These are our modules. We initialize them in the constructor.
