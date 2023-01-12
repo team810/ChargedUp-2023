@@ -53,15 +53,14 @@ public final class Constants {
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back right steer offset
 
      //LIMELIGHT
-     public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+     public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision");
     
     
      public static final NetworkTableEntry tx = table.getEntry("tx");
      public static final NetworkTableEntry ty = table.getEntry("ty");
      public static final NetworkTableEntry ta = table.getEntry("ta");
      public static final NetworkTableEntry tv = table.getEntry("tv");
-     public static final NetworkTableEntry ledMode = table.getEntry("ledMode");
-     public static final NetworkTableEntry camMode = table.getEntry("camMode");
-     public static final NetworkTableEntry pipeline = table.getEntry("pipeline");
+     public static final NetworkTableEntry camMode = table.getEntry("driverMode");
+     public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
      public static final NetworkTableEntry stream = table.getEntry("stream");
 }

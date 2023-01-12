@@ -11,6 +11,8 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -21,27 +23,26 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 
 public class Limelight extends SubsystemBase {
-  public NetworkTableEntry ledMode = Constants.ledMode;
   public NetworkTableEntry camMode = Constants.camMode;
 
   public NetworkTableEntry pipeline = Constants.pipeline;
   public NetworkTableEntry stream = Constants.stream;
 
-  public PhotonPipelineResult result;
-  public boolean hasTargets;
+  private PhotonPipelineResult result;
 
-  public List<PhotonTrackedTarget> targets;
+  private boolean hasTargets;
+  private List<PhotonTrackedTarget> targets;
+  private PhotonTrackedTarget target;
 
-  public PhotonTrackedTarget target;
+  private double yaw;
+  private double pitch;
+  private double area;
+  private double poseAmbiguity;
 
-  public double yaw;
-  public double pitch;
-  public double area;
+  private int targetID;
 
-  public int targetID;
-  public double poseAmbiguity;
-  public Transform3d bestCameraToTarget;
-  public Transform3d alternateCameraToTarget;
+  private Transform3d bestCameraToTarget;
+  private Transform3d alternateCameraToTarget;
 
   HttpCamera feed;
   // AprilTagFieldLayout aprilTagFieldLayout = new
@@ -54,20 +55,18 @@ public class Limelight extends SubsystemBase {
   CommandXboxController m_controller;
 
   public Limelight() {
-    feed = new HttpCamera("limelight", "http://photonvision.local:5800/");
+    feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
     CameraServer.startAutomaticCapture(feed);
 
     m_camera = new PhotonCamera("photonvision");
 
-    m_camera.setLED(VisionLEDMode.kOn);
+    setMode(2);
   }
 
   public void shuffleUpdate()
   {
     result = m_camera.getLatestResult();
     target = result.getBestTarget();
-
-    SmartDashboard.putNumber("Tag ID", target.getFiducialId());
   }
 
   public void aprilTagData() {
@@ -85,6 +84,33 @@ public class Limelight extends SubsystemBase {
     poseAmbiguity = target.getPoseAmbiguity();
     bestCameraToTarget = target.getBestCameraToTarget();
     alternateCameraToTarget = target.getAlternateCameraToTarget();
+  }
+
+  private void toggleLED(boolean onOff)
+  {
+    if(onOff)
+      m_camera.setLED(VisionLEDMode.kOn);
+    else
+      m_camera.setLED(VisionLEDMode.kOff);
+  }
+
+  private void setMode(int mode)
+  {
+    switch(mode){
+      case 1:
+        pipeline.setNumber(1);
+        camMode.setBoolean(false);
+        // toggleLED(false);
+        break;
+      case 2:
+        pipeline.setNumber(2);
+        // toggleLED(true);
+        camMode.setBoolean(false);
+        break;
+      case 3:
+        camMode.setBoolean(true);
+      break;
+    }
   }
 
   @Override
