@@ -30,9 +30,6 @@ public class RobotContainer {
   private final Joystick RIGHT = new Joystick(0);
   // private final Joystick LEFT = new Joystick(1);
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
   public RobotContainer() {
     // Set up the default command for the drivetrain.
     // The controls are for field-oriented driving:
