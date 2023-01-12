@@ -53,7 +53,7 @@ public final class Constants {
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back right steer offset
 
      //LIMELIGHT
-     public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision");
+     public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("photonvision");
     
     
      public static final NetworkTableEntry tx = table.getEntry("tx");
@@ -63,4 +63,10 @@ public final class Constants {
      public static final NetworkTableEntry camMode = table.getEntry("driverMode");
      public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
      public static final NetworkTableEntry stream = table.getEntry("stream");
+
+    public static final double CAMERA_HEIGHT_METERS = .266; //FIXME camera height in meters
+    public static final double TEST_TARGET_HEIGHT_METERS = .381; //FIXME TEST APRIL TAG HEIGHT
+    public static final double LOWEST_COMP_TARGET_HEIGHT_METERS = .36; // lowest april tag height in comp
+    public static final double HIGHEST_COMP_TARGET_HEIGHT_METERS = .59; // highest april tag height in comp
+    public static final double CAMERA_PITCH_RADIANS = 0.0; //FIXME Camera tilt in radians
 }
