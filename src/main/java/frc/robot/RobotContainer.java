@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Limelight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -25,10 +26,10 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  // private final Limelight m_lime = new Limelight();
+   private final Limelight m_lime = new Limelight();
 
   private final Joystick RIGHT = new Joystick(0);
-  // private final Joystick LEFT = new Joystick(1);
+  private final Joystick LEFT = new Joystick(1);  
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
@@ -58,6 +59,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
     new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    new JoystickButton(LEFT, 7).onTrue(new InstantCommand(m_lime::processedPipeline));  
+    new JoystickButton(LEFT, 8).onTrue(new InstantCommand(m_lime::aprilTagPipeline)); 
+    new JoystickButton(LEFT, 9).onTrue(new InstantCommand(m_lime::limeLightPipeline)); 
+    //new JoystickButton(LEFT, 7).onTrue(new InstantCommand(m_lime::processedPipeline));//FIXME
+    //new JoystickButton(LEFT, 8).onTrue(new InstantCommand(m_lime::aprilTagPipeline)); //FIXME
+    //new JoystickButton(LEFT, 9).onTrue(new InstantCommand(m_lime::limeLightPipeline));//FIXME
+
+
   }
 
   /**
