@@ -17,56 +17,63 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    /**
-     * The left-to-right distance between the drivetrain wheels
-     *
-     * Should be measured from center to center.
-     */
-    //16.25 inches converted to 0.41275 meters
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.41275; //Measure and set trackwidth
-    /**
-     * The front-to-back distance between the drivetrain wheels.
-     *
-     * Should be measured from center to center.
-     */
-    //24.25 inches converted to 0.61595 meters
-    public static final double DRIVETRAIN_WHEELBASE_METERS = 0.61595; //Measure and set wheelbase
+    public static final class DrivetrainConstants{
+        /**
+         * The left-to-right distance between the drivetrain wheels
+         * Should be measured from center to center.
+         */
+        //16.25 inches converted to 0.41275 meters
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.41275; //Measure and set trackwidth
+        /**
+         * The front-to-back distance between the drivetrain wheels.
+         *
+         * Should be measured from center to center.
+         */
+        //24.25 inches converted to 0.61595 meters
+        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.61595; //Measure and set wheelbase
 
-    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; // FIXME Set front left module drive motor ID
-    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
-    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 1; // FIXME Set front left steer encoder ID
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set front left steer offset
+        //FIXME CANCoder Ids and steer offset
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; 
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 1; 
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set front left steer offset
 
-    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 7; // FIXME Set front right drive motor ID
-    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 8; // FIXME Set front right steer motor ID
-    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 8; // FIXME Set front right steer encoder ID
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set front right steer offset
+        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8; 
+        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7; 
+        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 7;
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set front right steer offset
 
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4; // FIXME Set back left drive motor ID
-    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; // FIXME Set back left steer motor ID
-    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 3; // FIXME Set back left steer encoder ID
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back left steer offset
+        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
+        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
+        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 3; 
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set back left steer offset
 
-    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; // FIXME Set back right drive motor ID
-    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; // FIXME Set back right steer motor ID
-    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 3; // FIXME Set back right steer encoder ID
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); // FIXME Measure and set back right steer offset
+        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; 
+        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; 
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 5; 
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set back right steer offset
 
-     //LIMELIGHT
-     public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("photonvision");
+        //FeedForwardGains        
+        public static final double ky = 0;
+        public static final double kv = 0;
+        public static final double ka = 0;
+    }
+
+    public static final class CameraConstants{
+        public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("photonvision");
     
-    
-     public static final NetworkTableEntry tx = table.getEntry("tx");
-     public static final NetworkTableEntry ty = table.getEntry("ty");
-     public static final NetworkTableEntry ta = table.getEntry("ta");
-     public static final NetworkTableEntry tv = table.getEntry("tv");
-     public static final NetworkTableEntry camMode = table.getEntry("driverMode");
-     public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
-     public static final NetworkTableEntry stream = table.getEntry("stream");
-
-    public static final double CAMERA_HEIGHT_METERS = .266; //FIXME camera height in meters
-    public static final double TEST_TARGET_HEIGHT_METERS = .381; //FIXME TEST APRIL TAG HEIGHT
-    public static final double LOWEST_COMP_TARGET_HEIGHT_METERS = .36; // lowest april tag height in comp
-    public static final double HIGHEST_COMP_TARGET_HEIGHT_METERS = .59; // highest april tag height in comp
-    public static final double CAMERA_PITCH_RADIANS = 0.0; //FIXME Camera tilt in radians
+        public static final NetworkTableEntry tx = table.getEntry("tx");
+        public static final NetworkTableEntry ty = table.getEntry("ty");
+        public static final NetworkTableEntry ta = table.getEntry("ta");
+        public static final NetworkTableEntry tv = table.getEntry("tv");
+        public static final NetworkTableEntry camMode = table.getEntry("driverMode");
+        public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
+        public static final NetworkTableEntry stream = table.getEntry("stream");
+   
+       public static final double CAMERA_HEIGHT_METERS = .266; //FIXME camera height in meters
+       public static final double TEST_TARGET_HEIGHT_METERS = .381; //FIXME TEST APRIL TAG HEIGHT
+       public static final double LOWEST_COMP_TARGET_HEIGHT_METERS = .36; // lowest april tag height in comp
+       public static final double HIGHEST_COMP_TARGET_HEIGHT_METERS = .59; // highest april tag height in comp
+       public static final double CAMERA_PITCH_RADIANS = 0.0; //FIXME Camera tilt in radians
+    }
 }

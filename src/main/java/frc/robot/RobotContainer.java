@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Limelight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -25,10 +26,10 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  // private final Limelight m_lime = new Limelight();
+  private final Limelight m_lime = new Limelight();
 
-  private final Joystick RIGHT = new Joystick(0);
-  // private final Joystick LEFT = new Joystick(1);
+  private final Joystick RIGHT = new Joystick(1);
+  private final Joystick LEFT = new Joystick(0);
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
@@ -39,8 +40,8 @@ public class RobotContainer {
     modifyAxis(0);
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
-        ()-> -RIGHT.getY() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        ()-> -RIGHT.getX() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -LEFT.getY() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -LEFT.getX() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         ()-> -RIGHT.getZ() * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
       
     // Configure the button bindings
@@ -56,8 +57,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //Vison: 
+    //  AprilTag Pipeline
+    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+    //  Limelight Pipeline
+    new JoystickButton(RIGHT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
     // Back button zeros the gyroscope
-    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
   }
 
   /**
