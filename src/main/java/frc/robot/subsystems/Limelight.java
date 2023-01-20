@@ -15,13 +15,13 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
 
@@ -43,8 +43,7 @@ public class Limelight extends SubsystemBase {
   private double poseAmbiguity;
   private int targetID;
 
-  public Translation3d idk;
-  private Rotation3d hey;
+
   private Transform3d bestCameraToTarget;
   private Transform3d alternateCameraToTarget;
   private double rangeToTarget; 
@@ -74,6 +73,15 @@ public class Limelight extends SubsystemBase {
     target = result.getBestTarget();
   }
 
+  public void turnToTarget()
+  {
+    aprilTagData();
+    if(result.hasTargets())
+    {
+      // yaw 
+    }
+  }
+
   public void aprilTagData() {
     this.hasTargets = result.hasTargets();
 
@@ -84,6 +92,7 @@ public class Limelight extends SubsystemBase {
     yaw = target.getYaw();
     pitch = target.getPitch();
     area = target.getArea();
+
 
     targetID = target.getFiducialId();
     poseAmbiguity = target.getPoseAmbiguity();
@@ -97,31 +106,32 @@ public class Limelight extends SubsystemBase {
               CameraConstants.CAMERA_PITCH_RADIANS, 
               Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
-    Transform3D
+    // Transform3D
 
-    Pose3d  robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-                                    target.getBestCameraToTarget(), 
-                                    AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
-                                    alternateCameraToTarget);
+    // Pose3d  robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+    //                                 target.getBestCameraToTarget(), 
+    //                                 AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
+    //                                 alternateCameraToTarget);
  }
 
   public void setMode(int mode)
   {
     switch(mode){
-      case 1:
-        //AprilTags
+      case 0:
+        //AprilTag long range
         pipeline.setInteger(0);
-        
-        System.out.println("Vision mode: AprilTag, Current Mode: " + pipeline.getDouble(-1));
+        break;
+      case 1:
+        //Reflective Tape //long range ? 
+        pipeline.setInteger(1);
         break;
       case 2:
-        //Reflective Tape
-        pipeline.setInteger(1);
-        System.out.println("Vision mode: Limelight, Current Mode: " + pipeline.getDouble(-1));
+        //AprilTag short range
+        pipeline.setInteger(2);
         break;
       case 3:
         //Processing
-        pipeline.setInteger(2);
+        pipeline.setInteger(3);
         break;
     }
   }

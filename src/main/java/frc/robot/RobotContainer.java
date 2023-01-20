@@ -58,10 +58,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //Vison: 
-    //  AprilTag Pipeline
-    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
-    //  Limelight Pipeline
-    new JoystickButton(RIGHT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+    //AprilTag Long Pange Pipeline
+    new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+    //Limelight Pipeline
+    new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+    //AprilTag Short Range Pipeline
+    new JoystickButton(LEFT, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+    //Processing
+    new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(3)));
     // Back button zeros the gyroscope
     // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
   }
