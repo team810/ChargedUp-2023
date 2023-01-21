@@ -112,7 +112,6 @@ public class Limelight extends SubsystemBase {
 
     // robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
     //                         null,
-    //                         null,
     //                         bestCameraToTarget); 
 
   }
@@ -133,16 +132,16 @@ public class Limelight extends SubsystemBase {
     }
   }
   
-  public   void processedPipeline(){
-    setMode(1); //button 7
+  public void processedPipeline(){
+    setMode(1); //button 5/8
   }
 
   public void aprilTagPipeline(){
-    setMode(2); //button 8
+    setMode(2); //button 6/9
   }
 
   public void limeLightPipeline(){
-    setMode(3); //button 9 
+    setMode(3); //button 7/10
   }
 
 
