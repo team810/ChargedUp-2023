@@ -6,15 +6,11 @@ package frc.robot.subsystems;
 
 import java.util.List;
 
-import javax.management.loading.PrivateClassLoader;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -34,7 +30,6 @@ public class Limelight extends SubsystemBase {
 
   private PhotonPipelineResult result;
 
-  private boolean hasTargets;
   private List<PhotonTrackedTarget> targets;
   private PhotonTrackedTarget target;
 
@@ -83,7 +78,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public void aprilTagData() {
-    hasTargets = result.hasTargets();
+    result.hasTargets();
 
     targets = result.getTargets();
 
@@ -105,43 +100,39 @@ public class Limelight extends SubsystemBase {
               Constants.CAMERA_PITCH_RADIANS, 
               Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
-     
+    
+    //Translation2d
     translation = PhotonUtils.estimateCameraToTargetTranslation(
                   Constants.TEST_TARGET_HEIGHT_METERS, 
                   Rotation2d.fromDegrees(-target.getYaw()));
 
-    // robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-    //                         null,
-    //                         bestCameraToTarget); 
-
+  //robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+  //            target.getBestCameraToTarget(), 
+  //            AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
+  //            alternateCameraToTarget);
   }
 
 
-  private void setMode(int mode)
+  public void setMode(int mode)
   {
     switch(mode){
+      case 0:
+        //AprilTag long range
+        pipeline.setInteger(0);
+        break;
       case 1:
-        pipeline.setNumber(1);
+        //Reflective Tape //long range ? 
+        pipeline.setInteger(1);
         break;
       case 2:
-        pipeline.setNumber(2);
+        //AprilTag short range
+        pipeline.setInteger(2);
         break;
       case 3:
-        pipeline.setNumber(3);
-      break;
+        //Processing
+        pipeline.setInteger(3);
+        break;
     }
-  }
-  
-  public void processedPipeline(){
-    setMode(1); //button 5/8
-  }
-
-  public void aprilTagPipeline(){
-    setMode(2); //button 6/9
-  }
-
-  public void limeLightPipeline(){
-    setMode(3); //button 7/10
   }
 
 

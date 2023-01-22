@@ -25,7 +25,7 @@ import frc.robot.subsystems.Limelight;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
    private final Limelight m_lime = new Limelight();
 
   private final Joystick RIGHT = new Joystick(0);
@@ -57,14 +57,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //Vison: 
+    //AprilTag Long Pange Pipeline
+    new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+    //Limelight Pipeline
+    new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+    //AprilTag Short Range Pipeline
+    new JoystickButton(LEFT, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+    //Processing
+    new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(3)));
     // Back button zeros the gyroscope
-    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
-    new JoystickButton(LEFT, 7).onTrue(new InstantCommand(m_lime::processedPipeline));  
-    new JoystickButton(LEFT, 8).onTrue(new InstantCommand(m_lime::aprilTagPipeline)); 
-    new JoystickButton(LEFT, 9).onTrue(new InstantCommand(m_lime::limeLightPipeline)); 
-    //new JoystickButton(LEFT, 7).onTrue(new InstantCommand(m_lime::processedPipeline));//FIXME
-    //new JoystickButton(LEFT, 8).onTrue(new InstantCommand(m_lime::aprilTagPipeline)); //FIXME
-    //new JoystickButton(LEFT, 9).onTrue(new InstantCommand(m_lime::limeLightPipeline));//FIXME
+    // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
 
 
   }
