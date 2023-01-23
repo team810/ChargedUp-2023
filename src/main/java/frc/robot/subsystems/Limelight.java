@@ -118,17 +118,20 @@ public class Limelight extends SubsystemBase {
     switch(mode){
       case 0:
         //AprilTag long range
-        pipeline.setInteger(0);
+        if(result.hasTargets() != true)
+        {
+          pipeline.setInteger(0);
+        }
+        else
+        {
+          pipeline.setInteger(2);
+        }
         break;
       case 1:
-        //Reflective Tape //long range ? 
+        //Reflective Tape //long range ?
         pipeline.setInteger(1);
         break;
       case 2:
-        //AprilTag short range
-        pipeline.setInteger(2);
-        break;
-      case 3:
         //Processing
         pipeline.setInteger(3);
         break;
