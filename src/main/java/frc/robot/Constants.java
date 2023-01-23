@@ -22,7 +22,10 @@ public final class Constants {
         public static final String dir_path = "";
         public static final double MaxSpeed = 4;
         public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
-        public final double FieldLength = 15.6;
+        public static final double FieldLength = 15.6;
+        public static final double K_XController = 1;
+        public static final double K_YController = 1;
+        public static final double K_RController = 1;
     }
     public static final class DrivetrainConstants{
         /**

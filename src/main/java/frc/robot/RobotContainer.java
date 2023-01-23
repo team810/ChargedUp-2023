@@ -6,13 +6,15 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.drive.DefaultDriveCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.Limelight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,8 +28,8 @@ import frc.robot.subsystems.Limelight;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem;
-  private final PathPlannerTrajectory Path = PathPlanner.loadPath("Path",4,3);
-  private final Limelight m_lime = new Limelight();
+  private final PathPlannerTrajectory Path = PathPlanner.loadPath("New Path",4,3);
+  //private final Limelight m_lime = new Limelight();
 
   private final Joystick RIGHT = new Joystick(1);
   private final Joystick LEFT = new Joystick(0);
@@ -56,14 +58,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Vison: 
     //AprilTag Long Pange Pipeline
-    new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
-    //Limelight Pipeline
-    new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
-    //AprilTag Short Range Pipeline
-    new JoystickButton(LEFT, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
-    //Processing
-    new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(3)));
-    // Back button zeros the gyroscope
+//    new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+//    //Limelight Pipeline
+//    new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+//    //AprilTag Short Range Pipeline
+//    new JoystickButton(LEFT, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+//    //Processing
+//    new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(3)));
+//    // Back button zeros the gyroscope
     // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
   }
 
@@ -97,8 +99,28 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
+
     // An example command will be run in autonomous
-    // return Autos.swerveAutoTest(m_drivetrainSubsystem);
-    return null;
+    PIDController Xcontrlor = new PIDController(Constants.Auto.K_XController,0,0);
+    PIDController YControlor = new PIDController(Constants.Auto.K_YController,0,0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+            Constants.Auto.K_RController, 0,0, new TrapezoidProfile.Constraints(4,3)
+    );
+
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    Trajectory PathTrajectory = new Trajectory(Path.getStates());
+
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+            PathTrajectory,
+            m_drivetrainSubsystem::GetPos,
+            m_drivetrainSubsystem.get_kinematics(),
+            Xcontrlor,
+            YControlor,
+            thetaController,
+            m_drivetrainSubsystem::SetModuleStates,
+            m_drivetrainSubsystem
+    );
+    return swerveControllerCommand;
+
   }
 }

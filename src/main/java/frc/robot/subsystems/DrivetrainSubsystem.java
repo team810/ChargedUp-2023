@@ -81,6 +81,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
         new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                 -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
+        public SwerveDriveKinematics get_kinematics()
+        {
+                return m_kinematics;
+        }
+
         // Creating new pose, odometry, and chassis speeds
         // private Pose2d pose = new Pose2d();
         // private SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
@@ -96,6 +101,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         public DrivetrainSubsystem(Pose2d InitPos) {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+                modulePosition[0] = new SwerveModulePosition();
+                modulePosition[1] = new SwerveModulePosition();
+                modulePosition[2] = new SwerveModulePosition();
+                modulePosition[3] = new SwerveModulePosition();
 
                 // The module has two NEOs on it. One for steering and one for driving.
                 //Setup motor configuration
@@ -175,19 +184,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 m_chassisSpeeds = chassisSpeeds;
         }
 
+        public void SetModuleStates(SwerveModuleState[] states)
+        {
+                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                        states[0].angle.getRadians());
+                m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                        states[1].angle.getRadians());
+                m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                        states[2].angle.getRadians());
+                m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                        states[3].angle.getRadians());
+        }
         @Override
         public void periodic() {
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
-                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[0].angle.getRadians());
-                m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[1].angle.getRadians());
-                m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[2].angle.getRadians());
-                m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[3].angle.getRadians());
+                SetModuleStates(states);
 
                 modulePosition[0] = new SwerveModulePosition(states[0].speedMetersPerSecond, states[0].angle);
                 modulePosition[1] = new SwerveModulePosition(states[1].speedMetersPerSecond, states[1].angle);
@@ -195,5 +208,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 modulePosition[3] = new SwerveModulePosition(states[3].speedMetersPerSecond, states[3].angle);
 
                 odometry.update(getGyroscopeRotation(), modulePosition);
+
         }
 }
