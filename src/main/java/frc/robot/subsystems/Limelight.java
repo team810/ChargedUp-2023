@@ -11,24 +11,43 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.CameraConstants;
 
 public class Limelight extends SubsystemBase {
-  public NetworkTableEntry camMode = Constants.camMode;
+  //Entries on camera server
+  public NetworkTableEntry camMode = CameraConstants.camMode;
+  public NetworkTableEntry pipeline = CameraConstants.pipeline;
+  public NetworkTableEntry stream = CameraConstants.stream;
+  public NetworkTable table = CameraConstants.table;
 
-  public NetworkTableEntry pipeline = Constants.pipeline;
-  public NetworkTableEntry stream = Constants.stream;
-
+  //Data returned by AprilTag tracking
   private PhotonPipelineResult result;
+  private boolean hasTargets;
+  private List<PhotonTrackedTarget> targets;
+  private PhotonTrackedTarget target;
+  private double yaw;
+  private double pitch;
+  private double area;
+  private double poseAmbiguity;
+  private int targetID;
+
 
   private List<PhotonTrackedTarget> targets;
   private PhotonTrackedTarget target;
@@ -46,6 +65,14 @@ public class Limelight extends SubsystemBase {
   private double rangeToTarget; 
   private double distanceToTarget;
 
+
+
+  private Transform3d bestCameraToTarget;
+  private Transform3d alternateCameraToTarget;
+  private double rangeToTarget; 
+  private double distanceToTarget;
+
+  
   private Translation2d translation;
 
   private Pose3d robotPose;
@@ -54,31 +81,43 @@ public class Limelight extends SubsystemBase {
   // AprilTagFieldLayout aprilTagFieldLayout = new
   // AprilTagFieldLayout(AprilTagFieldLayout.loadFromResource
   // (AprilTagFields.k2022RapidReact.m_resourceFile));
+  private final HttpCamera feed;
 
-  /** Creates a new Limelight. */
+  private final PhotonCamera m_camera;
 
-  PhotonCamera m_camera;
-  DrivetrainSubsystem m_drivetrain;
+  
 
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
     CameraServer.startAutomaticCapture(feed);
 
     m_camera = new PhotonCamera("photonvision");
-
-    camMode.setBoolean(false);
-
-    setMode(2);
   }
 
   public void shuffleUpdate()
   {
     result = m_camera.getLatestResult();
     target = result.getBestTarget();
+
   }
 
   public void aprilTagData() {
     result.hasTargets();
+
+  }
+
+  public void turnToTarget()
+  {
+    aprilTagData();
+    if(result.hasTargets())
+    {
+      // yaw 
+    }
+  }
+
+  public void aprilTagData() {
+    this.hasTargets = result.hasTargets();
+
 
     targets = result.getTargets();
 
@@ -88,6 +127,7 @@ public class Limelight extends SubsystemBase {
     pitch = target.getPitch();
     area = target.getArea();
 
+
     targetID = target.getFiducialId();
     poseAmbiguity = target.getPoseAmbiguity();
     bestCameraToTarget = target.getBestCameraToTarget();
@@ -95,11 +135,12 @@ public class Limelight extends SubsystemBase {
 
     if(result.hasTargets()){
       PhotonUtils.calculateDistanceToTargetMeters(
-              Constants.CAMERA_HEIGHT_METERS,
-              Constants.TEST_TARGET_HEIGHT_METERS, 
-              Constants.CAMERA_PITCH_RADIANS, 
+              CameraConstants.CAMERA_HEIGHT_METERS,
+              CameraConstants.TEST_TARGET_HEIGHT_METERS, 
+              CameraConstants.CAMERA_PITCH_RADIANS, 
               Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
+
     
     //Translation2d
     translation = PhotonUtils.estimateCameraToTargetTranslation(
@@ -113,11 +154,21 @@ public class Limelight extends SubsystemBase {
   }
 
 
+    // Transform3D
+
+    // Pose3d  robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+    //                                 target.getBestCameraToTarget(), 
+    //                                 AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
+    //                                 alternateCameraToTarget);
+ }
+
+
   public void setMode(int mode)
   {
     switch(mode){
       case 0:
         //AprilTag long range
+
         if(result.hasTargets() != true)
         {
           pipeline.setInteger(0);
@@ -135,6 +186,22 @@ public class Limelight extends SubsystemBase {
         //Processing
         pipeline.setInteger(3);
         break;
+
+        pipeline.setInteger(0);
+        break;
+      case 1:
+        //Reflective Tape //long range ? 
+        pipeline.setInteger(1);
+        break;
+      case 2:
+        //AprilTag short range
+        pipeline.setInteger(2);
+        break;
+      case 3:
+        //Processing
+        pipeline.setInteger(3);
+        break;
+
     }
   }
 

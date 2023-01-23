@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.DRIVETRAIN_TRACKWIDTH_METERS;
-import static frc.robot.Constants.DRIVETRAIN_WHEELBASE_METERS;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
@@ -18,13 +15,26 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DrivetrainConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
+        // These are our modules. We initialize them in the constructor.
+        private final SwerveModule m_frontLeftModule;
+        private final SwerveModule m_frontRightModule;
+        private final SwerveModule m_backLeftModule;
+        private final SwerveModule m_backRightModule;
+
+        // The important thing about how you configure your gyroscope is that rotating
+        // the robot counter-clockwise should
+        // cause the angle reading to increase until it wraps back over to zero.
+        private final AHRS m_navx = new AHRS(Port.kMXP);
+
         /**
          * The maximum voltage that will be delivered to the drive motors.
          * <p>
@@ -58,44 +68,41 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // Here we calculate the theoretical maximum angular velocity. You can also
         // replace this with a measured amount.
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
-                        Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+                        Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
+        // Creates our swerve kinematics using the robots track width and wheel base
         private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-                        // Front left
-                        new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                        // Front right
-                        new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                        // Back left
-                        new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                        // Back right
-                        new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
+        // Front left
+        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+        // Front right
+        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                
+        // Back left
+        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+        // Back right
+        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-        // By default we use a Pigeon for our gyroscope. But if you use another
-        // gyroscope, like a NavX, you can change this.
-        // The important thing about how you configure your gyroscope is that rotating
-        // the robot counter-clockwise should
-        // cause the angle reading to increase until it wraps back over to zero.
-        // Uncomment if you are using a NavX
-        private final AHRS m_navx = new AHRS(SPI.Port.kMXP); // NavX
-        // connected over MXP
-
-        // These are our modules. We initialize them in the constructor.
-        private final SwerveModule m_frontLeftModule;
-        private final SwerveModule m_frontRightModule;
-        private final SwerveModule m_backLeftModule;
-        private final SwerveModule m_backRightModule;
-
+        // Creating new pose, odometry, and chassis speeds
+        // private Pose2d pose = new Pose2d();
+        // private SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
+                // new SwerveModulePosition(), new SwerveModulePosition() };
+        // private SwerveDriveOdometry odometry = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(), modulePositions, pose);
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+
+        // Creating our feed forward
+        // private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(DrivetrainConstants.ky, DrivetrainConstants.kv, DrivetrainConstants.ka);
+
+        // Field2d for displaying on the dashboard
+        // private final Field2d field2d = new Field2d();
 
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
-                // There are 4 methods you can call to create your swerve modules.
-                // The method you use depends on what motors you are using.
-                //
-                // Mk3SwerveModuleHelper.createNeo(...)
-                // Your module has two NEOs on it. One for steering and one for driving.
-                
+                // The module has two NEOs on it. One for steering and one for driving.
                 //Setup motor configuration
                 m_frontLeftModule = Mk3SwerveModuleHelper.createNeo(
                                 // This parameter is optional, but will allow you to see the current state of
@@ -106,14 +113,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 // This can either be STANDARD or FAST depending on your gear configuration
                                 Mk3SwerveModuleHelper.GearRatio.STANDARD,
                                 // This is the ID of the drive motor
-                                Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
+                                DrivetrainConstants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                                 // This is the ID of the steer motor
-                                Constants.FRONT_LEFT_MODULE_STEER_MOTOR,
+                                DrivetrainConstants.FRONT_LEFT_MODULE_STEER_MOTOR,
                                 // This is the ID of the steer encoder
-                                Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
+                                DrivetrainConstants.FRONT_LEFT_MODULE_STEER_ENCODER,
                                 // This is how much the steer encoder is offset from true zero (In our case,
                                 // zero is facing straight forward)
-                                Constants.FRONT_LEFT_MODULE_STEER_OFFSET);
+                                DrivetrainConstants.FRONT_LEFT_MODULE_STEER_OFFSET);
 
                 // We will do the same for the other modules
                 m_frontRightModule = Mk3SwerveModuleHelper.createNeo(
@@ -121,30 +128,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                                 .withSize(2, 4)
                                                 .withPosition(2, 0),
                                 Mk3SwerveModuleHelper.GearRatio.STANDARD,
-                                Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
-                                Constants.FRONT_RIGHT_MODULE_STEER_MOTOR,
-                                Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
-                                Constants.FRONT_RIGHT_MODULE_STEER_OFFSET);
+                                DrivetrainConstants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
+                                DrivetrainConstants.FRONT_RIGHT_MODULE_STEER_MOTOR,
+                                DrivetrainConstants.FRONT_RIGHT_MODULE_STEER_ENCODER,
+                                DrivetrainConstants.FRONT_RIGHT_MODULE_STEER_OFFSET);
                 
                 m_backLeftModule = Mk3SwerveModuleHelper.createNeo(
                                 tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(4, 0),
                                 Mk3SwerveModuleHelper.GearRatio.STANDARD,
-                                Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
-                                Constants.BACK_LEFT_MODULE_STEER_MOTOR,
-                                Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                                Constants.BACK_LEFT_MODULE_STEER_OFFSET);
+                                DrivetrainConstants.BACK_LEFT_MODULE_DRIVE_MOTOR,
+                                DrivetrainConstants.BACK_LEFT_MODULE_STEER_MOTOR,
+                                DrivetrainConstants.BACK_LEFT_MODULE_STEER_ENCODER,
+                                DrivetrainConstants.BACK_LEFT_MODULE_STEER_OFFSET);
 
                 m_backRightModule = Mk3SwerveModuleHelper.createNeo(
                                 tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(6, 0),
                                 Mk3SwerveModuleHelper.GearRatio.STANDARD,
-                                Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
-                                Constants.BACK_RIGHT_MODULE_STEER_MOTOR,
-                                Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                                Constants.BACK_RIGHT_MODULE_STEER_OFFSET);
+                                DrivetrainConstants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
+                                DrivetrainConstants.BACK_RIGHT_MODULE_STEER_MOTOR,
+                                DrivetrainConstants.BACK_RIGHT_MODULE_STEER_ENCODER,
+                                DrivetrainConstants.BACK_RIGHT_MODULE_STEER_OFFSET);
         }
 
         /**
@@ -154,7 +161,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * 
          * @return
          */
-
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
         }
