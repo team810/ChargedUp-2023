@@ -17,6 +17,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public final class Auto
+    {
+        public static final String dir_path = "";
+        public static final double MaxSpeed = 4;
+        public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
+        public final double FieldLength = 15.6;
+    }
     public static final class DrivetrainConstants{
         /**
          * The left-to-right distance between the drivetrain wheels

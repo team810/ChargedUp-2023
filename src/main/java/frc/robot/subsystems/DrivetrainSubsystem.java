@@ -9,11 +9,10 @@ import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -27,6 +26,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
         private final SwerveModule m_frontRightModule;
         private final SwerveModule m_backLeftModule;
         private final SwerveModule m_backRightModule;
+
+        private SwerveDriveOdometry odometry;
+        private SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
 
         // The important thing about how you configure your gyroscope is that rotating
         // the robot counter-clockwise should
@@ -49,12 +51,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // An example of this constant for a Mk4 L2 module with NEOs to drive is:
         // 5880.0 / 60.0 / SdsModuleConfigurations.MK4_L2.getDriveReduction() *
         // SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
-        /**
-         * The maximum velocity of the robot in meters per second.
-         * <p>
-         * This is a measure of how fast the robot should be able to drive in a straight
-         * line.
-         */
+
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
                         SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
                         SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
@@ -97,7 +94,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // Field2d for displaying on the dashboard
         // private final Field2d field2d = new Field2d();
 
-        public DrivetrainSubsystem() {
+        public DrivetrainSubsystem(Pose2d InitPos) {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
                 // The module has two NEOs on it. One for steering and one for driving.
@@ -150,15 +147,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_MOTOR,
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_ENCODER,
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_OFFSET);
+
+                odometry = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(),modulePosition, new Pose2d());
+
         }
 
-        /**
-         * Sets the gyroscope angle to zero. This can be used to set the direction the
-         * robot is currently facing to the
-         * 'forwards' direction.
-         * 
-         * @return
-         */
+        public Pose2d GetPos()
+        {
+                return odometry.getPoseMeters();
+        }
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
         }
@@ -191,5 +188,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 states[2].angle.getRadians());
                 m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
                                 states[3].angle.getRadians());
+
+                modulePosition[0] = new SwerveModulePosition(states[0].speedMetersPerSecond, states[0].angle);
+                modulePosition[1] = new SwerveModulePosition(states[1].speedMetersPerSecond, states[1].angle);
+                modulePosition[2] = new SwerveModulePosition(states[2].speedMetersPerSecond, states[2].angle);
+                modulePosition[3] = new SwerveModulePosition(states[3].speedMetersPerSecond, states[3].angle);
+
+                odometry.update(getGyroscopeRotation(), modulePosition);
         }
 }
