@@ -25,6 +25,12 @@ import frc.robot.subsystems.Limelight;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+   private final Limelight m_lime = new Limelight();
+
+  private final Joystick RIGHT = new Joystick(0);
+  private final Joystick LEFT = new Joystick(1);  
+
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final Limelight m_lime = new Limelight();
 
@@ -58,6 +64,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //Vison: 
+    //AprilTag Auto
+    new JoystickButton(LEFT, 3).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+    //Limelight Pipeline
+    new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+    //Processing
+    new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+    // Back button zeros the gyroscope
+    // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+
+
+
     //AprilTag Long Pange Pipeline
     new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
     //Limelight Pipeline

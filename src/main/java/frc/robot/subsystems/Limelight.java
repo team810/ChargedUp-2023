@@ -15,9 +15,14 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -44,6 +49,24 @@ public class Limelight extends SubsystemBase {
   private int targetID;
 
 
+  private List<PhotonTrackedTarget> targets;
+  private PhotonTrackedTarget target;
+
+  private double yaw;
+  private double pitch;
+  private double area;
+  private double poseAmbiguity;
+
+  private int targetID;
+
+  private Transform3d bestCameraToTarget;
+  private Transform3d alternateCameraToTarget;
+
+  private double rangeToTarget; 
+  private double distanceToTarget;
+
+
+
   private Transform3d bestCameraToTarget;
   private Transform3d alternateCameraToTarget;
   private double rangeToTarget; 
@@ -54,6 +77,10 @@ public class Limelight extends SubsystemBase {
 
   private Pose3d robotPose;
   
+  HttpCamera feed;
+  // AprilTagFieldLayout aprilTagFieldLayout = new
+  // AprilTagFieldLayout(AprilTagFieldLayout.loadFromResource
+  // (AprilTagFields.k2022RapidReact.m_resourceFile));
   private final HttpCamera feed;
 
   private final PhotonCamera m_camera;
@@ -71,6 +98,12 @@ public class Limelight extends SubsystemBase {
   {
     result = m_camera.getLatestResult();
     target = result.getBestTarget();
+
+  }
+
+  public void aprilTagData() {
+    result.hasTargets();
+
   }
 
   public void turnToTarget()
@@ -84,6 +117,7 @@ public class Limelight extends SubsystemBase {
 
   public void aprilTagData() {
     this.hasTargets = result.hasTargets();
+
 
     targets = result.getTargets();
 
@@ -106,6 +140,20 @@ public class Limelight extends SubsystemBase {
               CameraConstants.CAMERA_PITCH_RADIANS, 
               Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
+
+    
+    //Translation2d
+    translation = PhotonUtils.estimateCameraToTargetTranslation(
+                  Constants.TEST_TARGET_HEIGHT_METERS, 
+                  Rotation2d.fromDegrees(-target.getYaw()));
+
+  //robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+  //            target.getBestCameraToTarget(), 
+  //            AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
+  //            alternateCameraToTarget);
+  }
+
+
     // Transform3D
 
     // Pose3d  robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
@@ -114,11 +162,31 @@ public class Limelight extends SubsystemBase {
     //                                 alternateCameraToTarget);
  }
 
+
   public void setMode(int mode)
   {
     switch(mode){
       case 0:
         //AprilTag long range
+
+        if(result.hasTargets() != true)
+        {
+          pipeline.setInteger(0);
+        }
+        else
+        {
+          pipeline.setInteger(2);
+        }
+        break;
+      case 1:
+        //Reflective Tape //long range ?
+        pipeline.setInteger(1);
+        break;
+      case 2:
+        //Processing
+        pipeline.setInteger(3);
+        break;
+
         pipeline.setInteger(0);
         break;
       case 1:
@@ -133,8 +201,10 @@ public class Limelight extends SubsystemBase {
         //Processing
         pipeline.setInteger(3);
         break;
+
     }
   }
+
 
   @Override
   public void periodic() {
