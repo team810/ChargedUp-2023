@@ -39,7 +39,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * This can be reduced to cap the robot's maximum speed. Typically, this is
          * useful during initial testing of the robot.
          */
-        public static final double MAX_VOLTAGE = 12.0;
+        public static final double MAX_VOLTAGE = 10.0;//12
         // Measure the drivetrain's maximum velocity or calculate the theoretical.
         // The formula for calculating the theoretical maximum velocity is:
         // <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
@@ -55,7 +55,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * This is a measure of how fast the robot should be able to drive in a straight
          * line.
          */
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 * 
                         SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
                         SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
         /**
@@ -150,6 +150,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_MOTOR,
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_ENCODER,
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_OFFSET);
+
+                zeroGyroscope();
         }
 
         /**

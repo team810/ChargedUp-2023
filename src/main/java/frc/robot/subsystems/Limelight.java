@@ -11,6 +11,8 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
@@ -119,17 +121,18 @@ public class Limelight extends SubsystemBase {
     switch(mode){
       case 0:
         //AprilTag long range
-        pipeline.setInteger(0);
+        if(result.hasTargets() == true) {
+          pipeline.setInteger(2);
+         }
+         else {
+          pipeline.setInteger(0);
+        }
         break;
       case 1:
-        //Reflective Tape //long range ? 
+        //Reflective Tape 
         pipeline.setInteger(1);
         break;
       case 2:
-        //AprilTag short range
-        pipeline.setInteger(2);
-        break;
-      case 3:
         //Processing
         pipeline.setInteger(3);
         break;

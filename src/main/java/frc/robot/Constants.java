@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.swervedrivespecialties.swervelib.AbsoluteEncoder;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -35,23 +38,23 @@ public final class Constants {
         //FIXME CANCoder Ids and steer offset
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; 
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 1; 
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set front left steer offset
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 16; 
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1); //Measure and set front left steer offset
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8; 
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7; 
-        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 7;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set front right steer offset
+        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3); //Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
-        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 3; 
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set back left steer offset
-
+        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 15; 
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(170.1); //Measure and set back left steer offset
+        
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; 
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; 
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 5; 
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0.0); //Measure and set back right steer offset
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14; 
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8); //Measure and set back right steer offset
 
         //FeedForwardGains        
         public static final double ky = 0;
