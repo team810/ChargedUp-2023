@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,13 +25,12 @@ import frc.robot.subsystems.Limelight;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  //private final PathPlannerTrajectory Path = PathPlanner.loadPath("New Path",4,3);
-  
-  private final Limelight m_lime = new Limelight();
+   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+   private final Limelight m_lime = new Limelight();
 
-  // private final Joystick RIGHT = new Joystick(1);
-  // private final Joystick LEFT = new Joystick(0);
+  // private final Joystick RIGHT = new Joystick(0);
+  private final Joystick LEFT = new Joystick(1);  
+  //private final PathPlannerTrajectory Path = PathPlanner.loadPath("New Path",4,3);
   private XboxController mController = new XboxController(0);
 
   public RobotContainer() {

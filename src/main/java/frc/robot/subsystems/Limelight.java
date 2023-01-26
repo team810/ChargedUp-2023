@@ -14,6 +14,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -48,7 +49,6 @@ public class Limelight extends SubsystemBase {
   private Translation2d translation;
 
   private Pose3d robotPose;
-
   private final HttpCamera feed;
 
   private final PhotonCamera m_camera;
@@ -63,6 +63,7 @@ public class Limelight extends SubsystemBase {
   public void shuffleUpdate() {
     result = m_camera.getLatestResult();
     target = result.getBestTarget();
+
   }
 
   public void turnToTarget() {
@@ -74,6 +75,7 @@ public class Limelight extends SubsystemBase {
 
   public void aprilTagData() {
     this.hasTargets = result.hasTargets();
+
 
     targets = result.getTargets();
 
@@ -95,13 +97,26 @@ public class Limelight extends SubsystemBase {
           CameraConstants.CAMERA_PITCH_RADIANS,
           Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
+
+    
+    //Translation2d
+    translation = PhotonUtils.estimateCameraToTargetTranslation(
+                  CameraConstants.TEST_TARGET_HEIGHT_METERS, 
+                  Rotation2d.fromDegrees(-target.getYaw()));
+
+  //robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+  //            target.getBestCameraToTarget(), 
+  //            AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
+  //            alternateCameraToTarget);
+  }
+
+
     // Transform3D
 
     // Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
     // target.getBestCameraToTarget(),
     // AprilTagFieldLayout.getTagPose(target.getFiducialId()),
     // alternateCameraToTarget);
-  }
 
   public void setMode(int mode) {
     switch (mode) {
@@ -122,8 +137,10 @@ public class Limelight extends SubsystemBase {
         // Processing
         pipeline.setInteger(3);
         break;
+
     }
   }
+
 
   @Override
   public void periodic() {
