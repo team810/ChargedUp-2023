@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.swervedrivespecialties.swervelib.AbsoluteEncoder;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -20,6 +17,18 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    public final class Auto
+    {
+        public static final String dir_path = "";
+        public static final double MaxSpeed = 4;
+        public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
+        public static final double FieldLength = 15.6;
+        public static final double K_XController = 1;
+        public static final double K_YController = 1;
+        public static final double K_RController = 1;
+    }
+
     public static final class DrivetrainConstants{
         /**
          * The left-to-right distance between the drivetrain wheels
@@ -39,12 +48,12 @@ public final class Constants {
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; 
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 16; 
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1); //Measure and set front left steer offset
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(260.6);//261.1); //Measure and set front left steer offset
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8; 
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7; 
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3); //Measure and set front right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(237.83);//239.3); //Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
@@ -54,7 +63,7 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; 
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; 
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14; 
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8); //Measure and set back right steer offset
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(88.48);//87.8); //Measure and set back right steer offset
 
         //FeedForwardGains        
         public static final double ky = 0;

@@ -11,30 +11,25 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import com.ctre.phoenix.sensors.Pigeon2;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
 
 public class Limelight extends SubsystemBase {
-  //Entries on camera server
+  // Entries on camera server
   public NetworkTableEntry camMode = CameraConstants.camMode;
   public NetworkTableEntry pipeline = CameraConstants.pipeline;
   public NetworkTableEntry stream = CameraConstants.stream;
   public NetworkTable table = CameraConstants.table;
 
-  //Data returned by AprilTag tracking
+  // Data returned by AprilTag tracking
   private PhotonPipelineResult result;
   private boolean hasTargets;
   private List<PhotonTrackedTarget> targets;
@@ -45,22 +40,18 @@ public class Limelight extends SubsystemBase {
   private double poseAmbiguity;
   private int targetID;
 
-
   private Transform3d bestCameraToTarget;
   private Transform3d alternateCameraToTarget;
-  private double rangeToTarget; 
+  private double rangeToTarget;
   private double distanceToTarget;
 
-  
   private Translation2d translation;
 
   private Pose3d robotPose;
-  
+
   private final HttpCamera feed;
 
   private final PhotonCamera m_camera;
-
-  
 
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
@@ -69,18 +60,15 @@ public class Limelight extends SubsystemBase {
     m_camera = new PhotonCamera("photonvision");
   }
 
-  public void shuffleUpdate()
-  {
+  public void shuffleUpdate() {
     result = m_camera.getLatestResult();
     target = result.getBestTarget();
   }
 
-  public void turnToTarget()
-  {
+  public void turnToTarget() {
     aprilTagData();
-    if(result.hasTargets())
-    {
-      // yaw 
+    if (result.hasTargets()) {
+      // yaw
     }
   }
 
@@ -95,45 +83,43 @@ public class Limelight extends SubsystemBase {
     pitch = target.getPitch();
     area = target.getArea();
 
-
     targetID = target.getFiducialId();
     poseAmbiguity = target.getPoseAmbiguity();
     bestCameraToTarget = target.getBestCameraToTarget();
     alternateCameraToTarget = target.getAlternateCameraToTarget();
 
-    if(result.hasTargets()){
+    if (result.hasTargets()) {
       PhotonUtils.calculateDistanceToTargetMeters(
-              CameraConstants.CAMERA_HEIGHT_METERS,
-              CameraConstants.TEST_TARGET_HEIGHT_METERS, 
-              CameraConstants.CAMERA_PITCH_RADIANS, 
-              Units.degreesToRadians(result.getBestTarget().getPitch()));
+          CameraConstants.CAMERA_HEIGHT_METERS,
+          CameraConstants.TEST_TARGET_HEIGHT_METERS,
+          CameraConstants.CAMERA_PITCH_RADIANS,
+          Units.degreesToRadians(result.getBestTarget().getPitch()));
     }
     // Transform3D
 
-    // Pose3d  robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-    //                                 target.getBestCameraToTarget(), 
-    //                                 AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
-    //                                 alternateCameraToTarget);
- }
+    // Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+    // target.getBestCameraToTarget(),
+    // AprilTagFieldLayout.getTagPose(target.getFiducialId()),
+    // alternateCameraToTarget);
+  }
 
-  public void setMode(int mode)
-  {
-    switch(mode){
+  public void setMode(int mode) {
+    switch (mode) {
       case 0:
-        //AprilTag long range
-        if(result.hasTargets() == true) {
+        // AprilTag long range
+        pipeline.setInteger(0);
+
+        if (result.hasTargets()) {
           pipeline.setInteger(2);
-         }
-         else {
-          pipeline.setInteger(0);
         }
+
         break;
       case 1:
-        //Reflective Tape 
+        // Reflective Tape
         pipeline.setInteger(1);
         break;
       case 2:
-        //Processing
+        // Processing
         pipeline.setInteger(3);
         break;
     }
@@ -141,6 +127,6 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // shuffleUpdate();
+    shuffleUpdate();
   }
 }

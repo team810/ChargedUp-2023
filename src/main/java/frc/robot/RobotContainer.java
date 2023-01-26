@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,11 +25,13 @@ import frc.robot.subsystems.Limelight;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  //private final PathPlannerTrajectory Path = PathPlanner.loadPath("New Path",4,3);
+  
   private final Limelight m_lime = new Limelight();
 
-  private final Joystick RIGHT = new Joystick(1);
-  private final Joystick LEFT = new Joystick(0);
-  //private XboxController mController = new XboxController(0);
+  // private final Joystick RIGHT = new Joystick(1);
+  // private final Joystick LEFT = new Joystick(0);
+  private XboxController mController = new XboxController(0);
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
@@ -39,19 +40,19 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     // modifyAxis(0);
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,
-        ()-> Math.pow(modifyAxis(RIGHT.getX()) ,3) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        ()-> Math.pow(modifyAxis(RIGHT.getY()) ,3) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        ()-> Math.pow(modifyAxis(LEFT.getZ()) ,3) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    //     m_drivetrainSubsystem,
+    //     ()-> -modifyAxis(RIGHT.getY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     ()-> -modifyAxis(RIGHT.getX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     ()-> -modifyAxis(LEFT.getZ()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     
 
         //XboxControllera Controlls 
-        // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        // m_drivetrainSubsystem,
-        // ()-> modifyAxis(mController.getRawAxis(5)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        // ()-> modifyAxis(mController.getRawAxis(4)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        // ()-> modifyAxis(mController.getRawAxis(0)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        ()-> -modifyAxis(mController.getRawAxis(5)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -modifyAxis(mController.getRawAxis(4)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -modifyAxis(mController.getRawAxis(0)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
       
     // Configure the button bindings
     configureButtonBindings();
@@ -68,24 +69,24 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Vison: 
     //AprilTag Pipeline
-    new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+    // new JoystickButton(LEFT, 4).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
     //Limelight Pipeline
-    new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+    // new JoystickButton(LEFT, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
     //Processing
-    new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+    // new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
     //Zeros the gyroscope
-    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
     
     //Xboxcontroller Controlles 
     // Back button zeros the gyroscope on Xboxcontroller
     //new JoystickButton(mController, 5).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
     //Limelight buttons on Xboxcontroller
     //Apirltag
-    //new JoystickButton(mController, 1).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+    new JoystickButton(mController, 1).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
     //Limelight 
-    //new JoystickButton(mController, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+    new JoystickButton(mController, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
     //Processing 
-    //new JoystickButton(mController, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+    new JoystickButton(mController, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
     }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -117,8 +118,27 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return Autos.swerveAutoTest(m_drivetrainSubsystem);
+    // PIDController Xcontrlor = new PIDController(Constants.Auto.K_XController,0,0);
+    // PIDController YControlor = new PIDController(Constants.Auto.K_YController,0,0);
+    // ProfiledPIDController thetaController = new ProfiledPIDController(
+    //         Constants.Auto.K_RController, 0,0, new TrapezoidProfile.Constraints(4,3)
+    // );
+
+    // thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    // Trajectory PathTrajectory = new Trajectory(Path.getStates());
+
+    // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+    //         PathTrajectory,
+    //         m_drivetrainSubsystem::GetPos,
+    //         m_drivetrainSubsystem.get_kinematics(),
+    //         Xcontrlor,
+    //         YControlor,
+    //         thetaController,
+    //         m_drivetrainSubsystem::SetModuleStates,
+    //         m_drivetrainSubsystem
+    // );
+    // return swerveControllerCommand;
     return null;
+
   }
 }
