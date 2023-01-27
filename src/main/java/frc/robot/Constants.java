@@ -24,9 +24,9 @@ public final class Constants {
         public static final double MaxSpeed = 4;
         public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
         public static final double FieldLength = 15.6;
-        public static final double K_XController = 1;
-        public static final double K_YController = 1;
-        public static final double K_RController = 1;
+        public static final double K_XController = 5;
+        public static final double K_YController = 5;
+        public static final double K_RController = 5;
     }
 
     public static final class DrivetrainConstants{
@@ -48,12 +48,12 @@ public final class Constants {
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; 
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 16; 
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(260.6);//261.1); //Measure and set front left steer offset
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1); //Measure and set front left steer offset
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8; 
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7; 
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(237.83);//239.3); //Measure and set front right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3); //Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
@@ -63,7 +63,7 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; 
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; 
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14; 
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(88.48);//87.8); //Measure and set back right steer offset
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8); //Measure and set back right steer offset
 
         //FeedForwardGains        
         public static final double ky = 0;
@@ -87,5 +87,12 @@ public final class Constants {
        public static final double LOWEST_COMP_TARGET_HEIGHT_METERS = .36; // lowest april tag height in comp
        public static final double HIGHEST_COMP_TARGET_HEIGHT_METERS = .59; // highest april tag height in comp
        public static final double CAMERA_PITCH_RADIANS = 0.0; //FIXME Camera tilt in radians
+    }
+    public static final class Intake
+    {
+        public static final int INTEAKE_LEFT_ID = 9;
+        public static final int INTEAKE_RIGHT_ID = 10;
+
+        public static final double Speed = .2;
     }
 }
