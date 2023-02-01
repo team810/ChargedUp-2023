@@ -12,10 +12,11 @@ public class RobotContainer {
    private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 //   private final Limelight m_lime = new Limelight();
 
-  // private final Joystick RIGHT = new Joystick(0);
+// private final Joystick RIGHT = new Joystick(0);
 //  private final Joystick LEFT = new Joystick(1);
+
   //private final PathPlannerTrajectory Path = PathPlanner.loadPath("New Path",4,3);
-  private XboxController mController = new XboxController(0);
+  // private XboxController mController = new XboxController(0);
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
@@ -24,11 +25,11 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     // modifyAxis(0);
-    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-    //     m_drivetrainSubsystem,
-    //     ()-> -modifyAxis(RIGHT.getY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     ()-> -modifyAxis(RIGHT.getX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     ()-> -modifyAxis(LEFT.getZ()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        ()-> -modifyAxis(RIGHT.getY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -modifyAxis(RIGHT.getX()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -modifyAxis(LEFT.getZ()) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
     
 
         //XboxControllera Controlls 
@@ -59,7 +60,7 @@ public class RobotContainer {
     //Processing
     // new JoystickButton(LEFT, 1).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
     //Zeros the gyroscope
-    // new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    new JoystickButton(RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
     
     //Xboxcontroller Controlles 
     // Back button zeros the gyroscope on Xboxcontroller
