@@ -4,20 +4,11 @@
 
 package frc.robot.subsystems;
 
-import java.util.List;
-
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,23 +23,6 @@ public class Limelight extends SubsystemBase {
 
   // Data returned by AprilTag tracking
   private PhotonPipelineResult result;
-  private boolean hasTargets;
-  private List<PhotonTrackedTarget> targets;
-  private PhotonTrackedTarget target;
-  private double yaw;
-  private double pitch;
-  private double area;
-  private double poseAmbiguity;
-  private int targetID;
-
-  private Transform3d bestCameraToTarget;
-  private Transform3d alternateCameraToTarget;
-  private double rangeToTarget;
-  private double distanceToTarget;
-
-  private Translation2d translation;
-
-  private Pose3d robotPose;
   private final HttpCamera feed;
 
   private final PhotonCamera m_camera;
@@ -62,61 +36,7 @@ public class Limelight extends SubsystemBase {
 
   public void shuffleUpdate() {
     result = m_camera.getLatestResult();
-    target = result.getBestTarget();
-
   }
-
-  public void turnToTarget() {
-    aprilTagData();
-    if (result.hasTargets()) {
-      // yaw
-    }
-  }
-
-  public void aprilTagData() {
-    this.hasTargets = result.hasTargets();
-
-
-    targets = result.getTargets();
-
-    target = result.getBestTarget();
-
-    yaw = target.getYaw();
-    pitch = target.getPitch();
-    area = target.getArea();
-
-    targetID = target.getFiducialId();
-    poseAmbiguity = target.getPoseAmbiguity();
-    bestCameraToTarget = target.getBestCameraToTarget();
-    alternateCameraToTarget = target.getAlternateCameraToTarget();
-
-    if (result.hasTargets()) {
-      PhotonUtils.calculateDistanceToTargetMeters(
-          CameraConstants.CAMERA_HEIGHT_METERS,
-          CameraConstants.TEST_TARGET_HEIGHT_METERS,
-          CameraConstants.CAMERA_PITCH_RADIANS,
-          Units.degreesToRadians(result.getBestTarget().getPitch()));
-    }
-
-    
-    //Translation2d
-    translation = PhotonUtils.estimateCameraToTargetTranslation(
-                  CameraConstants.TEST_TARGET_HEIGHT_METERS, 
-                  Rotation2d.fromDegrees(-target.getYaw()));
-
-  //robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-  //            target.getBestCameraToTarget(), 
-  //            AprilTagFieldLayout.getTagPose(target.getFiducialId()), 
-  //            alternateCameraToTarget);
-  }
-
-
-    // Transform3D
-
-    // Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-    // target.getBestCameraToTarget(),
-    // AprilTagFieldLayout.getTagPose(target.getFiducialId()),
-    // alternateCameraToTarget);
 
   public void setMode(int mode) {
     switch (mode) {
@@ -140,7 +60,6 @@ public class Limelight extends SubsystemBase {
 
     }
   }
-
 
   @Override
   public void periodic() {

@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -14,21 +17,22 @@ import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.kinematics.*;
-
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
-
-
-import java.util.HashMap;
-import java.util.List;
 
 public class DrivetrainSubsystem extends SubsystemBase {
         private final SwerveModule m_frontLeftModule;
@@ -38,8 +42,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
         private SwerveDriveOdometry odometry;
         private SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
         private final AHRS m_navx = new AHRS(Port.kMXP);
-        private SwerveDrivePoseEstimator poseEstimator;
-
 
         /**
          * The maximum voltage that will be delivered to the drive motors.
@@ -47,7 +49,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * This can be reduced to cap the robot's maximum speed. Typically, this is
          * useful during initial testing of the robot.
          */
-        public static final double MAX_VOLTAGE = 12;//12
+        public static final double MAX_VOLTAGE = 12;// 12
         // Measure the drivetrain's maximum velocity or calculate the theoretical.
         // The formula for calculating the theoretical maximum velocity is:
         // <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
@@ -74,30 +76,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // Here we calculate the theoretical maximum angular velocity. You can also
         // replace this with a measured amount.
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
-                        Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
+                        Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
         // Creates our swerve kinematics using the robots track width and wheel base
         private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-        // Front left
-        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-        // Front right
-        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-        // Back left
-        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-        // Back right
-        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
+                        // Front left
+                        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                        // Front right
+                        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                                        -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                        // Back left
+                        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                        // Back right
+                        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                                        -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
-        // Creating our feed forward
-        // private final SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(DrivetrainConstants.ky, DrivetrainConstants.kv, DrivetrainConstants.ka);
-
-        // Field2d for displaying on the dashboard
-        // private final Field2d field2d = new Field2d();
 
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -153,21 +150,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 m_navx.zeroYaw();
         }
 
-        public Rotation2d getGyroscopeRotation() {//                return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+        public Rotation2d getGyroscopeRotation() {
                 return m_navx.getRotation2d();
         }
-        public void ResetPos(Pose2d pos)
-        {
-                odometry.resetPosition(getGyroscopeRotation(), modulePosition,pos);
+
+        public void ResetPos(Pose2d pos) {
+                odometry.resetPosition(getGyroscopeRotation(), modulePosition, pos);
         }
-        public Pose2d getPos()
-        {
+
+        public Pose2d getPos() {
                 return odometry.getPoseMeters();
         }
+
         public void drive(ChassisSpeeds chassisSpeeds) {
                 m_chassisSpeeds = chassisSpeeds;
         }
-        private void setSpeeds(ChassisSpeeds chassisSpeeds){
+
+        private void setSpeeds(ChassisSpeeds chassisSpeeds) {
 
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
@@ -181,19 +180,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
                 updatePos();
         }
-        private void updatePos()
-        {
-                odometry.update(getGyroscopeRotation(),modulePosition);
+
+        private void updatePos() {
+                odometry.update(getGyroscopeRotation(), modulePosition);
         }
+
         private void setStates(SwerveModuleState[] state) {
-                m_frontLeftModule.set((state[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE)*.25,
-                        state[0].angle.getRadians());
-                m_frontRightModule.set((state[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * .25,
-                        state[1].angle.getRadians());
-                m_backLeftModule.set((state[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * .25,
-                        state[2].angle.getRadians());
-                m_backRightModule.set((state[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * .25,
-                        state[3].angle.getRadians());
+                m_frontLeftModule.set(
+                                (state[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
+                                state[0].angle.getRadians());
+                m_frontRightModule.set(
+                                (state[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
+                                state[1].angle.getRadians());
+                m_backLeftModule.set(
+                                (state[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
+                                state[2].angle.getRadians());
+                m_backRightModule.set(
+                                (state[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
+                                state[3].angle.getRadians());
 
                 modulePosition[0] = new SwerveModulePosition(state[0].speedMetersPerSecond, state[0].angle);
                 modulePosition[1] = new SwerveModulePosition(state[1].speedMetersPerSecond, state[1].angle);
@@ -201,29 +205,33 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 modulePosition[3] = new SwerveModulePosition(state[3].speedMetersPerSecond, state[3].angle);
                 updatePos();
         }
-        void stopMotor()
-        {
-                drive(new ChassisSpeeds(0,0,0));
+
+        public void stopMotor() {
+                drive(new ChassisSpeeds(0, 0, 0));
         }
 
-        public Command getAuto()
-        {
+        public Command getAuto() {
 
-                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("ForwardWithRot", new PathConstraints(4, 3));
+                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("ForwardWithRot",
+                                new PathConstraints(4, 3));
 
                 HashMap<String, Command> eventMap = new HashMap<>();
-//                eventMap.put("HalfwayPoint", new PrintCommand("Halfway through"));
+                // eventMap.put("HalfwayPoint", new PrintCommand("Halfway through"));
                 SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-                        this::getPos, // Pose2d supplier
-                        this::ResetPos, // Pose2d consumer, used to reset odometry at the beginning of auto
-                        this.m_kinematics, // SwerveDriveKinematics
-                        new PIDConstants(2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-                        new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-                        this::setStates, // Module states consumer used to output to the drive subsystem
-                        eventMap,
-                        this // The drive subsystem. Used to properly set the requirements of path following commands
+                                this::getPos, // Pose2d supplier
+                                this::ResetPos, // Pose2d consumer, used to reset odometry at the beginning of auto
+                                this.m_kinematics, // SwerveDriveKinematics
+                                new PIDConstants(.06, 0.0, 0.0), // PID constants to correct for translation error (used
+                                                                 // to create the X and Y PID controllers)
+                                new PIDConstants(.05, 0.0, 0.0), // PID constants to correct for rotation error (used to
+                                                                 // create the rotation controller)
+                                this::setStates, // Module states consumer used to output to the drive subsystem
+                                eventMap,
+                                this // The drive subsystem. Used to properly set the requirements of path following
+                                     // commands
                 );
                 return autoBuilder.fullAuto(pathGroup);
+
         }
 
 }
