@@ -1,35 +1,20 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.Limelight;
 
-/**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
+
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-   private final Limelight m_lime = new Limelight();
 
-  private final Joystick RIGHT = new Joystick(0);
-  private final Joystick LEFT = new Joystick(1);  
+   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+//   private final Limelight m_lime = new Limelight();
+
+// private final Joystick RIGHT = new Joystick(0);
+//  private final Joystick LEFT = new Joystick(1);
+
   //private final PathPlannerTrajectory Path = PathPlanner.loadPath("New Path",4,3);
   // private XboxController mController = new XboxController(0);
 
@@ -48,11 +33,11 @@ public class RobotContainer {
     
 
         //XboxControllera Controlls 
-        // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        // m_drivetrainSubsystem,
-        // ()-> -modifyAxis(mController.getRawAxis(5)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        // ()-> -modifyAxis(mController.getRawAxis(4)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        // ()-> -modifyAxis(mController.getRawAxis(0)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        ()-> -modifyAxis(mController.getRawAxis(4)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -modifyAxis(mController.getRawAxis(3)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        ()-> -modifyAxis(mController.getRawAxis(0)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
       
     // Configure the button bindings
     configureButtonBindings();
@@ -82,11 +67,11 @@ public class RobotContainer {
     //new JoystickButton(mController, 5).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
     //Limelight buttons on Xboxcontroller
     //Apirltag
-    // new JoystickButton(mController, 1).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
-    //Limelight 
-    // new JoystickButton(mController, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
-    //Processing 
-    // new JoystickButton(mController, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
+//    new JoystickButton(mController, 1).onTrue(new InstantCommand(()-> m_lime.setMode(0)));
+//    //Limelight
+//    new JoystickButton(mController, 2).onTrue(new InstantCommand(()-> m_lime.setMode(1)));
+//    //Processing
+//    new JoystickButton(mController, 3).onTrue(new InstantCommand(()-> m_lime.setMode(2)));
     }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -109,36 +94,14 @@ public class RobotContainer {
 
   private static double modifyAxis(double value) {
     // Deadband
-    value = deadband(value, .5);
-
+    value = deadband(value, .2);
     // Square the axis
     value = Math.pow(value, 3);//Math.copySign(value * value, value);
 
     return value;
   }
 
-  public Command getAutonomousCommand() {
-    // PIDController Xcontrlor = new PIDController(Constants.Auto.K_XController,0,0);
-    // PIDController YControlor = new PIDController(Constants.Auto.K_YController,0,0);
-    // ProfiledPIDController thetaController = new ProfiledPIDController(
-    //         Constants.Auto.K_RController, 0,0, new TrapezoidProfile.Constraints(4,3)
-    // );
-
-    // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    // Trajectory PathTrajectory = new Trajectory(Path.getStates());
-
-    // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-    //         PathTrajectory,
-    //         m_drivetrainSubsystem::GetPos,
-    //         m_drivetrainSubsystem.get_kinematics(),
-    //         Xcontrlor,
-    //         YControlor,
-    //         thetaController,
-    //         m_drivetrainSubsystem::SetModuleStates,
-    //         m_drivetrainSubsystem
-    // );
-    // return swerveControllerCommand;
-    return null;
-
-  }
+    public Command getAutonomousCommand() {
+      return m_drivetrainSubsystem.getAuto();
+    }
 }

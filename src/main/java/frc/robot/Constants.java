@@ -18,12 +18,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public final class Constants {
 
-    public final class Auto
+    public static final class Auto
     {
-        public static final String dir_path = "";
-        public static final double MaxSpeed = 4;
-        public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
-        public static final double FieldLength = 15.6;
         public static final double K_XController = 1;
         public static final double K_YController = 1;
         public static final double K_RController = 1;
@@ -34,26 +30,26 @@ public final class Constants {
          * The left-to-right distance between the drivetrain wheels
          * Should be measured from center to center.
          */
-        //16.25 inches converted to 0.41275 meters
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.41275; //Measure and set trackwidth
+        //25 inches converted to 0.635 meters
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635; //Measure and set trackwidth
         /**
          * The front-to-back distance between the drivetrain wheels.
          *
          * Should be measured from center to center.
          */
-        //24.25 inches converted to 0.61595 meters
-        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.61595; //Measure and set wheelbase
+        //25 inches converted to 0.635 meters
+        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635; //Measure and set wheelbase
 
         //FIXME CANCoder Ids and steer offset
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; 
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 16; 
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(260.6);//261.1); //Measure and set front left steer offset
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1); //Measure and set front left steer offset
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8; 
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7; 
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(237.83);//239.3); //Measure and set front right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3); //Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
@@ -63,7 +59,7 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; 
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; 
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14; 
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(88.48);//87.8); //Measure and set back right steer offset
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8); //Measure and set back right steer offset
 
         //FeedForwardGains        
         public static final double ky = 0;
