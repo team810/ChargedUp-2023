@@ -18,15 +18,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public final class Constants {
 
-    public final class Auto
+    public static final class Auto
     {
-        public static final String dir_path = "";
-        public static final double MaxSpeed = 4;
-        public static final double TurningSpeed = 20; // How long in seconds it takes to make one turn in place
-        public static final double FieldLength = 15.6;
-        public static final double K_XController = 5;
-        public static final double K_YController = 5;
-        public static final double K_RController = 5;
+        public static final double K_XController = 1;
+        public static final double K_YController = 1;
+        public static final double K_RController = 1;
     }
 
     public static final class DrivetrainConstants{
@@ -34,15 +30,15 @@ public final class Constants {
          * The left-to-right distance between the drivetrain wheels
          * Should be measured from center to center.
          */
-        //16.25 inches converted to 0.41275 meters
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.41275; //Measure and set trackwidth
+        //25 inches converted to 0.635 meters
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635; //Measure and set trackwidth
         /**
          * The front-to-back distance between the drivetrain wheels.
          *
          * Should be measured from center to center.
          */
-        //24.25 inches converted to 0.61595 meters
-        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.61595; //Measure and set wheelbase
+        //25 inches converted to 0.635 meters
+        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635; //Measure and set wheelbase
 
         //FIXME CANCoder Ids and steer offset
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
@@ -87,12 +83,5 @@ public final class Constants {
        public static final double LOWEST_COMP_TARGET_HEIGHT_METERS = .36; // lowest april tag height in comp
        public static final double HIGHEST_COMP_TARGET_HEIGHT_METERS = .59; // highest april tag height in comp
        public static final double CAMERA_PITCH_RADIANS = 0.0; //FIXME Camera tilt in radians
-    }
-    public static final class Intake
-    {
-        public static final int INTEAKE_LEFT_ID = 9;
-        public static final int INTEAKE_RIGHT_ID = 10;
-
-        public static final double Speed = .2;
     }
 }
