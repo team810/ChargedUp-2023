@@ -27,7 +27,7 @@ public final class Constants {
         public static final double K_YController = 1;
         public static final double K_RController = 1;
 
-        public static final double MAX_SPEED = .3;
+        public static final double MAX_SPEED = .15;
     }
 
     public static final class DrivetrainConstants {
