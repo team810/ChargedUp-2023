@@ -27,7 +27,7 @@ public final class Constants {
         public static final double K_YController = 1;
         public static final double K_RController = 1;
 
-        public static final double MAX_SPEED = .15;
+        public static final double MAX_SPEED = .4;
     }
 
     public static final class DrivetrainConstants {
@@ -68,6 +68,9 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14;
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8); // Measure and set back right
                                                                                            // steer offset
+
+        public static final double WHEEL_DIAMETER = 0.0968375;
+        public static final double GEAR_RATIO = 12.8;
 
         // FeedForwardGains
         public static final double ky = 0;

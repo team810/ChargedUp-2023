@@ -72,6 +72,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_drivetrainSubsystem.getAuto();
+    return m_drivetrainSubsystem.auto();
   }
 }

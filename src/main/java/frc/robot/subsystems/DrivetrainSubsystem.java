@@ -37,34 +37,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
         private final SwerveModule m_frontRightModule;
         private final SwerveModule m_backLeftModule;
         private final SwerveModule m_backRightModule;
-        private final SwerveDriveOdometry odometry;
-        private final double[] drivePos = new double[4];
+
+        // private final CANSparkMax m_frontLeftDriveMotor = new CANSparkMax(
+        //                 DrivetrainConstants.FRONT_LEFT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
+        // private final CANSparkMax m_frontRightDriveMotor = new CANSparkMax(
+        //                 DrivetrainConstants.FRONT_RIGHT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
+        // private final CANSparkMax m_backLeftDriveMotor = new CANSparkMax(
+        //                 DrivetrainConstants.BACK_LEFT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
+        // private final CANSparkMax m_backRightDriveMotor = new CANSparkMax(
+        //                 DrivetrainConstants.BACK_RIGHT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
+
+        private SwerveDriveOdometry odometry;
+        private SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
         private final AHRS m_navx = new AHRS(Port.kMXP);
 
-        /**
-         * The maximum voltage that will be delivered to the drive motors.
-         * <p>
-         * This can be reduced to cap the robot's maximum speed. Typically, this is
-         * useful during initial testing of the robot.
-         */
-        public static final double MAX_VOLTAGE = 12;// 12
-        /*
-         Measure the drivetrain's maximum velocity or calculate the theoretical.
-         The formula for calculating the theoretical maximum velocity is:
-         <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
-         pi
-         By default this value is setup for a Mk3 standard module using Falcon500s to
-         drive.
-         An example of this constant for a Mk4 L2 module with NEOs to drive is:
-         5880.0 / 60.0 / SdsModuleConfigurations.MK4_L2.getDriveReduction() *
-         SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
-         */
+        private final double MAX_VOLTAGE = 12;// 12
+
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
                         SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
                         SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
 
-        // Here we calculate the theoretical maximum angular velocity. You can also
-        // replace this with a measured amount.
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
                         Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                                         DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
@@ -84,6 +76,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                         -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+
+        // private CANSparkMax[] motorController = {
+        // m_frontLeftDriveMotor,
+        // m_frontRightDriveMotor,
+        // m_backRightDriveMotor,
+        // m_backLeftDriveMotor
+        // };
 
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -126,30 +125,36 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_OFFSET);
                 zeroGyroscope();
 
-                odometry = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(),
-                        new SwerveModulePosition[]{
-                        });
+                // modulePosition[0] = getPosition(0);
+                // modulePosition[1] = getPosition(1);
+                // modulePosition[2] = getPosition(2);
+                // modulePosition[3] = getPosition(3);
 
+                odometry = new SwerveDriveOdometry(m_kinematics,
+                                Rotation2d.fromDegrees(m_navx.getFusedHeading()), modulePosition);
         }
+
+        // public SwerveModulePosition getPosition(int moduleNumber) {
+        // return new SwerveModulePosition(
+        // (motorController[moduleNumber].getEncoder().getPosition() *
+        // (DrivetrainConstants.WHEEL_DIAMETER
+        // * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+        // getGyroscopeRotation());
+        // }
 
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
+        }
+
+        public void ResetPos(Pose2d pos) {
+                odometry.resetPosition(getGyroscopeRotation(), modulePosition, getPose());
         }
 
         public Rotation2d getGyroscopeRotation() {
                 return m_navx.getRotation2d();
         }
 
-        public void ResetPos(Pose2d pos) {
-                odometry.resetPosition(getGyroscopeRotation(),new SwerveModulePosition[]{
-                        new SwerveModulePosition(drivePos[0], new Rotation2d(m_frontLeftModule.getSteerAngle())),
-                        new SwerveModulePosition(drivePos[1], new Rotation2d(m_frontRightModule.getSteerAngle())),
-                        new SwerveModulePosition(drivePos[2], new Rotation2d(m_backLeftModule.getSteerAngle())),
-                        new SwerveModulePosition(drivePos[3], new Rotation2d(m_backRightModule.getSteerAngle()))
-                } , pos);
-        }
-
-        public Pose2d getPos() {
+        public Pose2d getPose() {
                 return odometry.getPoseMeters();
         }
 
@@ -167,55 +172,50 @@ public class DrivetrainSubsystem extends SubsystemBase {
         public void periodic() {
 
                 setSpeeds(m_chassisSpeeds);
-
-                double updateSpeed = TimedRobot.kDefaultPeriod;
-
-                drivePos[0] = drivePos[0] + (m_frontLeftModule.getDriveVelocity() * updateSpeed);
-                drivePos[1] = drivePos[1] + (m_frontLeftModule.getDriveVelocity() * updateSpeed);
-                drivePos[2] = drivePos[2] + (m_frontLeftModule.getDriveVelocity() * updateSpeed);
-                drivePos[3] = drivePos[3] + (m_frontLeftModule.getDriveVelocity() * updateSpeed);
-
-                updatePos();
         }
 
-        private void updatePos() {
-                odometry.update(getGyroscopeRotation(), new SwerveModulePosition[]{
-                        new SwerveModulePosition(drivePos[0], new Rotation2d(m_frontLeftModule.getSteerAngle())),
-                        new SwerveModulePosition(drivePos[1], new Rotation2d(m_frontRightModule.getSteerAngle())),
-                        new SwerveModulePosition(drivePos[2], new Rotation2d(m_backLeftModule.getSteerAngle())),
-                        new SwerveModulePosition(drivePos[3], new Rotation2d(m_backRightModule.getSteerAngle()))
-
-                });
+        private void updatePose() {
+                odometry.update(getGyroscopeRotation(), modulePosition);
         }
 
         private void setStates(SwerveModuleState[] state) {
+                updatePose();
                 m_frontLeftModule.set(
-                        (state[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
-                        state[0].angle.getRadians());
+                                (state[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE)
+                                                * AutoConstants.MAX_SPEED,
+                                state[0].angle.getRadians());
                 m_frontRightModule.set(
-                        (state[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
-                        state[1].angle.getRadians());
+                                (state[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE)
+                                                * AutoConstants.MAX_SPEED,
+                                state[1].angle.getRadians());
                 m_backLeftModule.set(
-                        (state[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
-                        state[2].angle.getRadians());
+                                (state[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE)
+                                                * AutoConstants.MAX_SPEED,
+                                state[2].angle.getRadians());
                 m_backRightModule.set(
-                        (state[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE) * AutoConstants.MAX_SPEED,
-                        state[3].angle.getRadians());
+                                (state[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE)
+                                                * AutoConstants.MAX_SPEED,
+                                state[3].angle.getRadians());
+                                
+                modulePosition[0] = new SwerveModulePosition();
+                modulePosition[1] = new SwerveModulePosition();
+                modulePosition[2] = new SwerveModulePosition();
+                modulePosition[3] = new SwerveModulePosition();
         }
 
-        public Command getAuto() {
-                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("ForwardWithRot",
+        public Command auto() {
+
+                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Forward",
                                 new PathConstraints(4, 3));
 
                 HashMap<String, Command> eventMap = new HashMap<>();
-                // eventMap.put("HalfwayPoint", new PrintCommand("Halfway through"));
                 SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-                                this::getPos, // Pose2d supplier
+                                this::getPose, // Pose2d supplier
                                 this::ResetPos, // Pose2d consumer, used to reset odometry at the beginning of auto
                                 this.m_kinematics, // SwerveDriveKinematics
-                                new PIDConstants(1.3, 0, 0), // PID constants to correct for translation error (used
+                                new PIDConstants(0.4, 0.0, 0.0), // PID constants to correct for translation error (used
                                                                  // to create the X and Y PID controllers)
-                                new PIDConstants(.06, 0.0, 0.0), // PID constants to correct for rotation error (used to
+                                new PIDConstants(0.0, 0.0, 0.0), // PID constants to correct for rotation error (used to
                                                                  // create the rotation controller)
                                 this::setStates, // Module states consumer used to output to the drive subsystem
                                 eventMap,
