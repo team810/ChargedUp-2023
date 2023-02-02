@@ -9,7 +9,9 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
+import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,7 +22,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -28,27 +29,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
-import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
-import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
-import com.swervedrivespecialties.swervelib.SwerveModule;
 
 public class DrivetrainSubsystem extends SubsystemBase {
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;
         private final SwerveModule m_backLeftModule;
         private final SwerveModule m_backRightModule;
-
-        // private final CANSparkMax m_frontLeftDriveMotor = new CANSparkMax(
-        //                 DrivetrainConstants.FRONT_LEFT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
-        // private final CANSparkMax m_frontRightDriveMotor = new CANSparkMax(
-        //                 DrivetrainConstants.FRONT_RIGHT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
-        // private final CANSparkMax m_backLeftDriveMotor = new CANSparkMax(
-        //                 DrivetrainConstants.BACK_LEFT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
-        // private final CANSparkMax m_backRightDriveMotor = new CANSparkMax(
-        //                 DrivetrainConstants.BACK_RIGHT_MODULE_DRIVE_MOTOR, MotorType.kBrushless);
-
         private SwerveDriveOdometry odometry;
         private SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
+        SwerveModule[] module = new SwerveModule[4];
         private final AHRS m_navx = new AHRS(Port.kMXP);
 
         private final double MAX_VOLTAGE = 12;// 12
@@ -76,13 +65,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                         -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
-        // private CANSparkMax[] motorController = {
-        // m_frontLeftDriveMotor,
-        // m_frontRightDriveMotor,
-        // m_backRightDriveMotor,
-        // m_backLeftDriveMotor
-        // };
 
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -125,22 +107,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_OFFSET);
                 zeroGyroscope();
 
-                // modulePosition[0] = getPosition(0);
-                // modulePosition[1] = getPosition(1);
-                // modulePosition[2] = getPosition(2);
-                // modulePosition[3] = getPosition(3);
+                module[0] = m_frontLeftModule;
+                module[1] = m_frontRightModule;
+                module[2] = m_backLeftModule;
+                module[3] = m_backRightModule;
 
                 odometry = new SwerveDriveOdometry(m_kinematics,
                                 Rotation2d.fromDegrees(m_navx.getFusedHeading()), modulePosition);
         }
 
-        // public SwerveModulePosition getPosition(int moduleNumber) {
-        // return new SwerveModulePosition(
-        // (motorController[moduleNumber].getEncoder().getPosition() *
-        // (DrivetrainConstants.WHEEL_DIAMETER
-        // * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
-        // getGyroscopeRotation());
-        // }
+        public SwerveModulePosition getPosition(int moduleNumber) {
+                return new SwerveModulePosition(
+                                (module[moduleNumber].getDriveEncoder().getPosition() *
+                                                (DrivetrainConstants.WHEEL_DIAMETER
+                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+                                getGyroscopeRotation());
+        }
 
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
@@ -168,6 +150,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
                 setStates(states);
         }
+
         @Override
         public void periodic() {
 
@@ -196,11 +179,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 (state[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE)
                                                 * AutoConstants.MAX_SPEED,
                                 state[3].angle.getRadians());
-                                
-                modulePosition[0] = new SwerveModulePosition();
-                modulePosition[1] = new SwerveModulePosition();
-                modulePosition[2] = new SwerveModulePosition();
-                modulePosition[3] = new SwerveModulePosition();
+
+                modulePosition[0] = getPosition(0);
+                modulePosition[1] = getPosition(1);
+                modulePosition[2] = getPosition(2);
+                modulePosition[3] = getPosition(3);
         }
 
         public Command auto() {
