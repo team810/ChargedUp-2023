@@ -19,6 +19,7 @@ public class Limelight extends SubsystemBase {
   public NetworkTableEntry camMode = CameraConstants.camMode;
   public NetworkTableEntry pipeline = CameraConstants.pipeline;
   public NetworkTableEntry stream = CameraConstants.stream;
+  public NetworkTableEntry tx = CameraConstants.tx;
   public NetworkTable table = CameraConstants.table;
 
   // Data returned by AprilTag tracking
@@ -36,6 +37,10 @@ public class Limelight extends SubsystemBase {
 
   public void shuffleUpdate() {
     result = m_camera.getLatestResult();
+  }
+
+  public double getTx() {
+    return tx.getDouble(-1);
   }
 
   public void setMode(int mode) {
