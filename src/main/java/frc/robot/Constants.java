@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -22,57 +25,59 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public final class Constants {
 
-    public static final class AutoConstants {
-        public static final double K_XController = 1;
-        public static final double K_YController = 1;
-        public static final double K_RController = 1;
-
-        public static final double MAX_SPEED = .15;
-    }
-
     public static final class DrivetrainConstants {
-        /**
-         * The left-to-right distance between the drivetrain wheels
-         * Should be measured from center to center.
-         */
-        // 25 inches converted to 0.635 meters
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635; // Measure and set trackwidth
-        /**
-         * The front-to-back distance between the drivetrain wheels.
-         *
-         * Should be measured from center to center.
-         */
-        // 25 inches converted to 0.635 meters
-        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635; // Measure and set wheelbase
 
+        // Mechanical Constants
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
+        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
+        public static final double WHEEL_DIAMETER = 0.0968375;
+        public static final double GEAR_RATIO = 12.8;
+
+        // PORT #s and OFFSETS
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 16;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1); // Measure and set front
-                                                                                            // left steer offset
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3); // Measure and set front
-                                                                                             // right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 15;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(170.1); // Measure and set back left
-                                                                                           // steer offset
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(170.1);
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8); // Measure and set back right
-                                                                                           // steer offset
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8);
 
-        // FeedForwardGains
-        public static final double ky = 0;
-        public static final double kv = 0;
-        public static final double ka = 0;
+        public final static double MAX_VOLTAGE = 12;// 12
+
+        // Theoritcal speed cap XY
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
+                SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
+                SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+
+        // Theorital rot speed cap
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
+                Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
+
+        // Max speed is scary
+        public static final double SPEED_LIMIT = .4;
+
+        // Constants for XY PID controller
+        public static final double kP_X = .4;
+        public static final double kI_X = 0;
+        public static final double kD_X = 0;
+        // Constants for rotational PID controller
+        public static final double kP_R = 0;
+        public static final double kI_R = 0;
+        public static final double kD_R = 0;
+
     }
 
     public static final class CameraConstants {
@@ -87,10 +92,22 @@ public final class Constants {
         public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
         public static final NetworkTableEntry stream = table.getEntry("stream");
 
-        public static final double CAMERA_HEIGHT_METERS = .266; // FIXME camera height in meters
-        public static final double TEST_TARGET_HEIGHT_METERS = .381; // FIXME TEST APRIL TAG HEIGHT
-        public static final double LOWEST_COMP_TARGET_HEIGHT_METERS = .36; // lowest april tag height in comp
-        public static final double HIGHEST_COMP_TARGET_HEIGHT_METERS = .59; // highest april tag height in comp
-        public static final double CAMERA_PITCH_RADIANS = 0.0; // FIXME Camera tilt in radians
+        // FIXME camera height in meters
+        public static final double CAMERA_HEIGHT_METERS = .266;
+
+        public static final double LOWEST_TARGET_HEIGHT = .36;
+        public static final double HIGHEST_TARGET_HEIGHT = .59;
+
+        // FIXME camera angle in radians
+        public static final double CAMERA_ANGLE = 0;
+
+        public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
+    }
+
+    public static final class OIConstants {
+        public static final Joystick LEFT = new Joystick(0);
+        public static final Joystick RIGHT = new Joystick(1);
+
+        public static final Joystick GAMEPAD = new Joystick(2);
     }
 }
