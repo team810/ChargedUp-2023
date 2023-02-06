@@ -17,9 +17,9 @@ public class RobotContainer {
     // Set up the default command for the drivetrain.
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
-        () -> modifyAxis(OIConstants.RIGHT.getY() * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> modifyAxis(OIConstants.RIGHT.getX() * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> modifyAxis(OIConstants.LEFT.getZ() * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+        () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(1) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+        () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(0) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+        () -> modifyAxis(OIConstants.GAMEPAD.getRawAxis(5) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -35,7 +35,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Zero gyroscope
-    new JoystickButton(OIConstants.RIGHT, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
   }
 
   /**
@@ -58,14 +58,14 @@ public class RobotContainer {
 
   private static double modifyAxis(double value) {
     // Deadband
-    value = deadband(value, .2);
-    // Square the axis, smoother driving
+    value = deadband(value, .1);
+    // Cubed the axis, smoother driving
     value = Math.pow(value, 3);
 
-    return value;
+    return value * DrivetrainConstants.SPEED_LIMIT;
   }
 
   public Command getAutonomousCommand() {
-    return m_drivetrainSubsystem.genAutoCommand("Forward");
+    return null;
   }
 }

@@ -1,14 +1,8 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
@@ -144,7 +138,10 @@ public class Drivetrain extends SubsystemBase {
         }
 
         public Pose2d getPose() {
-                return odometry.getPoseMeters();
+
+                Pose2d tmp = odometry.getPoseMeters();
+
+                return tmp;
         }
 
         // Literal Speeds
@@ -157,7 +154,7 @@ public class Drivetrain extends SubsystemBase {
         }
 
         // Virtual Speeds
-        private void setStates(SwerveModuleState[] state) {
+        public void setStates(SwerveModuleState[] state) {
                 updatePose();
                 m_frontLeftModule.set(
                                 (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
@@ -186,34 +183,22 @@ public class Drivetrain extends SubsystemBase {
                 modulePosition[3] = getPosition(3);
         }
 
-        public void drive(ChassisSpeeds chassisSpeeds) {
-                m_chassisSpeeds = chassisSpeeds;
+        public SwerveDriveKinematics getKinematics() {
+                return this.m_kinematics;
         }
 
-        public Command genAutoCommand(String pathName) {
-                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName,
-                                new PathConstraints(4, 3));
-
-                HashMap<String, Command> eventMap = new HashMap<>();
-
-                SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-                                this::getPose,
-                                this::ResetPose,
-                                this.m_kinematics,
-                                // FIXME TEST XY PID CONTROLLER
-                                new PIDConstants(0.4, 0.0, 0.0),
-                                // FIXME TEST ROT PID CONTROLLER
-                                new PIDConstants(0.0, 0.0, 0.0),
-                                this::setStates,
-                                eventMap,
-                                this);
-
-                return autoBuilder.fullAuto(pathGroup);
+        public void drive(ChassisSpeeds chassisSpeeds) {
+                m_chassisSpeeds = chassisSpeeds;
         }
 
         @Override
         public void periodic() {
 
                 setSpeeds(m_chassisSpeeds);
+        }
+
+        public Command forward() {
+                return DrivetrainConstants.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("Forward",
+                                new PathConstraints(4, 3)));
         }
 }

@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -27,6 +33,8 @@ public final class Constants {
 
     public static final class DrivetrainConstants {
 
+        private static final Drivetrain m_drivetrain = new Drivetrain();
+
         // Mechanical Constants
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
@@ -34,25 +42,25 @@ public final class Constants {
         public static final double GEAR_RATIO = 12.8;
 
         // PORT #s and OFFSETS
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2;
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1;
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 16;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(261.1);
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 6;
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 14;
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(268.77);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(239.3);
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(238.54);
 
-        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4;
-        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
-        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 15;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(170.1);
+        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 2;
+        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 1;
+        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 16;
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(168.22);
 
-        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6;
-        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5;
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(87.8);
+        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 4;
+        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 3;
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 15;
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(79.81);
 
         public final static double MAX_VOLTAGE = 12;// 12
 
@@ -67,7 +75,7 @@ public final class Constants {
                         DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
         // Max speed is scary
-        public static final double SPEED_LIMIT = .4;
+        public static final double SPEED_LIMIT = .3;
 
         // Constants for XY PID controller
         public static final double kP_X = .4;
@@ -78,6 +86,22 @@ public final class Constants {
         public static final double kI_R = 0;
         public static final double kD_R = 0;
 
+        // Auto
+        public static final HashMap<String, Command> eventMap = new HashMap<>();
+
+        public static final PIDConstants XY_CONTROLLER = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
+        public static final PIDConstants THEATA_CONTROLLER = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
+
+        public static final SwerveAutoBuilder m_AUTO_BUILDER = new SwerveAutoBuilder(
+                m_drivetrain::getPose,
+                m_drivetrain::ResetPose,
+                m_drivetrain.getKinematics(),
+                XY_CONTROLLER,
+                THEATA_CONTROLLER,
+                m_drivetrain::setStates,
+                eventMap,
+                true,
+                m_drivetrain);
     }
 
     public static final class CameraConstants {
