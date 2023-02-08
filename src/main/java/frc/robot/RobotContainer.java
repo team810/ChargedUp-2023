@@ -19,7 +19,8 @@ public class RobotContainer {
         m_drivetrainSubsystem,
         () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(1) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
         () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(0) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> modifyAxis(OIConstants.GAMEPAD.getRawAxis(5) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+        () -> modifyAxis(
+            OIConstants.GAMEPAD.getRawAxis(5) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -66,6 +67,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return m_drivetrainSubsystem.forward();
+    // return null;
   }
 }

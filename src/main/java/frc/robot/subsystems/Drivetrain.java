@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
@@ -23,16 +26,38 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
+        // 4 modules on the drivetrain
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;
         private final SwerveModule m_backLeftModule;
         private final SwerveModule m_backRightModule;
-        private SwerveDriveOdometry odometry;
-        private SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
-        SwerveModule[] module = new SwerveModule[4];
+
+        // Contains the current distances and angles of each module
+        private SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
+                        new SwerveModulePosition(), new SwerveModulePosition() };
+
+        // Just an array to reference each module
+        private SwerveModule[] modules = new SwerveModule[4];
+
+        // Gyroscope
         private final AHRS m_navx = new AHRS(Port.kMXP);
 
-        // Creates our swerve kinematics using the robots track width and wheel base
+        // Auto Variables
+        private final SwerveAutoBuilder m_AUTO_BUILDER = new SwerveAutoBuilder(
+                        this::getPose,
+                        this::resetPose,
+                        this.m_kinematics,
+                        DrivetrainConstants.XY_CONTROLLER,
+                        DrivetrainConstants.THEATA_CONTROLLER,
+                        this::setStates,
+                        this.eventMap,
+                        true,
+                        this);
+
+        // This contains the methods we run during auto
+        private final HashMap<String, Command> eventMap = new HashMap<>();
+
+        // Kinematics is the position of the modules on the chasis
         private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
                         // Front left
                         new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
@@ -46,7 +71,10 @@ public class Drivetrain extends SubsystemBase {
                         // Back right
                         new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                                         -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
+        // Used to keep a virtual position of the robot
+        private SwerveDriveOdometry odometry;
 
+        // Contains our speeds
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
         public Drivetrain() {
@@ -89,62 +117,41 @@ public class Drivetrain extends SubsystemBase {
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_ENCODER,
                                 DrivetrainConstants.BACK_RIGHT_MODULE_STEER_OFFSET);
 
-                // Adding modules to array so we can get positions easier
-                module[0] = m_frontLeftModule;
-                module[1] = m_frontRightModule;
-                module[2] = m_backLeftModule;
-                module[3] = m_backRightModule;
+                // Adding modules to the array
+                modules[0] = m_frontLeftModule;
+                modules[1] = m_frontRightModule;
+                modules[2] = m_backLeftModule;
+                modules[3] = m_backRightModule;
 
+                // setting current gyro reading to 0 (accounts for uneven floor)
                 zeroGyroscope();
-                zeroPositions();
 
+                // Odometry is instantiated intitally with our module positions on the chasis,
+                // Rotation (should be 0)
+                // and the current positions, each should be 0 still here
                 odometry = new SwerveDriveOdometry(m_kinematics,
-                                Rotation2d.fromDegrees(m_navx.getFusedHeading()), modulePosition);
+                                m_navx.getRotation2d(), modulePositions);
         }
 
-        // Positions
-        // Get distance the bot has traveled in meters relative to the starting position
-        public SwerveModulePosition getPosition(int moduleNumber) {
-                return new SwerveModulePosition(
-                                (module[moduleNumber].getDriveEncoder().getPosition() *
-                                                (DrivetrainConstants.WHEEL_DIAMETER
-                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
-                                getGyroscopeRotation());
-        }
-
-        public void zeroPositions() {
-                modulePosition[0] = new SwerveModulePosition();
-                modulePosition[1] = new SwerveModulePosition();
-                modulePosition[2] = new SwerveModulePosition();
-                modulePosition[3] = new SwerveModulePosition();
-        }
-
-        // Gyroscope
+        // Resetting
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
         }
 
+        public void resetPose(Pose2d pose) {
+                odometry.resetPosition(getGyroscopeRotation(), modulePositions, pose);
+        }
+
+        // Gets
         public Rotation2d getGyroscopeRotation() {
                 return m_navx.getRotation2d();
         }
 
-        // Pose
-        public void ResetPose(Pose2d pos) {
-                odometry.resetPosition(getGyroscopeRotation(), modulePosition, getPose());
-        }
-
-        private void updatePose() {
-                odometry.update(getGyroscopeRotation(), modulePosition);
-        }
-
         public Pose2d getPose() {
-
-                Pose2d tmp = odometry.getPoseMeters();
-
-                return tmp;
+                return odometry.getPoseMeters();
         }
 
-        // Literal Speeds
+        // We set the speeds we want from joystick values
         private void setSpeeds(ChassisSpeeds chassisSpeeds) {
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
@@ -153,9 +160,10 @@ public class Drivetrain extends SubsystemBase {
                 setStates(states);
         }
 
-        // Virtual Speeds
+        // Setting each module to be that speed
         public void setStates(SwerveModuleState[] state) {
-                updatePose();
+                odometry.update(getGyroscopeRotation(), modulePositions);
+
                 m_frontLeftModule.set(
                                 (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
                                                 * DrivetrainConstants.MAX_VOLTAGE)
@@ -176,29 +184,41 @@ public class Drivetrain extends SubsystemBase {
                                                 * DrivetrainConstants.MAX_VOLTAGE)
                                                 * DrivetrainConstants.SPEED_LIMIT,
                                 state[3].angle.getRadians());
-
-                modulePosition[0] = getPosition(0);
-                modulePosition[1] = getPosition(1);
-                modulePosition[2] = getPosition(2);
-                modulePosition[3] = getPosition(3);
         }
 
-        public SwerveDriveKinematics getKinematics() {
-                return this.m_kinematics;
+        // Positions
+        public SwerveModulePosition getPosition(int moduleNumber) {
+                // relative to starting position
+                return new SwerveModulePosition(
+                                (modules[moduleNumber].getDriveEncoder().getPosition() *
+                                                (DrivetrainConstants.WHEEL_DIAMETER
+                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+                                m_navx.getRotation2d());
         }
 
+        private void updatePositions() {
+                modulePositions[0] = getPosition(0);
+                modulePositions[1] = getPosition(1);
+                modulePositions[2] = getPosition(2);
+                modulePositions[3] = getPosition(3);
+        }
+
+        // needed for the drive command
         public void drive(ChassisSpeeds chassisSpeeds) {
                 m_chassisSpeeds = chassisSpeeds;
         }
 
-        @Override
-        public void periodic() {
-
-                setSpeeds(m_chassisSpeeds);
+        // Auto Commands
+        public Command forward() {
+                return this.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("Forward",
+                                new PathConstraints(4, 3)));
         }
 
-        public Command forward() {
-                return DrivetrainConstants.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("Forward",
-                                new PathConstraints(4, 3)));
+        @Override
+        public void periodic() {
+                // setting the speeds of each module
+                setSpeeds(this.m_chassisSpeeds);
+                // updating the positions of each module
+                updatePositions();
         }
 }
