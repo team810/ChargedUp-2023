@@ -4,13 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
@@ -18,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -33,9 +25,13 @@ import edu.wpi.first.wpilibj2.command.Command;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final class OIConstants {
+        public static final Joystick LEFT = new Joystick(0);
+        public static final Joystick RIGHT = new Joystick(1);
 
+        public static final Joystick GAMEPAD = new Joystick(2);
+    }
     public static final class DrivetrainConstants {
-
         // Mechanical Constants
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
@@ -88,43 +84,49 @@ public final class Constants {
         public static final double kD_R = 0;
 
         // Auto
-
-
-        public static final PIDConstants XY_CONTROLLER = new PIDConstants(.5, 0, 0); // FIXME PID CONSTANTS
+        public static final PIDConstants XY_CONTROLLER = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
         public static final PIDConstants THEATA_CONTROLLER = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
-        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.5,3);
     }
 
     public static final class CameraConstants {
         public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision")
                 .getSubTable("photonvision");
 
-        public static final NetworkTableEntry tx = table.getEntry("tx");
-        public static final NetworkTableEntry ty = table.getEntry("ty");
-        public static final NetworkTableEntry ta = table.getEntry("ta");
-        public static final NetworkTableEntry tv = table.getEntry("tv");
+        public static final NetworkTableEntry targetPixelsX = table.getEntry("targetPixelsX");
+        public static final NetworkTableEntry targetPixelsY = table.getEntry("targetPixelsY");
+        public static final NetworkTableEntry targetYaw = table.getEntry("targetYaw");
+
         public static final NetworkTableEntry camMode = table.getEntry("driverMode");
         public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
         public static final NetworkTableEntry stream = table.getEntry("stream");
 
-        // FIXME camera height in meters
+        // FIXME camera height in meters on the bot
         public static final double CAMERA_HEIGHT_METERS = .266;
 
         public static final double LOWEST_TARGET_HEIGHT = .36;
         public static final double HIGHEST_TARGET_HEIGHT = .59;
 
-        // FIXME camera angle in radians
+        // FIXME camera angle in degrees on the bot
         public static final double CAMERA_ANGLE = 0;
 
         public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
-
-
     }
 
-    public static final class OIConstants {
-        public static final Joystick LEFT = new Joystick(0);
-        public static final Joystick RIGHT = new Joystick(1);
+    //FIXME subsytem new CAN IDs
+    public static final class ArmConstants{
+        public static final int EXTENDING_MOTOR = 0;
+        public static final int RAISING_MOTOR = 0;
+    }
+    public static final class ConveyorConstants{
+        public static final int CONVEYOR_MOTOR = 0;
+    }
+    public static final class GripperConstants{
+        public static final int GRIPPER_MOTOR = 0;
+    }
+    public static final class IntakeConstants{
 
-        public static final Joystick GAMEPAD = new Joystick(2);
+        public static final int LEFT_INTAKE_MOTOR = 0;
+        public static final int RIGHT_INTAKE_MOTOR = 0;
+
     }
 }

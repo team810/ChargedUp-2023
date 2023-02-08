@@ -6,53 +6,50 @@ package frc.robot.subsystems;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
 
 public class Limelight extends SubsystemBase {
   // Entries on camera server
-  public NetworkTableEntry camMode = CameraConstants.camMode;
-  public NetworkTableEntry pipeline = CameraConstants.pipeline;
-  public NetworkTableEntry stream = CameraConstants.stream;
-  public NetworkTableEntry tx = CameraConstants.tx;
-  public NetworkTable table = CameraConstants.table;
-
-  // Data returned by AprilTag tracking
-  private PhotonPipelineResult result;
+  private final NetworkTableEntry pipeline = CameraConstants.pipeline;
+  private final NetworkTableEntry targetPixelsX = CameraConstants.targetPixelsX;
   private final HttpCamera feed;
-
   private final PhotonCamera m_camera;
+
+  private PhotonPipelineResult result;
 
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
     CameraServer.startAutomaticCapture(feed);
 
     m_camera = new PhotonCamera("photonvision");
+
+    pipeline.setInteger(0);
+
+    shuffleInit();
   }
 
-  public void shuffleUpdate() {
-    result = m_camera.getLatestResult();
+  public double getTargetPixelsX() {
+    return this.targetPixelsX.getDouble(-1);
   }
 
-  public double getTx() {
-    return tx.getDouble(-1);
+  public PhotonTrackedTarget getBestTarget() {
+    return m_camera.getLatestResult().getBestTarget();
   }
 
   public void setMode(int mode) {
     switch (mode) {
       case 0:
-        // AprilTag long range
+        // AprilTag long range 0, short 2
         pipeline.setInteger(0);
-
-        if (result.hasTargets()) {
-          pipeline.setInteger(2);
-        }
-
         break;
       case 1:
         // Reflective Tape
@@ -66,8 +63,20 @@ public class Limelight extends SubsystemBase {
     }
   }
 
+  public void shuffleInit() {
+    ShuffleboardTab tab = Shuffleboard.getTab("Limelight");
+
+    tab.getLayout("Limelight Values", BuiltInLayouts.kList)
+        .withSize(2, 4)
+        .withPosition(0, 0)
+        .addDouble("targetPixelsX", () -> this.targetPixelsX.getDouble(-1));
+
+    tab.getLayout("Limelight Values").addBoolean("Is Valid?", () -> result.hasTargets());
+    tab.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
+  }
+
   @Override
   public void periodic() {
-    shuffleUpdate();
+    result = m_camera.getLatestResult();
   }
 }
