@@ -112,6 +112,9 @@ public final class Constants {
     }
     public static final class GripperConstants{
         public static final int GRIPPER_MOTOR = 0;
+        public static final double ENCODER_VALUE_CONE = 0; // FIXME when we have the arm measure the encoder value where the griper has closed around a cone and cube
+        public static final double ENCODER_VALUE_CUBE = 0;
+        public static final double ENCODER_VALUE_OPEN = 0;
     }
     public static final class IntakeConstants{
 
