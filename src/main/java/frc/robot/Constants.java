@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -15,7 +19,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -32,8 +35,6 @@ import frc.robot.subsystems.Drivetrain;
 public final class Constants {
 
     public static final class DrivetrainConstants {
-
-        private static final Drivetrain m_drivetrain = new Drivetrain();
 
         // Mechanical Constants
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
@@ -87,21 +88,11 @@ public final class Constants {
         public static final double kD_R = 0;
 
         // Auto
-        public static final HashMap<String, Command> eventMap = new HashMap<>();
 
-        public static final PIDConstants XY_CONTROLLER = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
+
+        public static final PIDConstants XY_CONTROLLER = new PIDConstants(.5, 0, 0); // FIXME PID CONSTANTS
         public static final PIDConstants THEATA_CONTROLLER = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
-
-        public static final SwerveAutoBuilder m_AUTO_BUILDER = new SwerveAutoBuilder(
-                m_drivetrain::getPose,
-                m_drivetrain::ResetPose,
-                m_drivetrain.getKinematics(),
-                XY_CONTROLLER,
-                THEATA_CONTROLLER,
-                m_drivetrain::setStates,
-                eventMap,
-                true,
-                m_drivetrain);
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.5,3);
     }
 
     public static final class CameraConstants {
@@ -126,6 +117,8 @@ public final class Constants {
         public static final double CAMERA_ANGLE = 0;
 
         public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
+
+
     }
 
     public static final class OIConstants {
