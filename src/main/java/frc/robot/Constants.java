@@ -77,21 +77,10 @@ public final class Constants {
 
         public static final class Auto
         {
-            // Constants for XY PID controller
-            private static final double kP_X = .4;
-            private static final double kI_X = 0;
-            private static final double kD_X = 0;
-            // Constants for rotational PID controller
-            private static final double kP_R = 0;
-            private static final double kI_R = 0;
-            private static final double kD_R = 0;
-
-            // Auto
             public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
             public static final PIDConstants THEATA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
             public static final PIDController XY_CONTTROLLER = new PIDController(kP_X, kI_X, kD_X);
             public static final PIDController THEATA_CONTTROLLER = new PIDController(kP_R, kI_R, kD_R);
-
         }
     }
 
