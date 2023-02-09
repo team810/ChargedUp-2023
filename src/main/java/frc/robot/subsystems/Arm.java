@@ -14,12 +14,12 @@ import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
   private final CANSparkMax extendingMotor;
-  private final CANSparkMax raisingMotor;
+  private final CANSparkMax pivotMotor;
 
   /** Creates a new Arm. */
   public Arm() {
     extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
-    raisingMotor = new CANSparkMax(ArmConstants.RAISING_MOTOR, MotorType.kBrushless);
+    pivotMotor = new CANSparkMax(ArmConstants.RAISING_MOTOR, MotorType.kBrushless);
   }
 
   public void runExtender(double speed) {
@@ -27,14 +27,14 @@ public class Arm extends SubsystemBase {
   }
 
   public void runRaisingMotor(double speed) {
-    raisingMotor.set(speed);
+    pivotMotor.set(speed);
   }
 
   public void shuffleboardInit() {
     ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
 
     armTab.addNumber("Extending Motor Velocity", () -> extendingMotor.getEncoder().getVelocity());
-    armTab.addNumber("Raising Motor Velocity", () -> raisingMotor.getEncoder().getVelocity());
+    armTab.addNumber("Raising Motor Velocity", () -> pivotMotor.getEncoder().getVelocity());
   }
 
   @Override

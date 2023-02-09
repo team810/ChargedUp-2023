@@ -53,7 +53,7 @@ public class Drivetrain extends SubsystemBase {
                         DrivetrainConstants.THEATA_CONTROLLER,
                         this::setStates,
                         this.eventMap,
-                        true,
+                        false,
                         this);
 
         // This contains the methods we run during auto

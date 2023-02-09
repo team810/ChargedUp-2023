@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,8 +38,9 @@ public class Intake extends SubsystemBase {
 
   public void shuffleboardInit() {
     ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake");
+    intakeTab.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
 
-    intakeTab.addDouble("Intake Motor Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+    intakeTab.getLayout("Motor Values").addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
   }
 
   @Override

@@ -29,7 +29,7 @@ public final class Constants {
         public static final Joystick LEFT = new Joystick(0);
         public static final Joystick RIGHT = new Joystick(1);
 
-        public static final Joystick GAMEPAD = new Joystick(2);
+        public static final Joystick GAMEPAD = new Joystick(0);
     }
     public static final class DrivetrainConstants {
         // Mechanical Constants
@@ -121,7 +121,9 @@ public final class Constants {
         public static final int CONVEYOR_MOTOR = 0;
     }
     public static final class GripperConstants{
-        public static final int GRIPPER_MOTOR = 0;
+        public static final int GRIPPER_MOTOR = 1;
+
+        public static final PIDConstants GRIPPER_PID_CONSTANTS = new PIDConstants(.1, 0, 0);
     }
     public static final class IntakeConstants{
 
