@@ -3,24 +3,27 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Gripper;
 
 public class RobotContainer {
-  private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
+  // private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
+  private final Gripper m_gripper = new Gripper();
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,
-        () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(1) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(0) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> modifyAxis(
-            OIConstants.GAMEPAD.getRawAxis(5) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    // m_drivetrainSubsystem,
+    // () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(1) *
+    // DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+    // () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(0) *
+    // DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+    // () -> modifyAxis(
+    // OIConstants.GAMEPAD.getRawAxis(5) *
+    // DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -36,7 +39,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Zero gyroscope
-    new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    // new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new
+    // InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+
+    // Grip Cone
+    new JoystickButton(OIConstants.GAMEPAD, 1)
+        .whileTrue((new StartEndCommand(() -> m_gripper.gripCone(), () -> m_gripper.rest(), m_gripper)));
+
+    // Grip Cube
+    new JoystickButton(OIConstants.GAMEPAD, 2)
+        .whileTrue(new StartEndCommand(() -> m_gripper.gripCube(), () -> m_gripper.rest(), m_gripper));
   }
 
   /**
@@ -67,7 +79,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_drivetrainSubsystem.forward();
-    // return null;
+    // return m_drivetrainSubsystem.forward();
+    return null;
   }
 }

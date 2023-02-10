@@ -7,17 +7,30 @@ package frc.robot;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
+ * globally (i.e. public static). Do not put anything functional in this class.
+ *
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
+ * constants are needed, to reduce verbosity.
+ */
 public final class Constants {
     public static final class OIConstants {
         public static final Joystick LEFT = new Joystick(0);
         public static final Joystick RIGHT = new Joystick(1);
 
-        public static final Joystick GAMEPAD = new Joystick(2);
+        public static final Joystick GAMEPAD = new Joystick(0);
     }
     public static final class DrivetrainConstants {
         // Mechanical Constants
@@ -62,18 +75,13 @@ public final class Constants {
         // Max speed is scary
         public static final double SPEED_LIMIT = .3;
 
-        // Constants for XY PID controller
-        public static final double kP_X = .4;
-        public static final double kI_X = 0;
-        public static final double kD_X = 0;
-        // Constants for rotational PID controller
-        public static final double kP_R = 0;
-        public static final double kI_R = 0;
-        public static final double kD_R = 0;
-
-        // Auto
-        public static final PIDConstants XY_CONTROLLER = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
-        public static final PIDConstants THEATA_CONTROLLER = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
+        public static final class Auto
+        {
+            public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
+            public static final PIDConstants THEATA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
+            public static final PIDController XY_CONTTROLLER = new PIDController(kP_X, kI_X, kD_X);
+            public static final PIDController THEATA_CONTTROLLER = new PIDController(kP_R, kI_R, kD_R);
+        }
     }
 
     public static final class CameraConstants {
@@ -104,17 +112,21 @@ public final class Constants {
     public static final class ArmConstants{
         public static final int EXTENDING_MOTOR = 0;
         public static final int RAISING_MOTOR = 0;
-        public static final int EXTENDER_MOTOR = 0;
         public static final int STRING_PLOT_CHANELLE = 0;
+
+        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0,0,0);
+        public static final PIDController PIVOT_CONTROLLER = new PIDController(0,0,0);
+
+        public static double[] EXTENDER_ENCODER_POINTS = {0,0,0};
+        public static double[] ARM_ENCODER_POINTS = {0,0,0};
     }
     public static final class ConveyorConstants{
         public static final int CONVEYOR_MOTOR = 0;
     }
     public static final class GripperConstants{
-        public static final int GRIPPER_MOTOR = 0;
-        public static final double ENCODER_VALUE_CONE = 0; // FIXME when we have the arm measure the encoder value where the griper has closed around a cone and cube
-        public static final double ENCODER_VALUE_CUBE = 0;
-        public static final double ENCODER_VALUE_OPEN = 0;
+        public static final int GRIPPER_MOTOR = 1;
+
+        public static final PIDConstants GRIPPER_PID_CONSTANTS = new PIDConstants(.1, 0, 0);
     }
     public static final class IntakeConstants{
 

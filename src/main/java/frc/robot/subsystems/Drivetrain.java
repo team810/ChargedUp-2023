@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
@@ -31,6 +32,7 @@ public class Drivetrain extends SubsystemBase {
         private final SwerveModule m_frontRightModule;
         private final SwerveModule m_backLeftModule;
         private final SwerveModule m_backRightModule;
+        private Field2d field2d = new Field2d();
 
         // Contains the current distances and angles of each module
         private SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
@@ -47,11 +49,11 @@ public class Drivetrain extends SubsystemBase {
                         this::getPose,
                         this::resetPose,
                         this.m_kinematics,
-                        DrivetrainConstants.XY_CONTROLLER,
-                        DrivetrainConstants.THEATA_CONTROLLER,
+                        DrivetrainConstants.Auto.XY_CONSTANTS,
+                        DrivetrainConstants.Auto.THEATA_CONSTANTS,
                         this::setStates,
                         this.eventMap,
-                        true,
+                        false,
                         this);
 
         // This contains the methods we run during auto
@@ -123,6 +125,8 @@ public class Drivetrain extends SubsystemBase {
                 modules[2] = m_backLeftModule;
                 modules[3] = m_backRightModule;
 
+                shuffleboardInit();
+
                 // setting current gyro reading to 0 (accounts for uneven floor)
                 zeroGyroscope();
 
@@ -193,7 +197,7 @@ public class Drivetrain extends SubsystemBase {
                                 (modules[moduleNumber].getDriveEncoder().getPosition() *
                                                 (DrivetrainConstants.WHEEL_DIAMETER
                                                                 * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
-                                m_navx.getRotation2d());
+                                new Rotation2d(modules[moduleNumber].getSteerAngle()));
         }
 
         private void updatePositions() {
@@ -210,8 +214,12 @@ public class Drivetrain extends SubsystemBase {
 
         // Auto Commands
         public Command forward() {
-                return this.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("Forward",
+                return this.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("ForwardWithRot",
                                 new PathConstraints(4, 3)));
+        }
+        public void shuffleboardInit() {
+                ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
+                drivetrain.add("Field", field2d);
         }
 
         @Override
