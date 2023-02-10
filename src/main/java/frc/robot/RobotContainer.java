@@ -3,16 +3,19 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 
 public class RobotContainer {
-  // private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
+  private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
   private final Gripper m_gripper = new Gripper();
-  // private final Conveyor m_conveyor = new Conveyor();
+  private final Conveyor m_conveyor = new Conveyor();
   // private final ColorSensor colorSensor = new ColorSensor();
 
   public RobotContainer() {
@@ -41,8 +44,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Zero gyroscope
-    // new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new
-    // InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new
+    InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
 
     // Grip Cone
     new JoystickButton(OIConstants.GAMEPAD, 1)
