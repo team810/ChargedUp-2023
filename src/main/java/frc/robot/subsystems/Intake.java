@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
@@ -16,11 +12,40 @@ import frc.robot.Constants.IntakeConstants;
 public class Intake extends SubsystemBase {
   private final CANSparkMax leftIntakeMotor;
   private final CANSparkMax rightIntakeMotor;
+  private final String[] states_names = {"Stopped, Running, Running Reversed"};
+  public int state;
 
-  /** Creates a new Intake. */
   public Intake() {
     leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
     rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
+
+    setState(IntakeConstants.STOP_INTAKE);
+
+    shuffleboardInit();
+  }
+
+  public void setState(int state)
+  {
+    this.state = state;
+    switch (state)
+    {
+      case 0:
+        stopIntake();
+        break;
+      case 1:
+        runIntake(IntakeConstants.INTAKE_SPEED);
+        break;
+      case 2:
+        reverseIntake(IntakeConstants.INTAKE_SPEED);
+        break;
+    }
+
+  }
+
+  public void stopIntake()
+  {
+    leftIntakeMotor.set(0);
+    rightIntakeMotor.set(0);
   }
 
   public void runIntake(double speed) {
@@ -39,8 +64,8 @@ public class Intake extends SubsystemBase {
   public void shuffleboardInit() {
     ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake");
     intakeTab.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
-
     intakeTab.getLayout("Motor Values").addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+    intakeTab.addString("Current State", () -> states_names[state]);
   }
 
   @Override
