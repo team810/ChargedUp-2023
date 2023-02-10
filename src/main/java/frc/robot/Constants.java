@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -27,10 +28,8 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public final class Constants {
     public static final class OIConstants {
-        public static final Joystick LEFT = new Joystick(0);
-        public static final Joystick RIGHT = new Joystick(1);
-
-        public static final Joystick GAMEPAD = new Joystick(0);
+        public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
+//        public static final XboxController SECONDARY_GAMEPAD = new XboxController(1);
     }
     public static final class DrivetrainConstants {
         // Mechanical Constants
@@ -79,8 +78,8 @@ public final class Constants {
         {
             public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
             public static final PIDConstants THEATA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
-            public static final PIDController XY_CONTTROLLER = new PIDController(kP_X, kI_X, kD_X);
-            public static final PIDController THEATA_CONTTROLLER = new PIDController(kP_R, kI_R, kD_R);
+            public static final PIDController XY_CONTTROLLER = new PIDController(.4,0,0);
+            public static final PIDController THEATA_CONTTROLLER = new PIDController(0,0,0);
         }
     }
 
@@ -132,6 +131,12 @@ public final class Constants {
 
         public static final int LEFT_INTAKE_MOTOR = 0;
         public static final int RIGHT_INTAKE_MOTOR = 0;
+
+        public static final int RUN_INTAKE = 1;
+        public static final int STOP_INTAKE = 0;
+        public static final int RUN_INVERTED_INTAKE = 2;
+
+        public static final double INTAKE_SPEED = .5;
 
     }
 }
