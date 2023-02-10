@@ -12,9 +12,9 @@ import frc.robot.subsystems.Limelight;
 public class SquareToTargetCommand extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
-    private final PIDController xController = Constants.DrivetrainConstants.Auto.XY_CONTTROLLER;
-    private final PIDController yController = Constants.DrivetrainConstants.Auto.XY_CONTTROLLER;
-    private final PIDController thetaController = Constants.DrivetrainConstants.Auto.THEATA_CONTTROLLER;
+    private final PIDController xController = Constants.DrivetrainConstants.Auto.XY_CONTROLLER;
+    private final PIDController yController = Constants.DrivetrainConstants.Auto.XY_CONTROLLER;
+    private final PIDController thetaController = Constants.DrivetrainConstants.Auto.THETA_CONTROLLER;
     private Pose3d targetPos;
     private Transform3d toTarget;
     private Pose3d currentPos;

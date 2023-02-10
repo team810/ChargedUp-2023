@@ -7,7 +7,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Limelight;
 
-
 public class ScoreCommand extends CommandBase {
     private final Arm arm;
     private final ColorSensor colorSensor;
@@ -24,7 +23,7 @@ public class ScoreCommand extends CommandBase {
         this.gripper = gripper;
         this.limelight = limelight;
         this.turnToTarget = new TurnToTarget(drivetrain, limelight);
-        this.squareToTarget = new SquareToTargetCommand(drivetrain, limelight,0);
+        this.squareToTarget = new SquareToTargetCommand(drivetrain, limelight, 0);
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements(this.arm, this.colorSensor, this.drivetrain, this.gripper, this.limelight);
@@ -42,7 +41,8 @@ public class ScoreCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
+        // TODO: Make this return true when this Command no longer needs to run
+        // execute()
         return false;
     }
 

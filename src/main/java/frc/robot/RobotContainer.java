@@ -12,6 +12,8 @@ import frc.robot.subsystems.Gripper;
 public class RobotContainer {
   // private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
   private final Gripper m_gripper = new Gripper();
+  // private final Conveyor m_conveyor = new Conveyor();
+  // private final ColorSensor colorSensor = new ColorSensor();
 
   public RobotContainer() {
     // Set up the default command for the drivetrain.

@@ -77,10 +77,13 @@ public final class Constants {
 
         public static final class Auto
         {
+            //TeleOP
+            public static final PIDController XY_CONTROLLER = new PIDController(0, 0, 0);
+            public static final PIDController THETA_CONTROLLER = new PIDController(0, 0, 0);
+
+            //Auto
             public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
-            public static final PIDConstants THEATA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
-            public static final PIDController XY_CONTTROLLER = new PIDController(kP_X, kI_X, kD_X);
-            public static final PIDController THEATA_CONTTROLLER = new PIDController(kP_R, kI_R, kD_R);
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
         }
     }
 
@@ -112,7 +115,7 @@ public final class Constants {
     public static final class ArmConstants{
         public static final int EXTENDING_MOTOR = 0;
         public static final int RAISING_MOTOR = 0;
-        public static final int STRING_PLOT_CHANELLE = 0;
+        public static final int STRING_POT_CHANNEL = 0;
 
         public static final PIDController EXTENDER_CONTROLLER = new PIDController(0,0,0);
         public static final PIDController PIVOT_CONTROLLER = new PIDController(0,0,0);
@@ -121,17 +124,15 @@ public final class Constants {
         public static double[] ARM_ENCODER_POINTS = {0,0,0};
     }
     public static final class ConveyorConstants{
-        public static final int CONVEYOR_MOTOR = 0;
+        public static final int CONVEYOR_MOTOR = 1;
     }
     public static final class GripperConstants{
         public static final int GRIPPER_MOTOR = 1;
 
-        public static final PIDConstants GRIPPER_PID_CONSTANTS = new PIDConstants(.1, 0, 0);
+        public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }
     public static final class IntakeConstants{
-
         public static final int LEFT_INTAKE_MOTOR = 0;
         public static final int RIGHT_INTAKE_MOTOR = 0;
-
     }
 }

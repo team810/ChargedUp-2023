@@ -1,17 +1,11 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -22,11 +16,12 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Autos;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
+        Autos auto = new Autos(this);
         // 4 modules on the drivetrain
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;
@@ -44,35 +39,6 @@ public class Drivetrain extends SubsystemBase {
         // Gyroscope
         private final AHRS m_navx = new AHRS(Port.kMXP);
 
-        // Auto Variables
-        private final SwerveAutoBuilder m_AUTO_BUILDER = new SwerveAutoBuilder(
-                        this::getPose,
-                        this::resetPose,
-                        this.m_kinematics,
-                        DrivetrainConstants.Auto.XY_CONSTANTS,
-                        DrivetrainConstants.Auto.THEATA_CONSTANTS,
-                        this::setStates,
-                        this.eventMap,
-                        false,
-                        this);
-
-        // This contains the methods we run during auto
-        private final HashMap<String, Command> eventMap = new HashMap<>();
-
-        // Kinematics is the position of the modules on the chasis
-        private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-                        // Front left
-                        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                        // Front right
-                        new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                        -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                        // Back left
-                        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                        // Back right
-                        new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                        -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
         // Used to keep a virtual position of the robot
         private SwerveDriveOdometry odometry;
 
@@ -133,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
                 // Odometry is instantiated intitally with our module positions on the chasis,
                 // Rotation (should be 0)
                 // and the current positions, each should be 0 still here
-                odometry = new SwerveDriveOdometry(m_kinematics,
+                odometry = new SwerveDriveOdometry(auto.getKinematics(),
                                 m_navx.getRotation2d(), modulePositions);
         }
 
@@ -157,7 +123,7 @@ public class Drivetrain extends SubsystemBase {
 
         // We set the speeds we want from joystick values
         private void setSpeeds(ChassisSpeeds chassisSpeeds) {
-                SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+                SwerveModuleState[] states = auto.getKinematics().toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
                 // Update virtual states
@@ -212,11 +178,6 @@ public class Drivetrain extends SubsystemBase {
                 m_chassisSpeeds = chassisSpeeds;
         }
 
-        // Auto Commands
-        public Command forward() {
-                return this.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("ForwardWithRot",
-                                new PathConstraints(4, 3)));
-        }
         public void shuffleboardInit() {
                 ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
                 drivetrain.add("Field", field2d);
