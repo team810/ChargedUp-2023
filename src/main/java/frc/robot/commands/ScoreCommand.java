@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 import frc.robot.subsystems.*;
 
 
@@ -14,11 +13,12 @@ public class ScoreCommand extends CommandBase {
     private final Limelight limelight;
     private final Conveyor conveyor;
     private final TurnToTarget turnToTarget;
-    private final SquareToTargetCommand squareToTarget;
     private final ToArmCommand toArm;
     private boolean finished;
-    private final int target = 0;
-    public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight, Conveyor conveyor) {
+    private int[] target = {0,0};
+
+    // FIXME Lime light implementation
+    public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight, Conveyor conveyor, int target[]) {
         this.arm = arm;
         this.colorSensor = colorSensor;
         this.drivetrain = drivetrain;
@@ -27,10 +27,12 @@ public class ScoreCommand extends CommandBase {
         this.conveyor = conveyor;
 
         this.turnToTarget = new TurnToTarget(drivetrain, limelight);
-        this.squareToTarget = new SquareToTargetCommand(drivetrain, limelight,0);
+
         this.toArm = new ToArmCommand(arm,conveyor,gripper);
 
         this.finished = false;
+
+        this.target = target;
 
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
@@ -39,28 +41,23 @@ public class ScoreCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        squareToTarget.initialize();
         toArm.initialize();
     }
 
     @Override
     public void execute() {
+        while(!toArm.isFinished())
+        {
+            toArm.execute();
+        }
 
-        squareToTarget.execute();
-        while(!squareToTarget.isFinished()) {squareToTarget.execute();}
+        arm.setTarget(target);
 
-        toArm.execute();
-        while(!toArm.isFinished()) {toArm.execute();}
+        new WaitCommand(2);
 
-
-        arm.setArmTargetLength(Constants.ArmConstants.ARM_HIGHT_POINTS[target]);
-        arm.setArmHight(Constants.ArmConstants.EXTENDER_LENGTH_POINTS[target]);
-
-        new WaitCommand(1.5);
         gripper.rest();
 
-        arm.setArmTargetLength(Constants.ArmConstants.ARM_HIGHT_POINTS[0]);
-        arm.setArmHight(Constants.ArmConstants.EXTENDER_LENGTH_POINTS[0]);
+        arm.setTarget(new int[]{0, 0});
 
         finished = true;
     }

@@ -8,6 +8,9 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -96,9 +99,10 @@ public final class Constants {
 
         // FIXME camera height in meters on the bot
         public static final double CAMERA_HEIGHT_METERS = .266;
-
         public static final double LOWEST_TARGET_HEIGHT = .36;
         public static final double HIGHEST_TARGET_HEIGHT = .59;
+
+        public static final Transform3d ROBOT_TO_CAM = new Transform3d(new Translation3d(0,0,0),new Rotation3d());
 
         // FIXME camera angle in degrees on the bot
         public static final double CAMERA_ANGLE = 0;
@@ -106,17 +110,23 @@ public final class Constants {
         public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
     }
 
-    //FIXME subsytem new CAN IDs
+    //FIXME subsystem new CAN IDs
     public static final class ArmConstants{
         public static final int EXTENDING_MOTOR = 0;
         public static final int RAISING_MOTOR = 0;
         public static final int STRING_PLOT_CHANELLE = 0;
+        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0,0,0); // FIXME needs to be tuned
+        public static final PIDController PIVOT_CONTROLLER = new PIDController(0,0,0); // FIXME needs to be tuned
+        /*
+            you need to measure the string plot value for the extender to score for each of the possible positions
+            end you need to set the default value of the extender and the arm
+         */
+        public static final double EXTENDER_LENGTHS[] = {0,0,0,0}; // FIXME needs to be actual measurements look above for instruction
+        /*
+            for the pivot height you need to measure the value of the continues encoder as the arm gets to the height needed to place a cone at every position
+         */
+        public static final double PIVOT_HEIGHT[] = {0,0,0,0}; // FIXME needs to be actual measurements look above for instruction
 
-        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0,0,0);
-        public static final PIDController PIVOT_CONTROLLER = new PIDController(0,0,0);
-
-        public static double[] EXTENDER_LENGTH_POINTS = {0,0,0}; // FIXME
-        public static double[] ARM_HIGHT_POINTS = {0,0,0}; // FIXME
     }
     public static final class ConveyorConstants{
         public static final int CONVEYOR_MOTOR = 0;
