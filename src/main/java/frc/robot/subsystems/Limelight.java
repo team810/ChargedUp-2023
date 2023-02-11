@@ -31,7 +31,6 @@ public class Limelight extends SubsystemBase {
     CameraServer.startAutomaticCapture(feed);
 
     m_camera = new PhotonCamera("photonvision");
-
     pipeline.setInteger(0);
 
     shuffleInit();
@@ -42,6 +41,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public PhotonTrackedTarget getBestTarget() {
+
     return m_camera.getLatestResult().getBestTarget();
   }
 

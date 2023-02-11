@@ -1,33 +1,29 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-  private final CANSparkMax extendingMotor;
   private final PIDController extenderController;
+  private final CANSparkMax extendingMotor;
+  private AnalogInput potReading;
+  private double extenderTargetValue;
+
+
   private final PIDController pivotController;
   private final CANSparkMax pivotMotor;
-  private final RelativeEncoder pivotEncoder;
-  private AnalogInput potReading;
-  private double armTargetLength = 0;
-
-  private double targetPivotValue = 0;
-
-
+  private double pivotContinuesValue;
+  private double previousCountDif;
+  private double pivotTargetValue; // This is the target encoder value
 
   public Arm() {
     extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
@@ -36,45 +32,76 @@ public class Arm extends SubsystemBase {
     extenderController = ArmConstants.EXTENDER_CONTROLLER;
     pivotController = ArmConstants.PIVOT_CONTROLLER;
 
-    pivotEncoder = pivotMotor.getEncoder();
-
     potReading = new AnalogInput(Constants.ArmConstants.STRING_PLOT_CHANELLE);
+
+    pivotMotor.getEncoder().setPosition(0);
+
+    pivotContinuesValue = 0;
+    previousCountDif = pivotMotor.getEncoder().getPosition() - pivotContinuesValue;
+
+    pivotTargetValue = ArmConstants.PIVOT_HEIGHT[0];
+    extenderTargetValue = ArmConstants.EXTENDER_LENGTHS[0];
+
+    shuffleboardInit();
   }
+  public void shuffleboardInit() {
+    ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+
+    ShuffleboardLayout extenderLayout = armTab.getLayout("Extender");
+    ShuffleboardLayout pivotLayout = armTab.getLayout("Pivot");
+
+    extenderLayout.addDouble("String Pot Reading", () -> getPivotTargetValue());
+    extenderLayout.addDouble("Target Reading", () -> extenderTargetValue);
 
 
-  public void setArmTargetLength(double set)
-  {
-    armTargetLength = set;
+    pivotLayout.addDouble("Pivot Continues Reading", () ->pivotContinuesValue);
+    pivotLayout.addDouble("Raw Encoder Reading", () -> pivotMotor.getEncoder().getPosition());
+    pivotLayout.addDouble("Target Reading", () -> pivotTargetValue);
   }
-  public double getArmTargetLength()
+
+  public void setTarget(int target[])
   {
-    return armTargetLength;
+    setPivotTargetValue(ArmConstants.PIVOT_HEIGHT[target[0]]);
+    setExtenderTargetValue(ArmConstants.EXTENDER_LENGTHS[target[1]]);
   }
+
   private void updateExtender()
   {
-    pivotMotor.set(extenderController.calculate(getExtenderLength(),armTargetLength));
+    double speed = extenderController.calculate(getExtenderLength(), getExtenderTargetValue());
+    extendingMotor.set(speed);
   }
-  private void updatePivot()
+  public void updatePivot()
   {
-    pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), targetPivotValue));
+    double speed = pivotController.calculate(pivotContinuesValue,getPivotTargetValue());
+    pivotMotor.set(speed);
+  }
+
+  @Override
+  public void periodic() {
+    pivotContinuesValue = pivotContinuesValue + previousCountDif;
+
+    updatePivot();
+    updateExtender();
   }
 
   private double getExtenderLength()
   {
     return (potReading.getAverageValue() - 35) / 78;
   }
-  public void shuffleboardInit() {
-    ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
 
-    armTab.addNumber("Arm Length", () -> getExtenderLength());
-    armTab.addNumber("Arm Target Length", () -> armTargetLength);
-
-    armTab.addNumber("Arm Target Height", () -> targetPivotValue);
-    armTab.addNumber("Arm Current Height", () -> pivotEncoder.getPosition()); // This is going to be encoder value
-
+  public double getPivotTargetValue() {
+    return pivotTargetValue;
   }
 
-  @Override
-  public void periodic() {
+  public void setPivotTargetValue(double pivotTargetValue) {
+    this.pivotTargetValue = pivotTargetValue;
+  }
+
+  public double getExtenderTargetValue() {
+    return extenderTargetValue;
+  }
+
+  public void setExtenderTargetValue(double extenderTargetValue) {
+    this.extenderTargetValue = extenderTargetValue;
   }
 }
