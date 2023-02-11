@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -116,9 +115,8 @@ public final class Constants {
         public static final PIDController EXTENDER_CONTROLLER = new PIDController(0,0,0);
         public static final PIDController PIVOT_CONTROLLER = new PIDController(0,0,0);
 
-
-        public static double[] EXTENDER_ENCODER_POINTS = {0,0,0};
-        public static double[] ARM_ENCODER_POINTS = {0,0,0};
+        public static double[] EXTENDER_LENGTH_POINTS = {0,0,0}; // FIXME
+        public static double[] ARM_HIGHT_POINTS = {0,0,0}; // FIXME
     }
     public static final class ConveyorConstants{
         public static final int CONVEYOR_MOTOR = 0;

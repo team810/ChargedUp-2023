@@ -46,6 +46,11 @@ public class Arm extends SubsystemBase {
   {
     armTargetLength = set;
   }
+  public double getTargetPivotValue()
+  {
+    return targetPivotValue;
+  }
+  public void setArmHight(double set) {targetPivotValue = set;}
   public double getArmTargetLength()
   {
     return armTargetLength;
@@ -71,10 +76,11 @@ public class Arm extends SubsystemBase {
 
     armTab.addNumber("Arm Target Height", () -> targetPivotValue);
     armTab.addNumber("Arm Current Height", () -> pivotEncoder.getPosition()); // This is going to be encoder value
-
   }
 
   @Override
   public void periodic() {
+    updateExtender();
+    updatePivot();
   }
 }

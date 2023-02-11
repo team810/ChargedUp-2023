@@ -19,7 +19,8 @@ public class SquareToTargetCommand extends CommandBase {
     private Transform3d toTarget;
     private Pose3d currentPos;
     private final Transform3d distanceFromTarget = new Transform3d(new Translation3d(-.5,0,0),new Rotation3d());
-    double error_amount = .05;
+    private double error_amount = .05;
+    private int targetRow;
     public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, int object) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
@@ -27,6 +28,7 @@ public class SquareToTargetCommand extends CommandBase {
         currentPos = new Pose3d(drivetrain.getPose());
 
         toTarget = limelight.getBestTarget().getBestCameraToTarget();
+
 
         targetPos = currentPos;
         targetPos.transformBy(toTarget);
@@ -37,7 +39,13 @@ public class SquareToTargetCommand extends CommandBase {
 
 
 
+
         addRequirements(this.drivetrain, this.limelight);
+    }
+
+    public int getTargetRow()
+    {
+        return targetRow;
     }
 
     private Transform3d basedOnTargetTransform(int object) // FIXME needs to be adjusted based on cones and cubes
