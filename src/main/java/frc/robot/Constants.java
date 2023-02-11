@@ -8,9 +8,6 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -78,10 +75,13 @@ public final class Constants {
 
         public static final class Auto
         {
+            //TeleOP
+            public static final PIDController XY_CONTROLLER = new PIDController(0, 0, 0);
+            public static final PIDController THETA_CONTROLLER = new PIDController(0, 0, 0);
+
+            //Auto
             public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
-            public static final PIDConstants THEATA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
-            public static final PIDController XY_CONTTROLLER = new PIDController(.4,0,0);
-            public static final PIDController THEATA_CONTTROLLER = new PIDController(0,0,0);
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
         }
     }
 
@@ -99,6 +99,7 @@ public final class Constants {
 
         // FIXME camera height in meters on the bot
         public static final double CAMERA_HEIGHT_METERS = .266;
+
         public static final double LOWEST_TARGET_HEIGHT = .36;
         public static final double HIGHEST_TARGET_HEIGHT = .59;
 
@@ -110,7 +111,7 @@ public final class Constants {
         public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
     }
 
-    //FIXME subsystem new CAN IDs
+    //FIXME subsytem new CAN IDs
     public static final class ArmConstants{
         public static final int EXTENDING_MOTOR = 0;
         public static final int RAISING_MOTOR = 0;

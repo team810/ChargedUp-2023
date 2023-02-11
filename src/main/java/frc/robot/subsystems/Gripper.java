@@ -23,8 +23,7 @@ public class Gripper extends SubsystemBase {
   /** Creates a new Gripper. */
   public Gripper() {
     gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
-    gripperPIDController = new PIDController(GripperConstants.GRIPPER_PID_CONSTANTS.kP,
-        GripperConstants.GRIPPER_PID_CONSTANTS.kI, GripperConstants.GRIPPER_PID_CONSTANTS.kD);
+    gripperPIDController = GripperConstants.GRIPPER_CONTROLLER;
 
     this.setPoint = 0;
 
@@ -42,11 +41,11 @@ public class Gripper extends SubsystemBase {
   }
 
   public void gripCone() {
-    this.setPoint = 6;
+    this.setPoint = 12;
   }
 
   public void gripCube() {
-    this.setPoint = 3;
+    this.setPoint = 6;
   }
 
   public void rest() {
@@ -62,9 +61,6 @@ public class Gripper extends SubsystemBase {
     gripperTab.getLayout("Motor Values").addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
 
     gripperTab.getLayout("PID Values").addDouble("Setpoint", () -> this.setPoint);
-    gripperTab.getLayout("PID Values").addDouble("kP", ()->GripperConstants.GRIPPER_PID_CONSTANTS.kP);
-    gripperTab.getLayout("PID Values").addDouble("kI", ()->GripperConstants.GRIPPER_PID_CONSTANTS.kI);
-    gripperTab.getLayout("PID Values").addDouble("kD", ()->GripperConstants.GRIPPER_PID_CONSTANTS.kD);
   }
 
   @Override
