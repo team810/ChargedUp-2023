@@ -2,13 +2,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Gripper;
 
 public class RobotContainer {
   // private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
@@ -42,14 +46,13 @@ public class RobotContainer {
     // Zero gyroscope
     // new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new
     // InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
-
     // Grip Cone
-    new JoystickButton(OIConstants.GAMEPAD, 1)
-        .whileTrue((new StartEndCommand(() -> m_gripper.gripCone(), () -> m_gripper.rest(), m_gripper)));
-
-    // Grip Cube
-    new JoystickButton(OIConstants.GAMEPAD, 2)
-        .whileTrue(new StartEndCommand(() -> m_gripper.gripCube(), () -> m_gripper.rest(), m_gripper));
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
+            new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper)
+    );
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
+            new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper)
+    );
   }
 
   /**
@@ -80,6 +83,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_drivetrainSubsystem.forward();
+    return null;
   }
 }

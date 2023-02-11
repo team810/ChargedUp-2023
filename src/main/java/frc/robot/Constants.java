@@ -103,8 +103,6 @@ public final class Constants {
         public static final double LOWEST_TARGET_HEIGHT = .36;
         public static final double HIGHEST_TARGET_HEIGHT = .59;
 
-        public static final Transform3d ROBOT_TO_CAM = new Transform3d(new Translation3d(0,0,0),new Rotation3d());
-
         // FIXME camera angle in degrees on the bot
         public static final double CAMERA_ANGLE = 0;
 
@@ -135,7 +133,7 @@ public final class Constants {
     public static final class GripperConstants{
         public static final int GRIPPER_MOTOR = 1;
 
-        public static final PIDConstants GRIPPER_PID_CONSTANTS = new PIDConstants(.1, 0, 0);
+        public static final PIDController GRIPPER_PID_CONSTANTS = new PIDController(.1, 0, 0);
     }
     public static final class IntakeConstants{
 
