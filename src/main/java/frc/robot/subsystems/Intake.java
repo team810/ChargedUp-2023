@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase {
     leftPiston.toggle();
     rightPiston.toggle();
   }
-  
+
   public void shuffleboardInit() {
     ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake");
     intakeTab.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
