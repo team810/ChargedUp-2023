@@ -41,7 +41,12 @@ public class Limelight extends SubsystemBase {
     return this.targetPixelsX.getDouble(-1);
   }
 
-  public PhotonTrackedTarget getBestTarget() {
+  public PhotonTrackedTarget getBestTargetAT() {
+    return m_camera.getLatestResult().getBestTarget();
+  }
+
+  public PhotonTrackedTarget getBestTargetRT()
+  {
     return m_camera.getLatestResult().getBestTarget();
   }
 

@@ -19,7 +19,7 @@ public class AprilTTT extends PIDCommand {
         // PID Values
         new PIDController(.05, 0.001, 0.0035),
         // Measurement is the yaw that the limelight returns
-        () -> lime.getBestTarget().getYaw(),
+        () -> lime.getBestTargetAT().getYaw(),
         // Setpoint is always 0, as the delta x must be 0 for a line up
         () -> 0,
         // Output command

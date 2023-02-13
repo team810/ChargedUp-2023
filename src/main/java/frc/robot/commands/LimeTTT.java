@@ -4,25 +4,33 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 
-public class LimeTTT extends CommandBase {
-  /** Creates a new AprilTagTTT. */
-  public LimeTTT() {
-    // Use addRequirements() here to declare subsystem dependencies.
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class LimeTTT extends PIDCommand {
+  /** Creates a new TurnToTarget. */
+  public LimeTTT(Drivetrain m_drive, Limelight lime) {
+    super(
+        // PID Values
+        new PIDController(.05, 0.001, 0.0035),
+        // Measurement is the yaw that the limelight returns
+        () -> lime.getBestTargetRT().getYaw(),
+        // Setpoint is always 0, as the delta x must be 0 for a line up
+        () -> 0,
+        // Output command
+        output -> {
+          new DefaultDriveCommand(m_drive, () -> 0.0, () -> 0.0, () -> output);
+        });
+
+    addRequirements(m_drive);
+    // Set tolerance to +/- .2, as that is "good enough"
+    getController().setTolerance(.2);
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

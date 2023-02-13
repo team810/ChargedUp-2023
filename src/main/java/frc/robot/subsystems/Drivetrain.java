@@ -21,7 +21,7 @@ import frc.robot.Autos;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
-        Autos auto = new Autos(this);
+        private Autos auto = new Autos(this);
         // 4 modules on the drivetrain
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;

@@ -26,7 +26,7 @@ public class SquareToTargetCommand extends CommandBase {
 
         currentPos = new Pose3d(drivetrain.getPose());
 
-        toTarget = limelight.getBestTarget().getBestCameraToTarget();
+        toTarget = limelight.getBestTargetAT().getBestCameraToTarget();
 
         targetPos = currentPos;
         targetPos.transformBy(toTarget);
