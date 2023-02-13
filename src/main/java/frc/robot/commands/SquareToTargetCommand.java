@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 
-
 public class SquareToTargetCommand extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
@@ -18,15 +17,16 @@ public class SquareToTargetCommand extends CommandBase {
     private Pose3d targetPos;
     private Transform3d toTarget;
     private Pose3d currentPos;
-    private final Transform3d distanceFromTarget = new Transform3d(new Translation3d(-.5,0,0),new Rotation3d());
+    private final Transform3d distanceFromTarget = new Transform3d(new Translation3d(-.5, 0, 0), new Rotation3d());
     double error_amount = .05;
+
     public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, int object) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
 
         currentPos = new Pose3d(drivetrain.getPose());
 
-        toTarget = limelight.getBestTargetAT().getBestCameraToTarget();
+        toTarget = limelight.getBestTarget().getBestCameraToTarget();
 
         targetPos = currentPos;
         targetPos.transformBy(toTarget);
@@ -34,8 +34,6 @@ public class SquareToTargetCommand extends CommandBase {
         targetPos.transformBy(basedOnTargetTransform(object));
 
         targetPos.transformBy(distanceFromTarget);// makes it so the target pos is not on the actual target
-
-
 
         addRequirements(this.drivetrain, this.limelight);
     }
@@ -58,7 +56,8 @@ public class SquareToTargetCommand extends CommandBase {
 
         x_speed = xController.calculate(drivetrain.getPose().getX(), targetPos.getX());
         y_speed = yController.calculate(drivetrain.getPose().getY(), targetPos.getY());
-        z_speed = thetaController.calculate(drivetrain.getPose().getRotation().getRadians(), targetPos.getRotation().getAngle());
+        z_speed = thetaController.calculate(drivetrain.getPose().getRotation().getRadians(),
+                targetPos.getRotation().getAngle());
 
         speeds = new ChassisSpeeds(x_speed, y_speed, z_speed);
 

@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -89,6 +90,7 @@ public final class Constants {
     }
 
     public static final class CameraConstants {
+        // Network entries
         public static final NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision")
                 .getSubTable("photonvision");
 
@@ -114,15 +116,20 @@ public final class Constants {
 
     // FIXME subsytem new CAN IDs
     public static final class ArmConstants {
+        // ARM
+        public static final ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+
         // EXTENDER
         public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
-        public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList).withPosition(0, 0).withSize(2,
-                4);
+        public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList)
+                .withPosition(0, 0).withSize(2,
+                        4);
         public static final int EXTENDING_MOTOR = 0;
         public static final PIDController EXTENDER_CONTROLLER = new PIDController(0, 0, 0);
 
         // PIVOT
-        public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
+        public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
+                .withPosition(0, 0).withSize(2, 4);
 
         public static final int PIVOT_MOTOR = 0;
         public static final PIDController PIVOT_CONTROLLER = new PIDController(0, 0, 0);
@@ -132,17 +139,50 @@ public final class Constants {
     }
 
     public static final class ConveyorConstants {
+        // Shuffleboard
+        public static final ShuffleboardTab conveyorTab = Shuffleboard.getTab("Conveyor");
+        public static final ShuffleboardLayout CONVEYOR_LAYOUT = conveyorTab
+                .getLayout("Motor Values", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
+
+        // Motors
         public static final int CONVEYOR_MOTOR = 1;
     }
 
     public static final class GripperConstants {
+        // Shuffleboard
+        public static final ShuffleboardTab gripperTab = Shuffleboard.getTab("Gripper");
+        public static final ShuffleboardLayout GRIPPER_M_VALUES = gripperTab
+                .getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
+        public static final ShuffleboardLayout GRIPPER_PID = gripperTab.getLayout("PID Values", BuiltInLayouts.kList)
+                .withPosition(2, 0).withSize(2, 4);
+
+        // Ports
         public static final int GRIPPER_MOTOR = 1;
 
         public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }
 
     public static final class IntakeConstants {
+        // Shuffleboard
+        public static final ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake");
+        public static final ShuffleboardLayout INTAKE_VALUES = intakeTab.getLayout("Motor Values", BuiltInLayouts.kList)
+                .withPosition(0, 0).withSize(2, 4);
+
+        // Ports
         public static final int LEFT_INTAKE_MOTOR = 0;
         public static final int RIGHT_INTAKE_MOTOR = 0;
+    }
+
+    public static final class ColorSensorConstants {
+        // Shuffleboard
+        public static final ShuffleboardTab colorsensorTab = Shuffleboard.getTab("Color Sensor");
+
+        public static final ShuffleboardLayout COLOR_SENSOR = colorsensorTab
+                .getLayout("Color Sensor", BuiltInLayouts.kList)
+                .withSize(2, 4)
+                .withPosition(0, 0);
+
+        // Ports
+
     }
 }

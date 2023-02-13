@@ -10,8 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -20,6 +19,7 @@ public class Intake extends SubsystemBase {
 
   private final DoubleSolenoid leftPiston, rightPiston;
 
+  private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -40,17 +40,14 @@ public class Intake extends SubsystemBase {
     rightIntakeMotor.set(-speed);
   }
 
-  public void actuateIntake()
-  {
+  public void actuateIntake() {
     leftPiston.toggle();
     rightPiston.toggle();
   }
 
   public void shuffleboardInit() {
-    ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake");
-    intakeTab.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
-
-    intakeTab.getLayout("Motor Values").addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+    INTAKE_VALUES.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
+    INTAKE_VALUES.getLayout("Motor Values").addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
   }
 
   @Override

@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 
-
 public class ScoreCommand extends CommandBase {
     private final Arm arm;
     private final ColorSensor colorSensor;
@@ -15,7 +14,8 @@ public class ScoreCommand extends CommandBase {
     private boolean finished;
 
     // FIXME Lime light implementation
-    public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight, Conveyor conveyor, int target[]) {
+    public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
+            Conveyor conveyor, int target[]) {
         this.arm = arm;
         this.colorSensor = colorSensor;
         this.drivetrain = drivetrain;
@@ -23,11 +23,9 @@ public class ScoreCommand extends CommandBase {
         this.limelight = limelight;
         this.conveyor = conveyor;
 
-//        this.turnToTarget = new TurnToTarget(drivetrain, limelight);
-
+        // this.turnToTarget = new TurnToTarget(drivetrain, limelight);
 
         this.finished = false;
-
 
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
@@ -53,7 +51,8 @@ public class ScoreCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
+        // TODO: Make this return true when this Command no longer needs to run
+        // execute()
         return finished;
     }
 

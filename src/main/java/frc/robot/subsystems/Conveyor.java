@@ -7,9 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
 
@@ -17,11 +15,14 @@ public class Conveyor extends SubsystemBase {
   private final CANSparkMax conveyorMotor;
   private final ColorSensor colorSensor;
   private double speed;
+  private final ShuffleboardLayout CONVEYOR_TAB;
 
   /** Creates a new Conveyor. */
   public Conveyor() {
     conveyorMotor = new CANSparkMax(ConveyorConstants.CONVEYOR_MOTOR, MotorType.kBrushless);
     colorSensor = new ColorSensor();
+
+    CONVEYOR_TAB = ConveyorConstants.CONVEYOR_LAYOUT;
 
     shuffleboardInit();
   }
@@ -33,17 +34,14 @@ public class Conveyor extends SubsystemBase {
 
   // To move conveyor during scoring
   public void runConveyorWithColor() {
-      if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple"))
-        runConveyor(0);
-      else
-        runConveyor(.5);
+    if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple"))
+      runConveyor(0);
+    else
+      runConveyor(.5);
   }
 
   public void shuffleboardInit() {
-    ShuffleboardTab conveyorTab = Shuffleboard.getTab("Conveyor");
-    conveyorTab.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
-
-    conveyorTab.getLayout("Motor Values").addDouble("Velocity",
+    CONVEYOR_TAB.getLayout("Motor Values").addDouble("Velocity",
         () -> this.speed);
   }
 

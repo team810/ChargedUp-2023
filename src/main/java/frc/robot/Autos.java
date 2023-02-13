@@ -13,32 +13,33 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain;
 
-public class Autos extends CommandBase{
+public class Autos extends CommandBase {
     private Drivetrain m_drivetrain;
 
-    public Autos(Drivetrain drivetrain)
-    {
+    public Autos(Drivetrain drivetrain) {
         m_drivetrain = drivetrain;
         addRequirements(drivetrain);
     }
+
     // Kinematics is the position of the modules on the chasis
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-                    // Front left
-                    new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                    // Front right
-                    new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                    // Back left
-                    new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                    // Back right
-                    new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
-    public SwerveDriveKinematics getKinematics()
-    {
+            // Front left
+            new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            // Front right
+            new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            // Back left
+            new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+            // Back right
+            new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                    -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
+
+    public SwerveDriveKinematics getKinematics() {
         return m_kinematics;
     }
+
     // Auto Variables
     private final SwerveAutoBuilder m_AUTO_BUILDER = new SwerveAutoBuilder(
             m_drivetrain::getPose,

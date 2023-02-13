@@ -41,19 +41,14 @@ public class Limelight extends SubsystemBase {
     return this.targetPixelsX.getDouble(-1);
   }
 
-  public PhotonTrackedTarget getBestTargetAT() {
-    return m_camera.getLatestResult().getBestTarget();
-  }
-
-  public PhotonTrackedTarget getBestTargetRT()
-  {
+  public PhotonTrackedTarget getBestTarget() {
     return m_camera.getLatestResult().getBestTarget();
   }
 
   public void setMode(String pipeline) {
     switch (pipeline) {
       case "AprilTag":
-        //long range 0, short 2
+        // long range 0, short 2
         this.pipeline.setInteger(0);
         break;
       case "Reflective Tape":
