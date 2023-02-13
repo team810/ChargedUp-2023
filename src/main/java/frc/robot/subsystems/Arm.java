@@ -10,9 +10,7 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -23,10 +21,11 @@ public class Arm extends SubsystemBase {
   private final RelativeEncoder pivotEncoder;
   private AnalogInput potReading;
   private double extenderSetpoint, pivotSetpoint;
+  private final ShuffleboardLayout PIVOT, EXTENDER;
 
   public Arm() {
     extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
-    pivotMotor = new CANSparkMax(ArmConstants.RAISING_MOTOR, MotorType.kBrushless);
+    pivotMotor = new CANSparkMax(ArmConstants.PIVOT_MOTOR, MotorType.kBrushless);
 
     extenderController = ArmConstants.EXTENDER_CONTROLLER;
     pivotController = ArmConstants.PIVOT_CONTROLLER;
@@ -34,6 +33,9 @@ public class Arm extends SubsystemBase {
     pivotEncoder = pivotMotor.getEncoder();
 
     potReading = new AnalogInput(Constants.ArmConstants.STRING_POT_CHANNEL);
+
+    PIVOT = ArmConstants.PIVOT;
+    EXTENDER = ArmConstants.EXTENDER;
   }
 
   public void rest() {
@@ -41,29 +43,33 @@ public class Arm extends SubsystemBase {
     extenderSetpoint = 0;
   }
 
-  public void middleGoal() {
+  public void lowGoal()
+  {
     pivotSetpoint = 3;
     extenderSetpoint = 3;
   }
 
-  public void highGoal() {
+  public void middleGoal() {
     pivotSetpoint = 6;
     extenderSetpoint = 6;
   }
 
+  public void highGoal() {
+    pivotSetpoint = 12;
+    extenderSetpoint = 12;
+  }
+
   private double getExtenderLength() {
+    // 35 is the length pulled out by default cus of spacer, 78 ohms per inch
     return (potReading.getAverageValue() - 35) / 78;
   }
 
   public void shuffleboardInit() {
-    ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
-    armTab.getLayout("Arm Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
+    PIVOT.addNumber("Extender Distance", () -> getExtenderLength());
+    PIVOT.addNumber("Extender Setpoint", () -> extenderSetpoint);
 
-    armTab.getLayout("Arm Values").addNumber("Extender Distance", () -> getExtenderLength());
-    armTab.getLayout("Arm Values").addNumber("Extender Setpoint", () -> extenderSetpoint);
-
-    armTab.getLayout("Arm Values").addNumber("Arm Current Height", () -> pivotEncoder.getPosition());
-    armTab.getLayout("Arm Values").addNumber("Pivot Setpoint", () -> pivotSetpoint);
+    EXTENDER.addNumber("Arm Current Height", () -> pivotEncoder.getPosition());
+    EXTENDER.addNumber("Pivot Setpoint", () -> pivotSetpoint);
   }
 
   @Override

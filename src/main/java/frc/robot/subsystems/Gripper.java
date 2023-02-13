@@ -40,16 +40,16 @@ public class Gripper extends SubsystemBase {
     this.gripperMotor.set(speed);
   }
 
-  public void gripCone() {
-    this.setPoint = 12;
+  public void rest() {
+    this.setPoint = 0;
   }
 
   public void gripCube() {
     this.setPoint = 6;
   }
 
-  public void rest() {
-    this.setPoint = 0;
+  public void gripCone() {
+    this.setPoint = 12;
   }
 
   public void shuffleboardInit() {

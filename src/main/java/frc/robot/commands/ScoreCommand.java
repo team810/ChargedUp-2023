@@ -13,7 +13,7 @@ public class ScoreCommand extends CommandBase {
     private final Drivetrain drivetrain;
     private final Gripper gripper;
     private final Limelight limelight;
-    private final TurnToTarget turnToTarget;
+    private final AprilTTT turnToTarget;
     private final SquareToTargetCommand squareToTarget;
 
     public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight) {
@@ -22,7 +22,7 @@ public class ScoreCommand extends CommandBase {
         this.drivetrain = drivetrain;
         this.gripper = gripper;
         this.limelight = limelight;
-        this.turnToTarget = new TurnToTarget(drivetrain, limelight);
+        this.turnToTarget = new AprilTTT(drivetrain, limelight);
         this.squareToTarget = new SquareToTargetCommand(drivetrain, limelight, 0);
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
