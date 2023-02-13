@@ -2,16 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 
 public class RobotContainer {
@@ -23,12 +18,15 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Set up the default command for the drivetrain.
-//    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-//        m_drivetrainSubsystem,
-//        () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-//        () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-//        () -> modifyAxis(
-//            OIConstants.DRIVE_GAMEPAD.getRawAxis(5) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    // m_drivetrainSubsystem,
+    // () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(1) *
+    // DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+    // () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(0) *
+    // DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+    // () -> modifyAxis(
+    // OIConstants.GAMEPAD.getRawAxis(5) *
+    // DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -83,6 +81,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
+    // return m_drivetrainSubsystem.forward();
     return null;
   }
 }
