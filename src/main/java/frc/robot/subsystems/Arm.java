@@ -7,10 +7,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -65,11 +66,17 @@ public class Arm extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
-    PIVOT.addNumber("Extender Distance", () -> getExtenderLength());
-    PIVOT.addNumber("Extender Setpoint", () -> extenderSetpoint);
+    ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
 
-    EXTENDER.addNumber("Arm Current Height", () -> pivotEncoder.getPosition());
-    EXTENDER.addNumber("Pivot Setpoint", () -> pivotSetpoint);
+    ShuffleboardLayout extenderLayout = armTab.getLayout("Extender");
+    ShuffleboardLayout pivotLayout = armTab.getLayout("Pivot");
+
+    extenderLayout.addDouble("String Pot Reading", () -> getExtenderLength());
+    extenderLayout.addDouble("Target Reading", () -> extenderSetpoint);
+
+
+    pivotLayout.addDouble("Raw Encoder Reading", () -> pivotMotor.getEncoder().getPosition());
+    pivotLayout.addDouble("Target Reading", () -> pivotSetpoint);
   }
 
   @Override
