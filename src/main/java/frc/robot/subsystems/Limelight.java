@@ -31,7 +31,8 @@ public class Limelight extends SubsystemBase {
     CameraServer.startAutomaticCapture(feed);
 
     m_camera = new PhotonCamera("photonvision");
-    pipeline.setInteger(0);
+
+    setMode("AprilTag");
 
     shuffleInit();
   }
@@ -41,25 +42,18 @@ public class Limelight extends SubsystemBase {
   }
 
   public PhotonTrackedTarget getBestTarget() {
-
     return m_camera.getLatestResult().getBestTarget();
   }
 
-  public void setMode(int mode) {
-    switch (mode) {
-      case 0:
-        // AprilTag long range 0, short 2
-        pipeline.setInteger(0);
+  public void setMode(String pipeline) {
+    switch (pipeline) {
+      case "AprilTag":
+        //long range 0, short 2
+        this.pipeline.setInteger(0);
         break;
-      case 1:
-        // Reflective Tape
-        pipeline.setInteger(1);
+      case "Reflective Tape":
+        this.pipeline.setInteger(1);
         break;
-      case 2:
-        // Processing
-        pipeline.setInteger(3);
-        break;
-
     }
   }
 
