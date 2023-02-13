@@ -6,9 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class Auto extends CommandBase {
-  /** Creates a new Auto. */
-  public Auto() {
+public class LimeTTT extends CommandBase {
+  /** Creates a new AprilTagTTT. */
+  public LimeTTT() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -8,13 +8,15 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -33,6 +35,7 @@ public final class Constants {
         public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
 //        public static final XboxController SECONDARY_GAMEPAD = new XboxController(1);
     }
+
     public static final class DrivetrainConstants {
         // Mechanical Constants
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
@@ -76,12 +79,14 @@ public final class Constants {
         // Max speed is scary
         public static final double SPEED_LIMIT = .3;
 
-        public static final class Auto
-        {
+        public static final class Auto {
+            // TeleOP
+            public static final PIDController XY_CONTROLLER = new PIDController(0, 0, 0);
+            public static final PIDController THETA_CONTROLLER = new PIDController(0, 0, 0);
+
+            // Auto
             public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
-            public static final PIDConstants THEATA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
-            public static final PIDController XY_CONTTROLLER = new PIDController(.4,0,0);
-            public static final PIDController THEATA_CONTTROLLER = new PIDController(0,0,0);
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
         }
     }
 
@@ -99,10 +104,9 @@ public final class Constants {
 
         // FIXME camera height in meters on the bot
         public static final double CAMERA_HEIGHT_METERS = .266;
+
         public static final double LOWEST_TARGET_HEIGHT = .36;
         public static final double HIGHEST_TARGET_HEIGHT = .59;
-
-        public static final Transform3d ROBOT_TO_CAM = new Transform3d(new Translation3d(0,0,0),new Rotation3d());
 
         // FIXME camera angle in degrees on the bot
         public static final double CAMERA_ANGLE = 0;
@@ -110,42 +114,37 @@ public final class Constants {
         public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
     }
 
-    //FIXME subsystem new CAN IDs
-    public static final class ArmConstants{
+    // FIXME subsytem new CAN IDs
+    public static final class ArmConstants {
+        // EXTENDER
+        public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
+        public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList).withPosition(0, 0).withSize(2,
+                4);
         public static final int EXTENDING_MOTOR = 0;
-        public static final int RAISING_MOTOR = 0;
-        public static final int STRING_PLOT_CHANELLE = 0;
-        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0,0,0); // FIXME needs to be tuned
-        public static final PIDController PIVOT_CONTROLLER = new PIDController(0,0,0); // FIXME needs to be tuned
-        /*
-            you need to measure the string plot value for the extender to score for each of the possible positions
-            end you need to set the default value of the extender and the arm
-         */
-        public static final double EXTENDER_LENGTHS[] = {0,0,0,0}; // FIXME needs to be actual measurements look above for instruction
-        /*
-            for the pivot height you need to measure the value of the continues encoder as the arm gets to the height needed to place a cone at every position
-         */
-        public static final double PIVOT_HEIGHT[] = {0,0,0,0}; // FIXME needs to be actual measurements look above for instruction
+        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0, 0, 0);
 
+        // PIVOT
+        public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
+
+        public static final int PIVOT_MOTOR = 0;
+        public static final PIDController PIVOT_CONTROLLER = new PIDController(0, 0, 0);
+
+        // String Pot
+        public static final int STRING_POT_CHANNEL = 0;
     }
-    public static final class ConveyorConstants{
-        public static final int CONVEYOR_MOTOR = 0;
+
+    public static final class ConveyorConstants {
+        public static final int CONVEYOR_MOTOR = 1;
     }
-    public static final class GripperConstants{
+
+    public static final class GripperConstants {
         public static final int GRIPPER_MOTOR = 1;
 
-        public static final PIDConstants GRIPPER_PID_CONSTANTS = new PIDConstants(.1, 0, 0);
+        public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }
-    public static final class IntakeConstants{
 
+    public static final class IntakeConstants {
         public static final int LEFT_INTAKE_MOTOR = 0;
         public static final int RIGHT_INTAKE_MOTOR = 0;
-
-        public static final int RUN_INTAKE = 1;
-        public static final int STOP_INTAKE = 0;
-        public static final int RUN_INVERTED_INTAKE = 2;
-
-        public static final double INTAKE_SPEED = .5;
-
     }
 }
