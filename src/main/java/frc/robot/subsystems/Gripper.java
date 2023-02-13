@@ -23,7 +23,7 @@ public class Gripper extends SubsystemBase {
   /** Creates a new Gripper. */
   public Gripper() {
     gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
-    gripperPIDController = GripperConstants.GRIPPER_PID_CONSTANTS;
+    gripperPIDController = GripperConstants.GRIPPER_CONTROLLER;
 
     this.setPoint = 0;
 
