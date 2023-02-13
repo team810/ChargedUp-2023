@@ -12,8 +12,6 @@ public class ScoreCommand extends CommandBase {
     private final Gripper gripper;
     private final Limelight limelight;
     private final Conveyor conveyor;
-    private final TurnToTarget turnToTarget;
-    private final ToArmCommand toArm;
     private boolean finished;
     private int[] target = {0,0};
 
@@ -26,9 +24,8 @@ public class ScoreCommand extends CommandBase {
         this.limelight = limelight;
         this.conveyor = conveyor;
 
-        this.turnToTarget = new TurnToTarget(drivetrain, limelight);
+//        this.turnToTarget = new TurnToTarget(drivetrain, limelight);
 
-        this.toArm = new ToArmCommand(arm,conveyor,gripper);
 
         this.finished = false;
 
@@ -41,23 +38,17 @@ public class ScoreCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        toArm.initialize();
     }
 
     @Override
     public void execute() {
-        while(!toArm.isFinished())
-        {
-            toArm.execute();
-        }
-
-        arm.setTarget(target);
+        // set arm to hight
 
         new WaitCommand(2);
 
         gripper.rest();
 
-        arm.setTarget(new int[]{0, 0});
+        arm.rest();
 
         finished = true;
     }

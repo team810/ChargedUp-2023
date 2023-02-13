@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -71,35 +71,12 @@ public class Arm extends SubsystemBase {
     ShuffleboardLayout extenderLayout = armTab.getLayout("Extender");
     ShuffleboardLayout pivotLayout = armTab.getLayout("Pivot");
 
-    extenderLayout.addDouble("String Pot Reading", () -> getPivotTargetValue());
-    extenderLayout.addDouble("Target Reading", () -> extenderTargetValue);
+    extenderLayout.addDouble("String Pot Reading", () -> getExtenderLength());
+    extenderLayout.addDouble("Target Reading", () -> extenderSetpoint);
 
 
-    pivotLayout.addDouble("Pivot Continues Reading", () ->pivotContinuesValue);
     pivotLayout.addDouble("Raw Encoder Reading", () -> pivotMotor.getEncoder().getPosition());
-    pivotLayout.addDouble("Target Reading", () -> pivotTargetValue);
-  }
-
-
-  private double getExtenderLength()
-  {
-    return (potReading.getAverageValue() - 35) / 78;
-  }
-
-  public double getPivotTargetValue() {
-    return pivotTargetValue;
-  }
-
-  public void setPivotTargetValue(double pivotTargetValue) {
-    this.pivotTargetValue = pivotTargetValue;
-  }
-
-  public double getExtenderTargetValue() {
-    return extenderTargetValue;
-  }
-
-  public void setExtenderTargetValue(double extenderTargetValue) {
-    this.extenderTargetValue = extenderTargetValue;
+    pivotLayout.addDouble("Target Reading", () -> pivotSetpoint);
   }
 
   @Override
