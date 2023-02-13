@@ -13,7 +13,6 @@ public class ScoreCommand extends CommandBase {
     private final Limelight limelight;
     private final Conveyor conveyor;
     private boolean finished;
-    private int[] target = {0,0};
 
     // FIXME Lime light implementation
     public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight, Conveyor conveyor, int target[]) {
@@ -29,7 +28,6 @@ public class ScoreCommand extends CommandBase {
 
         this.finished = false;
 
-        this.target = target;
 
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
