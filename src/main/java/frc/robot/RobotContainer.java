@@ -1,49 +1,44 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
 
 public class RobotContainer {
-  // private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
-  private final Gripper m_gripper = new Gripper();
-  // private final Conveyor m_conveyor = new Conveyor();
-  // private final ColorSensor colorSensor = new ColorSensor();
+   private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
+   private final Gripper m_gripper = new Gripper();
+   private final Conveyor m_conveyor = new Conveyor();
+   private final Intake m_intake = new Intake();
+
 
   public RobotContainer() {
 
     // Set up the default command for the drivetrain.
-    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-    // m_drivetrainSubsystem,
-    // () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(1) *
-    // DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-    // () -> -modifyAxis(OIConstants.GAMEPAD.getRawAxis(0) *
-    // DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-    // () -> modifyAxis(
-    // OIConstants.GAMEPAD.getRawAxis(5) *
-    // DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+            m_drivetrainSubsystem,
+            () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRightX())* DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+    ));
 
     // Configure the button bindings
     configureButtonBindings();
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindings() {
-    // Zero gyroscope
-    // new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new
-    // InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    // Driving Constants
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getRightBumper).whileTrue(
+            new InstantCommand(m_drivetrainSubsystem::zeroGyroscope)
+    );
+
     // Grip Cone
     new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
             new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper)
@@ -51,13 +46,15 @@ public class RobotContainer {
     new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
             new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper)
     );
-  }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
+    // Intake
+    new Trigger(OIConstants.SECONDARY_GAMEPAD::getLeftBumper).whileTrue(
+            new StartEndCommand(() -> m_intake.runIntake(.5), () -> m_intake.runIntake(0), m_intake)
+    );
+    new Trigger(OIConstants.SECONDARY_GAMEPAD::getRightBumper).toggleOnTrue(
+            new InstantCommand(m_intake::actuateIntake)
+    );
+  }
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {

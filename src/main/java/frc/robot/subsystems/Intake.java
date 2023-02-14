@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -21,10 +20,15 @@ public class Intake extends SubsystemBase {
 
   private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
 
-  /** Creates a new Intake. */
   public Intake() {
     leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
     rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
+
+    rightIntakeMotor.clearFaults();
+    leftIntakeMotor.clearFaults();
+
+    rightIntakeMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    leftIntakeMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
 
     leftPiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
     rightPiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);

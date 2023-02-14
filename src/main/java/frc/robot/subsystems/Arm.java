@@ -27,6 +27,15 @@ public class Arm extends SubsystemBase {
     extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
     pivotMotor = new CANSparkMax(ArmConstants.PIVOT_MOTOR, MotorType.kBrushless);
 
+    pivotMotor.restoreFactoryDefaults();
+    extendingMotor.restoreFactoryDefaults();
+
+    pivotMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    extendingMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+    extendingMotor.clearFaults();
+    pivotMotor.clearFaults();
+
     extenderController = ArmConstants.EXTENDER_CONTROLLER;
     pivotController = ArmConstants.PIVOT_CONTROLLER;
 
