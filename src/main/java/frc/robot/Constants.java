@@ -102,6 +102,13 @@ public final class Constants {
         public static final NetworkTableEntry pipeline = table.getEntry("pipelineIndex");
         public static final NetworkTableEntry stream = table.getEntry("stream");
 
+        //Shuffleboard
+        public static final ShuffleboardTab tab = Shuffleboard.getTab("Limelight");
+
+        public static final ShuffleboardLayout CAMERA_VALUES = tab.getLayout("Limelight Values", BuiltInLayouts.kList)
+            .withSize(2, 4)
+            .withPosition(0, 0);
+
         // FIXME camera height in meters on the bot
         public static final double CAMERA_HEIGHT_METERS = .266;
 

@@ -38,6 +38,11 @@ public class Arm extends SubsystemBase {
     EXTENDER = ArmConstants.EXTENDER;
   }
 
+  public void runPivot(double speed)
+  {
+    pivotMotor.set(speed);
+  }
+
   public void rest() {
     pivotSetpoint = 0;
     extenderSetpoint = 0;

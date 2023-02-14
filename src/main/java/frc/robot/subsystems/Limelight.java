@@ -11,9 +11,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
 
@@ -25,6 +23,8 @@ public class Limelight extends SubsystemBase {
   private final PhotonCamera m_camera;
 
   private PhotonPipelineResult result;
+
+  private final ShuffleboardLayout tab = CameraConstants.CAMERA_VALUES;
 
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
@@ -58,13 +58,6 @@ public class Limelight extends SubsystemBase {
   }
 
   public void shuffleInit() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Limelight");
-
-    tab.getLayout("Limelight Values", BuiltInLayouts.kList)
-        .withSize(2, 4)
-        .withPosition(0, 0)
-        .addDouble("targetPixelsX", () -> this.targetPixelsX.getDouble(-1));
-
     tab.getLayout("Limelight Values").addBoolean("Is Valid?", () -> result.hasTargets());
     tab.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
   }
