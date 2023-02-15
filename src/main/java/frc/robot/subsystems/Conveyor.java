@@ -41,7 +41,7 @@ public class Conveyor extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
-    CONVEYOR_TAB.getLayout("Motor Values").addDouble("Velocity",
+    CONVEYOR_TAB.addDouble("Velocity",
         () -> this.speed);
   }
 

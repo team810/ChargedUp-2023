@@ -11,17 +11,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.*;
 
 public class RobotContainer {
   private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
+  private final Autos autos = new Autos(m_drivetrainSubsystem);
   private final Arm m_arm = new Arm();
-  private final Intake m_intake = new Intake();
+//  private final Intake m_intake = new Intake();
   private final Gripper m_gripper = new Gripper();
-  // private final Conveyor m_conveyor = new Conveyor();
+  private final Conveyor m_conveyor = new Conveyor();
   // private final ColorSensor colorSensor = new ColorSensor();
 
   public RobotContainer() {
@@ -70,8 +68,8 @@ public class RobotContainer {
         new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper));
 
     //Actuate intake
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).toggleOnTrue(
-      new StartEndCommand(m_intake::actuateIntake, m_intake::actuateIntake, m_intake));
+//    new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).toggleOnTrue(
+//      new StartEndCommand(m_intake::actuateIntake, m_intake::actuateIntake, m_intake));
 
     // Zero gyroscope
     new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));

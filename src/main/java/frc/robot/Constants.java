@@ -10,7 +10,9 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -20,18 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
+
 public final class Constants {
     public static final class OIConstants {
         public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
@@ -39,6 +30,21 @@ public final class Constants {
     }
 
     public static final class DrivetrainConstants {
+
+        public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
+                // Front left
+                new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                // Front right
+                new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                        -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                // Back left
+                new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                        DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
+                // Back right
+                new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
+                        -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
+
         // Mechanical Constants
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
@@ -167,7 +173,7 @@ public final class Constants {
                 .withPosition(2, 0).withSize(2, 4);
 
         // Ports
-        public static final int GRIPPER_MOTOR = 1;
+        public static final int GRIPPER_MOTOR = 16; // FIXME LIFE
 
         public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }
