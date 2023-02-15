@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -160,10 +161,14 @@ public class Drivetrain extends SubsystemBase {
         public SwerveModulePosition getPosition(int moduleNumber) {
                 // relative to starting position
                 return new SwerveModulePosition(
-                                (modules[moduleNumber].getDriveEncoder().getPosition() *
-                                                (DrivetrainConstants.WHEEL_DIAMETER
-                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
-                                new Rotation2d(modules[moduleNumber].getSteerAngle()));
+                        (modulePositions[moduleNumber].distanceMeters + (modules[moduleNumber].getDriveVelocity() * TimedRobot.kDefaultPeriod)),
+                        new Rotation2d(modules[moduleNumber].getSteerAngle()));
+
+                // return new SwerveModulePosition(
+                //                 (modules[moduleNumber].getDriveEncoder().getPosition() *
+                //                                 (DrivetrainConstants.WHEEL_DIAMETER
+                //                                                 * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+                //                 new Rotation2d(modules[moduleNumber].getSteerAngle()));
         }
 
         private void updatePositions() {

@@ -45,22 +45,18 @@ public class Arm extends SubsystemBase {
 
   public void rest() {
     pivotSetpoint = 0;
-    extenderSetpoint = 0;
   }
 
   public void lowGoal() {
-    pivotSetpoint = 3;
-    extenderSetpoint = 3;
+    pivotSetpoint = -10.429;
   }
 
   public void middleGoal() {
-    pivotSetpoint = 6;
-    extenderSetpoint = 6;
+    pivotSetpoint = -24.428;
   }
 
   public void highGoal() {
-    pivotSetpoint = 12;
-    extenderSetpoint = 12;
+    pivotSetpoint = -37.642;
   }
 
   private double getExtenderLength() {
@@ -69,7 +65,6 @@ public class Arm extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
-
     EXTENDER.addDouble("String Pot Reading", () -> getExtenderLength());
     EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
 
@@ -79,7 +74,7 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    extendingMotor.set(extenderController.calculate(getExtenderLength(), extenderSetpoint));
-    pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint));
+    // extendingMotor.set(extenderController.calculate(getExtenderLength(), extenderSetpoint));
+    pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint) * .5);
   }
 }

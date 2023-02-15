@@ -8,6 +8,9 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -131,14 +134,14 @@ public final class Constants {
         public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2,
                         4);
-        public static final int EXTENDING_MOTOR = 0;
+        public static final int EXTENDING_MOTOR = 13;
         public static final PIDController EXTENDER_CONTROLLER = new PIDController(0, 0, 0);
 
         // PIVOT
         public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2, 4);
 
-        public static final int PIVOT_MOTOR = 0;
+        public static final int PIVOT_MOTOR = 12;
         public static final PIDController PIVOT_CONTROLLER = new PIDController(0, 0, 0);
 
         // String Pot
@@ -152,7 +155,7 @@ public final class Constants {
                 .getLayout("Motor Values", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
 
         // Motors
-        public static final int CONVEYOR_MOTOR = 1;
+        public static final int CONVEYOR_MOTOR = 10;
     }
 
     public static final class GripperConstants {
@@ -188,8 +191,15 @@ public final class Constants {
                 .getLayout("Color Sensor", BuiltInLayouts.kList)
                 .withSize(2, 4)
                 .withPosition(0, 0);
+    }
 
-        // Ports
+    public static final class ScoreConstants
+    {
+        public static final Transform3d DISTANCE_FROM_TARGET = new Transform3d(new Translation3d(-.5, 0, 0), new Rotation3d());
+
+        public static final int[] BOTTOM_ROW_RANGE = {0,0};
+        public static final int[] MIDDLE_ROW_RANGE = {0,0};
+        public static final int[] TOP_ROW_RANGE = {0,0};
 
     }
 }
