@@ -19,10 +19,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Autos;
+import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
-        private Autos auto = new Autos(this);
         // 4 modules on the drivetrain
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;
@@ -100,7 +100,7 @@ public class Drivetrain extends SubsystemBase {
                 // Odometry is instantiated intitally with our module positions on the chasis,
                 // Rotation (should be 0)
                 // and the current positions, each should be 0 still here
-                odometry = new SwerveDriveOdometry(auto.getKinematics(),
+                odometry = new SwerveDriveOdometry(DrivetrainConstants.KINEMATICS,
                                 m_navx.getRotation2d(), modulePositions);
         }
 
@@ -124,7 +124,7 @@ public class Drivetrain extends SubsystemBase {
 
         // We set the speeds we want from joystick values
         private void setSpeeds(ChassisSpeeds chassisSpeeds) {
-                SwerveModuleState[] states = auto.getKinematics().toSwerveModuleStates(chassisSpeeds);
+                SwerveModuleState[] states = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
                 // Update virtual states
