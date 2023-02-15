@@ -22,6 +22,8 @@ public class Conveyor extends SubsystemBase {
     conveyorMotor = new CANSparkMax(ConveyorConstants.CONVEYOR_MOTOR, MotorType.kBrushless);
     colorSensor = new ColorSensor();
 
+    conveyorMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
     CONVEYOR_TAB = ConveyorConstants.CONVEYOR_LAYOUT;
 
     shuffleboardInit();
@@ -37,12 +39,12 @@ public class Conveyor extends SubsystemBase {
     if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple"))
       runConveyor(0);
     else
-      runConveyor(.5);
+      runConveyor(.25);
   }
 
   public void shuffleboardInit() {
-    CONVEYOR_TAB.getLayout("Motor Values").addDouble("Velocity",
-        () -> this.speed);
+    /*CONVEYOR_TAB.getLayout("Motor Values").addDouble("Velocity",
+        () -> this.speed);*/
   }
 
   @Override

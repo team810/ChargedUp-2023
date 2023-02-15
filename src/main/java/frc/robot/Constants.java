@@ -137,15 +137,15 @@ public final class Constants {
         public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2,
                         4);
-        public static final int EXTENDING_MOTOR = 0;
+        public static final int EXTENDING_MOTOR = 13;
         public static final PIDController EXTENDER_CONTROLLER = new PIDController(0, 0, 0);
 
         // PIVOT
         public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2, 4);
 
-        public static final int PIVOT_MOTOR = 0;
-        public static final PIDController PIVOT_CONTROLLER = new PIDController(0, 0, 0);
+        public static final int PIVOT_MOTOR = 12;
+        public static final PIDController PIVOT_CONTROLLER = new PIDController(.1, 0, 0);
 
         // String Pot
         public static final int STRING_POT_CHANNEL = 0;
@@ -158,7 +158,7 @@ public final class Constants {
                 .getLayout("Motor Values", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
 
         // Motors
-        public static final int CONVEYOR_MOTOR = 1;
+        public static final int CONVEYOR_MOTOR = 10;
     }
 
     public static final class GripperConstants {
@@ -182,8 +182,8 @@ public final class Constants {
                 .withPosition(0, 0).withSize(2, 4);
 
         // Ports
-        public static final int LEFT_INTAKE_MOTOR = 0;
-        public static final int RIGHT_INTAKE_MOTOR = 0;
+        public static final int LEFT_INTAKE_MOTOR = 0; // FIXME where is the motor ?
+        public static final int RIGHT_INTAKE_MOTOR = 0; // FIXME where is the motor
     }
 
     public static final class ColorSensorConstants {

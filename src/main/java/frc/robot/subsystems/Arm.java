@@ -26,7 +26,7 @@ public class Arm extends SubsystemBase {
   public Arm() {
     extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
     pivotMotor = new CANSparkMax(ArmConstants.PIVOT_MOTOR, MotorType.kBrushless);
-
+    pivotMotor.getEncoder().setPosition(0);
     pivotMotor.restoreFactoryDefaults();
     extendingMotor.restoreFactoryDefaults();
 
@@ -45,26 +45,34 @@ public class Arm extends SubsystemBase {
 
     PIVOT = ArmConstants.PIVOT;
     EXTENDER = ArmConstants.EXTENDER;
+
+
+
+    shuffleboardInit();
   }
 
   public void rest() {
     pivotSetpoint = 0;
     extenderSetpoint = 0;
+    System.out.println("R");
   }
 
   public void lowGoal() {
-    pivotSetpoint = 3;
+    pivotSetpoint = -10.429;
     extenderSetpoint = 3;
+    System.out.println("lowG");
   }
 
   public void middleGoal() {
-    pivotSetpoint = 6;
+    pivotSetpoint = -24.428;
     extenderSetpoint = 6;
+    System.out.println("mG");
   }
 
   public void highGoal() {
-    pivotSetpoint = 12;
-    extenderSetpoint = 12;
+    pivotSetpoint = -37.642;
+    extenderSetpoint = 0;
+    System.out.println("hG");
   }
 
   private double getExtenderLength() {
@@ -83,7 +91,10 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    extendingMotor.set(extenderController.calculate(getExtenderLength(), extenderSetpoint));
-    pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint));
+//    extendingMotor.set(Math.max(Math.min(extenderController.calculate(getExtenderLength(), -.1), .1), extenderSetpoint));
+//    pivotMotor.set(Math.max(Math.min(pivotController.calculate(pivotEncoder.getPosition(),-.2), .2), pivotSetpoint));
+    double tmp = Math.max(Math.min(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint), 0.2), -0.2);
+    pivotMotor.set(tmp);
+    System.out.println(tmp);
   }
 }

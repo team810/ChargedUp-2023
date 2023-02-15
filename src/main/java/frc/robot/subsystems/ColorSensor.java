@@ -58,12 +58,12 @@ public class ColorSensor extends SubsystemBase {
     }
 
     private void shuffleInit() {
-        COLOR_TAB.getLayout("Color Sensor").addDouble("Red", () -> detectedColor.red);
-        COLOR_TAB.getLayout("Color Sensor").addDouble("Green", () -> detectedColor.green);
-        COLOR_TAB.getLayout("Color Sensor").addDouble("Blue", () -> detectedColor.blue);
-        COLOR_TAB.getLayout("Color Sensor").addDouble("Confidence", () -> match.confidence);
-        COLOR_TAB.getLayout("Color Sensor").addDouble("IR", () -> IR);
-        COLOR_TAB.getLayout("Color Sensor").addString("Detected Color", () -> colorString);
+//        COLOR_TAB.getLayout("Color Sensor").addDouble("Red", () -> detectedColor.red);
+//        COLOR_TAB.getLayout("Color Sensor").addDouble("Green", () -> detectedColor.green);
+//        COLOR_TAB.getLayout("Color Sensor").addDouble("Blue", () -> detectedColor.blue);
+//        COLOR_TAB.getLayout("Color Sensor").addDouble("Confidence", () -> match.confidence);
+//        COLOR_TAB.getLayout("Color Sensor").addDouble("IR", () -> IR);
+//        COLOR_TAB.getLayout("Color Sensor").addString("Detected Color", () -> colorString);
     }
 
     @Override
