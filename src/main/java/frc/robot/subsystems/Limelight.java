@@ -33,7 +33,7 @@ public class Limelight extends SubsystemBase {
     m_camera = new PhotonCamera("photonvision");
 
     pipeline.setInteger(0);
-
+    
     shuffleInit();
   }
 

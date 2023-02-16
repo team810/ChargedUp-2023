@@ -34,6 +34,7 @@ public class Autos extends CommandBase{
         m_arm = arm;
         m_gripper = gripper;
         addRequirements(m_drivetrain, m_intake, m_conveyor, m_arm, m_gripper);
+        addMethods();
     }
     // Kinematics is the position of the modules on the chasis
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
