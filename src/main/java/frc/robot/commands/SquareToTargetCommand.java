@@ -1,13 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-
 
 public class SquareToTargetCommand extends CommandBase {
     private final Drivetrain drivetrain;
@@ -18,8 +18,9 @@ public class SquareToTargetCommand extends CommandBase {
     private Pose3d targetPos;
     private Transform3d toTarget;
     private Pose3d currentPos;
-    private final Transform3d distanceFromTarget = new Transform3d(new Translation3d(-.5,0,0),new Rotation3d());
-    double error_amount = .05;
+
+    private double error_amount = .05;
+
     public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, int object) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
@@ -33,11 +34,42 @@ public class SquareToTargetCommand extends CommandBase {
 
         targetPos.transformBy(basedOnTargetTransform(object));
 
-        targetPos.transformBy(distanceFromTarget);// makes it so the target pos is not on the actual target
-
-
+        targetPos.transformBy(Constants.ScoreConstants.DISTANCE_FROM_TARGET);// makes it so the target pos is not on the actual target
 
         addRequirements(this.drivetrain, this.limelight);
+    }
+    public int getTarget()
+    {
+        // This might be a point of error
+
+        // This should return the distance to the target
+        currentPos = new Pose3d(drivetrain.getPose());
+        toTarget = limelight.getBestTarget().getBestCameraToTarget();
+
+        targetPos = currentPos;
+        targetPos.transformBy(toTarget);
+        targetPos.transformBy(basedOnTargetTransform(0));
+
+        double distanceTo = targetPos.minus(currentPos).getX();
+
+        if (
+                distanceTo > Constants.ScoreConstants.BOTTOM_ROW_RANGE[0]&&
+                distanceTo < Constants.ScoreConstants.BOTTOM_ROW_RANGE[1]
+        ){
+            return 1;
+        } else if (
+                distanceTo > Constants.ScoreConstants.MIDDLE_ROW_RANGE[0]&&
+                distanceTo < Constants.ScoreConstants.MIDDLE_ROW_RANGE[1]
+        ) {
+            return 2;
+        } else if (
+                distanceTo > Constants.ScoreConstants.TOP_ROW_RANGE[0]&&
+                distanceTo < Constants.ScoreConstants.TOP_ROW_RANGE[1]
+        ) {
+            return 3;
+        }else{
+            return 0;
+        }
     }
 
     private Transform3d basedOnTargetTransform(int object) // FIXME needs to be adjusted based on cones and cubes
@@ -58,7 +90,8 @@ public class SquareToTargetCommand extends CommandBase {
 
         x_speed = xController.calculate(drivetrain.getPose().getX(), targetPos.getX());
         y_speed = yController.calculate(drivetrain.getPose().getY(), targetPos.getY());
-        z_speed = thetaController.calculate(drivetrain.getPose().getRotation().getRadians(), targetPos.getRotation().getAngle());
+        z_speed = thetaController.calculate(drivetrain.getPose().getRotation().getRadians(),
+                targetPos.getRotation().getAngle());
 
         speeds = new ChassisSpeeds(x_speed, y_speed, z_speed);
 
