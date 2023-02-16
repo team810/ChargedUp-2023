@@ -4,22 +4,22 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
 
 public class RobotContainer {
   private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
-  private final Autos autos = new Autos(m_drivetrainSubsystem);
-  private final Arm m_arm = new Arm();
+  // private final Autos autos = new Autos(m_drivetrainSubsystem);
+  // private final Arm m_arm = new Arm();
 //  private final Intake m_intake = new Intake();
-  private final Gripper m_gripper = new Gripper();
-  private final Conveyor m_conveyor = new Conveyor();
+  // private final Gripper m_gripper = new Gripper();
+  // private final Conveyor m_conveyor = new Conveyor();
   // private final ColorSensor colorSensor = new ColorSensor();
 
   public RobotContainer() {
@@ -27,12 +27,12 @@ public class RobotContainer {
     // Set up the default command for the drivetrain.
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
-        () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
+        () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
             DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
+        () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
             DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
         () -> -modifyAxis(
-            OIConstants.DRIVE_GAMEPAD.getRawAxis(3) *
+            OIConstants.DRIVE_GAMEPAD.getRawAxis(4) *
                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
     // Configure the button bindings
@@ -49,30 +49,36 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //Raise/Lower Arm
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
-      new SequentialCommandGroup(
-        new InstantCommand(m_arm::highGoal),
-        new WaitCommand(1),
-        new InstantCommand(m_arm::middleGoal),
-        new WaitCommand(1),
-        new InstantCommand(m_arm::lowGoal),
-        new WaitCommand(1),
-        new InstantCommand(m_arm::rest)
-    ));
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
+    //   new SequentialCommandGroup(
+    //     new InstantCommand(m_arm::lowGoal),
+    //     new WaitCommand(1),
+    //     new InstantCommand(m_arm::middleGoal),
+    //     new WaitCommand(1),
+    //     new InstantCommand(m_arm::highGoal),
+    //     new WaitCommand(1),
+    //     new InstantCommand(m_arm::rest)
+    // ));
 
+    //Run conveyor
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
+    //   new StartEndCommand(()->m_conveyor.runConveyor(-.5),()-> m_conveyor.runConveyor(0), m_conveyor));
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).whileTrue(
+    //   new StartEndCommand(()->m_conveyor.runConveyor(.5),()-> m_conveyor.runConveyor(0), m_conveyor));
+  
     // Grip Cone
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
-        new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper));
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
+    //     new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper));
     // Grip Cube
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
-        new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper));
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
+    //     new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper));
 
     //Actuate intake
-//    new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).toggleOnTrue(
-//      new StartEndCommand(m_intake::actuateIntake, m_intake::actuateIntake, m_intake));
+  //  new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).toggleOnTrue(
+  //    new StartEndCommand(m_intake::actuateIntake, m_intake::actuateIntake, m_intake));
 
     // Zero gyroscope
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
   }
 
   /**
@@ -95,7 +101,7 @@ public class RobotContainer {
 
   private static double modifyAxis(double value) {
     // Deadband
-    value = deadband(value, .1);
+    value = deadband(value, .2);
     // Cubed the axis, smoother driving
     value = Math.pow(value, 3);
 

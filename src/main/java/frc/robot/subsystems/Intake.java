@@ -4,50 +4,44 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
+  // private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
 
-  private final DoubleSolenoid leftPiston, rightPiston;
+  private final DoubleSolenoid piston;
 
   private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
 
   /** Creates a new Intake. */
   public Intake() {
-    leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
-    rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
+    // leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
+    // rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-    leftPiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
-    rightPiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
+    // piston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 7, 0);
+    piston = new DoubleSolenoid(18, PneumaticsModuleType.REVPH, 0, 7);
 
-    leftPiston.set(DoubleSolenoid.Value.kOff);
-    rightPiston.set(DoubleSolenoid.Value.kOff);
+    piston.set(DoubleSolenoid.Value.kOff);
   }
 
   public void runIntake(double speed) {
     // The intake motors will always run at the same speed,
     // one of them has to run "backwards" so they are in the same direction
-    leftIntakeMotor.set(speed);
-    rightIntakeMotor.set(-speed);
+    // leftIntakeMotor.set(speed);
+    // rightIntakeMotor.set(-speed);
   }
 
   public void actuateIntake() {
-    leftPiston.toggle();
-    rightPiston.toggle();
+    piston.toggle();
   }
 
   public void shuffleboardInit() {
-    INTAKE_VALUES.getLayout("Motor Values", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
-    INTAKE_VALUES.getLayout("Motor Values").addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+    INTAKE_VALUES.withPosition(0, 0).withSize(2, 4);
+    // INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
   }
 
   @Override

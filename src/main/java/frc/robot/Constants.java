@@ -186,7 +186,7 @@ public final class Constants {
 
         // Ports
         public static final int LEFT_INTAKE_MOTOR = 0;
-        public static final int RIGHT_INTAKE_MOTOR = 0;
+        public static final int RIGHT_INTAKE_MOTOR = 1;
     }
 
     public static final class ColorSensorConstants {
