@@ -11,9 +11,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
 
@@ -26,14 +24,16 @@ public class Limelight extends SubsystemBase {
 
   private PhotonPipelineResult result;
 
+  private final ShuffleboardLayout tab = CameraConstants.CAMERA_VALUES;
+
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
     CameraServer.startAutomaticCapture(feed);
 
     m_camera = new PhotonCamera("photonvision");
 
-    pipeline.setInteger(0);
-    
+    setMode("AprilTag");
+
     shuffleInit();
   }
 
@@ -45,32 +45,19 @@ public class Limelight extends SubsystemBase {
     return m_camera.getLatestResult().getBestTarget();
   }
 
-  public void setMode(int mode) {
-    switch (mode) {
-      case 0:
-        // AprilTag long range 0, short 2
-        pipeline.setInteger(0);
+  public void setMode(String pipeline) {
+    switch (pipeline) {
+      case "AprilTag":
+        // long range 0, short 2
+        this.pipeline.setInteger(0);
         break;
-      case 1:
-        // Reflective Tape
-        pipeline.setInteger(1);
+      case "Reflective Tape":
+        this.pipeline.setInteger(1);
         break;
-      case 2:
-        // Processing
-        pipeline.setInteger(3);
-        break;
-
     }
   }
 
   public void shuffleInit() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Limelight");
-
-    tab.getLayout("Limelight Values", BuiltInLayouts.kList)
-        .withSize(2, 4)
-        .withPosition(0, 0)
-        .addDouble("targetPixelsX", () -> this.targetPixelsX.getDouble(-1));
-
     tab.getLayout("Limelight Values").addBoolean("Is Valid?", () -> result.hasTargets());
     tab.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
   }
