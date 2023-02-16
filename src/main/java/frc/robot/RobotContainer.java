@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Intake;
@@ -48,7 +48,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //Raise/Lower Arm
+    // Zero gyroscope
+    new JoystickButton(OIConstants.GAMEPAD, 1).onTrue(new
+    InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+
+  //Raise/Lower Arm
     // new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
     //   new SequentialCommandGroup(
     //     new InstantCommand(m_arm::lowGoal),

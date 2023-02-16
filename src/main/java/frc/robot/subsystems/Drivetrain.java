@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
+        Autos auto;
         // 4 modules on the drivetrain
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;

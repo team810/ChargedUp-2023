@@ -1,0 +1,73 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8908688649785739,
+        "y": 3.3013469356572456
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0285534910692467,
+        "y": 4.5405085704733015
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "Grip Cone",
+          "Set Arm to High Goal",
+          "Rest Grip",
+          "Rest Arm"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.194791608229166,
+        "y": 4.742446022072954
+      },
+      "prevControl": {
+        "x": 3.065777674285649,
+        "y": 4.843414747872782
+      },
+      "nextControl": null,
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    }
+  ]
+}
