@@ -37,7 +37,7 @@ public class Conveyor extends SubsystemBase {
     if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple"))
       runConveyor(0);
     else
-      runConveyor(.5);
+      runConveyor(.3);
   }
 
   public void shuffleboardInit() {
@@ -48,6 +48,6 @@ public class Conveyor extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    runConveyorWithColor();
+    // runConveyorWithColor();
   }
 }

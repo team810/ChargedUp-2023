@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -30,12 +31,18 @@ public class Arm extends SubsystemBase {
     extenderController = ArmConstants.EXTENDER_CONTROLLER;
     pivotController = ArmConstants.PIVOT_CONTROLLER;
 
+    extendingMotor.setIdleMode(IdleMode.kBrake);
+
+    extendingMotor.getEncoder().setPosition(0);
+
     pivotEncoder = pivotMotor.getEncoder();
 
     potReading = new AnalogInput(Constants.ArmConstants.STRING_POT_CHANNEL);
 
     PIVOT = ArmConstants.PIVOT;
     EXTENDER = ArmConstants.EXTENDER;
+
+    extenderSetpoint = 0;
   }
 
   public void runPivot(double speed)
@@ -74,7 +81,8 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // extendingMotor.set(extenderController.calculate(getExtenderLength(), extenderSetpoint));
-    pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint) * .5);
+    extendingMotor.set(extenderController.calculate(this.extendingMotor.getEncoder().getPosition(), 0));
+    // pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint) * .5);
+    pivotMotor.set(Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
   }
 }

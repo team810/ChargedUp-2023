@@ -46,6 +46,7 @@ public final class Constants {
                         -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
         // Mechanical Constants
+        //0.5969 roughly
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
         public static final double WHEEL_DIAMETER = 0.0968375;
@@ -54,13 +55,13 @@ public final class Constants {
         // PORT #s and OFFSETS
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 6;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 14;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(268.77);
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 15;
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(269.30);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(238.54);
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(238.62);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 2;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 1;
@@ -69,8 +70,8 @@ public final class Constants {
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 4;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 3;
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 15;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(79.81);
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 14;
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(79.63);
 
         public final static double MAX_VOLTAGE = 12;// 12
 
@@ -85,7 +86,7 @@ public final class Constants {
                         DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
         // Max speed is scary
-        public static final double SPEED_LIMIT = .3;
+        public static final double SPEED_LIMIT = .5;
 
         public static final class Auto {
             // TeleOP
@@ -140,15 +141,15 @@ public final class Constants {
         public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2,
                         4);
-        public static final int EXTENDING_MOTOR = 13;
-        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0, 0, 0);
+        public static final int EXTENDING_MOTOR = 11;
+        public static final PIDController EXTENDER_CONTROLLER = new PIDController(0.15, 0, 0);
 
         // PIVOT
         public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2, 4);
 
         public static final int PIVOT_MOTOR = 12;
-        public static final PIDController PIVOT_CONTROLLER = new PIDController(0, 0, 0);
+        public static final PIDController PIVOT_CONTROLLER = new PIDController(0.1, 0, 0);
 
         // String Pot
         public static final int STRING_POT_CHANNEL = 0;
