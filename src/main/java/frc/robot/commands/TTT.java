@@ -12,9 +12,9 @@ import frc.robot.subsystems.Limelight;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TurnToTarget extends PIDCommand {
+public class TTT extends PIDCommand {
   /** Creates a new TurnToTarget. */
-  public TurnToTarget(Drivetrain m_drive, Limelight lime) {
+  public TTT(Drivetrain m_drive, Limelight lime) {
     super(
         // PID Values
         new PIDController(.05, 0.001, 0.0035),

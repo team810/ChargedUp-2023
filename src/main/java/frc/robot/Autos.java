@@ -6,8 +6,6 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,58 +17,32 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Intake;
 
-public class Autos extends CommandBase{
+public class Autos extends CommandBase {
     private Drivetrain m_drivetrain;
-    private Intake m_intake;
-    private Conveyor m_conveyor; 
-    private Arm m_arm;
-    private Gripper m_gripper;
-
-    public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper)
-    {
+    
+    public Autos(Drivetrain drivetrain) {
         m_drivetrain = drivetrain;
-        m_intake = intake;
-        m_conveyor = conveyor;
-        m_arm = arm;
-        m_gripper = gripper;
-        addRequirements(m_drivetrain, m_intake, m_conveyor, m_arm, m_gripper);
-    }
-    // Kinematics is the position of the modules on the chasis
-    private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-                    // Front left
-                    new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                    // Front right
-                    new Translation2d(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                    // Back left
-                    new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-                    // Back right
-                    new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
-                                    -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
-    public SwerveDriveKinematics getKinematics()
-    {
-        return m_kinematics;
-    }
-    // Auto Variables
-    private final SwerveAutoBuilder m_AUTO_BUILDER = new SwerveAutoBuilder(
-            m_drivetrain::getPose,
-            m_drivetrain::resetPose,
-            this.m_kinematics,
-            DrivetrainConstants.Auto.XY_CONSTANTS,
-            DrivetrainConstants.Auto.THETA_CONSTANTS,
-            m_drivetrain::setStates,
-            this.eventMap,
-            false,
-            m_drivetrain);
+        AUTO_BUILDER = new SwerveAutoBuilder(
+                m_drivetrain::getPose,
+                m_drivetrain::resetPose,
+                Constants.DrivetrainConstants.KINEMATICS,
+                Constants.DrivetrainConstants.Auto.XY_CONSTANTS,
+                Constants.DrivetrainConstants.Auto.THETA_CONSTANTS,
+                m_drivetrain::setStates,
+                this.eventMap,
+                false,
+                m_drivetrain);
 
+        addRequirements(drivetrain);
+    }
+
+    // Auto Variables
     // This contains the methods we run during auto
     private final HashMap<String, Command> eventMap = new HashMap<>();
 
     // Auto Commands
     public Command forward() {
-        return this.m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("ForwardWithRot",
+        return this.AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup("ForwardWithRot",
                 new PathConstraints(4, 3)));
     }
 
