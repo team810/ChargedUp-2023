@@ -9,29 +9,30 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 
 public class RobotContainer {
-  private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
+  // private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
   // private final Autos autos = new Autos(m_drivetrainSubsystem);
   // private final Arm m_arm = new Arm();
 //  private final Intake m_intake = new Intake();
   // private final Gripper m_gripper = new Gripper();
   // private final Conveyor m_conveyor = new Conveyor();
   // private final ColorSensor colorSensor = new ColorSensor();
+  private final Limelight m_lime = new Limelight(); 
 
   public RobotContainer() {
 
     // Set up the default command for the drivetrain.
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,
-        () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
-            DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
-            DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
-        () -> -modifyAxis(
-            OIConstants.DRIVE_GAMEPAD.getRawAxis(4) *
-                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    //     m_drivetrainSubsystem,
+    //     () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
+    //         DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+    //     () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
+    //         DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+    //     () -> -modifyAxis(
+    //         OIConstants.DRIVE_GAMEPAD.getRawAxis(4) *
+    //             DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -47,8 +48,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Zero gyroscope
-    new JoystickButton(OIConstants.DRIVE_GAMEPAD, 1).onTrue(new
-    InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    // new JoystickButton(OIConstants.DRIVE_GAMEPAD, 1).onTrue(new
+    // InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
 
   //Raise/Lower Arm
     // new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
@@ -80,7 +81,13 @@ public class RobotContainer {
   //    new StartEndCommand(m_intake::actuateIntake, m_intake::actuateIntake, m_intake));
 
     // Zero gyroscope
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(m_drivetrainSubsystem::zeroGyroscope));
+
+    // Switch to AprilTag Pipeline
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).onTrue(new InstantCommand(() -> m_lime.setMode("AprilTag")));
+
+    // Switch to Reflective Tape
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(() -> m_lime.setMode("Reflective Tape")));
   }
 
   /**

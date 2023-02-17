@@ -5,11 +5,13 @@
 package frc.robot.subsystems;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,12 +21,13 @@ public class Limelight extends SubsystemBase {
   // Entries on camera server
   private final NetworkTableEntry pipeline = CameraConstants.pipeline;
   private final NetworkTableEntry targetPixelsX = CameraConstants.targetPixelsX;
+  private final NetworkTable table = CameraConstants.table;
   private final HttpCamera feed;
   private final PhotonCamera m_camera;
 
   private PhotonPipelineResult result;
 
-  private final ShuffleboardLayout tab = CameraConstants.CAMERA_VALUES;
+  private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
 
   public Limelight() {
     feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
@@ -33,6 +36,9 @@ public class Limelight extends SubsystemBase {
     m_camera = new PhotonCamera("photonvision");
 
     setMode("AprilTag");
+    this.table.getEntry("ledMode").setInteger(1);
+    m_camera.setLED(VisionLEDMode.kOn);
+    // m_camera.setPipelineIndex(0);
 
     shuffleInit();
   }
@@ -48,18 +54,22 @@ public class Limelight extends SubsystemBase {
   public void setMode(String pipeline) {
     switch (pipeline) {
       case "AprilTag":
-        // long range 0, short 2
+        // long range 0, short 1
         this.pipeline.setInteger(0);
+        this.table.getEntry("ledMode").setInteger(0);
+        // m_camera.setLED(VisionLEDMode.kOff);
         break;
       case "Reflective Tape":
-        this.pipeline.setInteger(1);
+        this.pipeline.setInteger(3);
+        this.table.getEntry("ledMode").setInteger(1);
+        // m_camera.setLED(VisionLEDMode.kOn);
         break;
     }
   }
 
   public void shuffleInit() {
-    tab.getLayout("Limelight Values").addBoolean("Is Valid?", () -> result.hasTargets());
-    tab.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
+    this.cameraValues.addBoolean("Is Valid?", () -> result.hasTargets());
+    this.cameraValues.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
   }
 
   @Override

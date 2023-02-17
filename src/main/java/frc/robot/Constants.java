@@ -120,10 +120,10 @@ public final class Constants {
             .withPosition(0, 0);
 
         // FIXME camera height in meters on the bot
-        public static final double CAMERA_HEIGHT_METERS = .266;
+        public static final double CAMERA_HEIGHT_METERS = .155;
 
         public static final double LOWEST_TARGET_HEIGHT = .36;
-        public static final double HIGHEST_TARGET_HEIGHT = .59;
+        public static final double HIGHEST_TARGET_HEIGHT = 1.06;
 
         // FIXME camera angle in degrees on the bot
         public static final double CAMERA_ANGLE = 0;
