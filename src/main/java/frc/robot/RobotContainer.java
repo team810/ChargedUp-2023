@@ -1,22 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.*;
 
 public class RobotContainer {
   private final Drivetrain m_drive = new Drivetrain();
@@ -25,9 +14,10 @@ public class RobotContainer {
   private final Gripper m_gripper = new Gripper();
   private final Conveyor m_conveyor = new Conveyor();
   // private final ColorSensor colorSensor = new ColorSensor();
-  private final Limelight m_lime = new Limelight(); 
+  private final Limelight m_lime = new Limelight();
 
   private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper);
+
 
   public RobotContainer() {
 
@@ -46,14 +36,6 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindings() {
   //Raise/Lower Arm
     new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
@@ -68,11 +50,11 @@ public class RobotContainer {
     ));
 
     //Run conveyor
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
-      new StartEndCommand(()->m_conveyor.runConveyor(-.5),()-> m_conveyor.runConveyor(0), m_conveyor));
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).whileTrue(
-      new StartEndCommand(()->m_conveyor.runConveyor(.5),()-> m_conveyor.runConveyor(0), m_conveyor));
-  
+//    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
+//      new StartEndCommand(()->m_conveyor.runConveyor(-.5),()-> m_conveyor.runConveyor(0), m_conveyor));
+//    new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).whileTrue(
+//      new StartEndCommand(()->m_conveyor.runConveyor(.5),()-> m_conveyor.runConveyor(0), m_conveyor));
+
     // Grip Cone
     new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
         new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper));
@@ -92,13 +74,18 @@ public class RobotContainer {
 
     // Switch to Reflective Tape
     new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(() -> m_lime.setMode("Reflective Tape")));
+
+    // toggle conveyor on and off
+    new Trigger(OIConstants.SECONDARY_GAMEPAD::getAButton).whileTrue(
+            new StartEndCommand(
+                    () -> m_conveyor.setDisabled(!m_conveyor.isDisabled()),
+                    () -> m_conveyor.setDisabled(m_conveyor.isDisabled()),
+                    m_conveyor
+            )
+    );
+
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {

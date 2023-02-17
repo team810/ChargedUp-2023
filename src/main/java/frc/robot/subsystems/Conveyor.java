@@ -16,6 +16,8 @@ public class Conveyor extends SubsystemBase {
   private final ColorSensor colorSensor;
   private double speed;
   private final ShuffleboardLayout CONVEYOR_TAB;
+  private int gamePiece = 0; // if set to zero there is no gamePiece 1 is cone and 2 is cube
+  private boolean disabled;
 
   /** Creates a new Conveyor. */
   public Conveyor() {
@@ -25,6 +27,8 @@ public class Conveyor extends SubsystemBase {
     CONVEYOR_TAB = ConveyorConstants.CONVEYOR_LAYOUT;
 
     shuffleboardInit();
+
+    disabled = false;
   }
 
   public void runConveyor(double speed) {
@@ -33,11 +37,30 @@ public class Conveyor extends SubsystemBase {
   }
 
   // To move conveyor during scoring
+
   public void runConveyorWithColor() {
-    if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple"))
+    if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple")) {
       runConveyor(0);
-    else
+      if (colorSensor.getColor().equals("Yellow")) {
+        gamePiece = 1;
+      } else if (colorSensor.getColor().equals("Purple")) {
+        gamePiece = 2;
+      }
+    } else {
       runConveyor(.3);
+      gamePiece = 0;
+    }
+  }
+  public int getGamePiece() {
+    return gamePiece;
+  }
+
+  public boolean isDisabled() {
+    return disabled;
+  }
+
+  public void setDisabled(boolean disabled) {
+    this.disabled = disabled;
   }
 
   public void shuffleboardInit() {
@@ -48,6 +71,10 @@ public class Conveyor extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // runConveyorWithColor();
+//    if (!disabled) // FIXME like this the conveyor and score command will not work as intended
+//    {
+//      runConveyorWithColor();
+//    }
+//
   }
 }

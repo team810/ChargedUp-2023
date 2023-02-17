@@ -1,13 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -23,11 +19,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-
 public final class Constants {
     public static final class OIConstants {
         public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
         public static final XboxController SECONDARY_GAMEPAD = new XboxController(1);
+
+//        public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
+//        public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
     }
 
     public static final class DrivetrainConstants {
@@ -136,11 +134,11 @@ public final class Constants {
 
     // FIXME subsytem new CAN IDs
     public static final class ArmConstants {
-        // ARM
-        public static final ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+
 
         // EXTENDER
         public static final ShuffleboardTab ARM_TAB = Shuffleboard.getTab("Arm");
+
         public static final ShuffleboardLayout EXTENDER = ARM_TAB.getLayout("EXTENDER", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2,
                         4);
@@ -177,7 +175,7 @@ public final class Constants {
                 .withPosition(2, 0).withSize(2, 4);
 
         // Ports
-        public static final int GRIPPER_MOTOR = 16; // FIXME LIFE
+        public static final int GRIPPER_MOTOR = 13; // FIXME Gripper constants
 
         public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }
@@ -189,8 +187,8 @@ public final class Constants {
                 .withPosition(0, 0).withSize(2, 4);
 
         // Ports
-        public static final int LEFT_INTAKE_MOTOR = 0;
-        public static final int RIGHT_INTAKE_MOTOR = 1;
+        public static final int LEFT_INTAKE_MOTOR = 9; // FIXME intake constants
+        public static final int RIGHT_INTAKE_MOTOR = 14;
     }
 
     public static final class ColorSensorConstants {

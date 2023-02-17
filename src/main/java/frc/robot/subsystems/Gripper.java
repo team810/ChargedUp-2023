@@ -15,10 +15,10 @@ import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
   private final CANSparkMax gripperMotor;
-  private PIDController gripperPIDController;
+  private final PIDController gripperPIDController;
   private double setPoint;
-  private ShuffleboardLayout GRIPPER_MOTOR = GripperConstants.GRIPPER_M_VALUES;
-  private ShuffleboardLayout GRIPPER_PID = GripperConstants.GRIPPER_M_VALUES;
+  private final ShuffleboardLayout GRIPPER_MOTOR = GripperConstants.GRIPPER_M_VALUES;
+  private final ShuffleboardLayout GRIPPER_PID = GripperConstants.GRIPPER_M_VALUES;
 
   /** Creates a new Gripper. */
   public Gripper() {
