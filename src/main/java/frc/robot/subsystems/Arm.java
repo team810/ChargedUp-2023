@@ -18,8 +18,9 @@ import frc.robot.Constants.ArmConstants;
 public class Arm extends SubsystemBase {
   private final CANSparkMax extendingMotor, pivotMotor;
   private final PIDController extenderController, pivotController;
-  private AnalogInput potReading;
-  private double extenderSetpoint, pivotSetpoint;
+  private final AnalogInput potReading;
+  private final double extenderSetpoint;
+  private double pivotSetpoint;
   private final ShuffleboardLayout PIVOT, EXTENDER;
 
   public Arm() {
@@ -39,6 +40,8 @@ public class Arm extends SubsystemBase {
     EXTENDER = ArmConstants.EXTENDER;
 
     extenderSetpoint = 0;
+
+    shuffleboardInit();
   }
 
   public void runPivot(double speed)

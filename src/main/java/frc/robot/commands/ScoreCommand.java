@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Conveyor;
@@ -17,12 +15,12 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final Gripper gripper;
     private final Limelight limelight;
     private final Conveyor conveyor;
-    private SquareToTargetCommand toTarget;
+    private final SquareToTargetCommand toTarget;
     private int targetNum;
 
 
     public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-            Conveyor conveyor, int target[]) {
+                        Conveyor conveyor, int[] target) {
         this.arm = arm;
         this.colorSensor = colorSensor;
         this.drivetrain = drivetrain;
@@ -34,11 +32,41 @@ public class ScoreCommand extends SequentialCommandGroup {
         addRequirements(this.arm, this.colorSensor, this.drivetrain, this.gripper, this.limelight, this.conveyor);
 
         addCommands(
-                toTarget, // This command squares the bot to the target
+                new ParallelCommandGroup(
+                        toTarget, // This command squares the bot to the target
+                        getGamePiece() // puts the game peice in the arm
+                ),
                 armCommand(),
                 new InstantCommand(gripper::rest),
                 new InstantCommand(() -> System.out.println("Piece Placed")),
                 new InstantCommand(arm::rest)
+        );
+    }
+
+    private SequentialCommandGroup getGamePiece() // this is getting the game pice to the gripper from the conveyer belit
+    {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> conveyor.setDisabled(false)),
+                new WaitUntilCommand(() -> conveyor.getGamePiece() != 0),
+                new InstantCommand(() ->
+                {
+                    switch (conveyor.getGamePiece())
+                    {
+                        case 1:
+                            gripper.gripCone();
+                            System.out.println("Gripping something");
+                            break;
+                        case 2:
+                            gripper.gripCube();
+                            System.out.println("Gripping something");
+                            break;
+                        case 0:
+                            System.out.println("LIFE IS A LIE");
+                            break;
+                    }
+                }),
+                new InstantCommand(() -> conveyor.setDisabled(true))
+
         );
     }
 

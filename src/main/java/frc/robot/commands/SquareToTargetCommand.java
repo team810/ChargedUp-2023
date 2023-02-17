@@ -19,7 +19,7 @@ public class SquareToTargetCommand extends CommandBase {
     private Transform3d toTarget;
     private Pose3d currentPos;
 
-    private double error_amount = .05;
+    private final double error_amount = .05;
 
     public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, int object) {
         this.drivetrain = drivetrain;

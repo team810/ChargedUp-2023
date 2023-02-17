@@ -27,20 +27,20 @@ public class Drivetrain extends SubsystemBase {
         private final SwerveModule m_frontRightModule;
         private final SwerveModule m_backLeftModule;
         private final SwerveModule m_backRightModule;
-        private Field2d field2d = new Field2d();
+        private final Field2d field2d = new Field2d();
 
         // Contains the current distances and angles of each module
-        private SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
+        private final SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
                         new SwerveModulePosition(), new SwerveModulePosition() };
 
         // Just an array to reference each module
-        private SwerveModule[] modules = new SwerveModule[4];
+        private final SwerveModule[] modules = new SwerveModule[4];
 
         // Gyroscope
         private final AHRS m_navx = new AHRS(Port.kMXP);
 
         // Used to keep a virtual position of the robot
-        private SwerveDriveOdometry odometry;
+        private final SwerveDriveOdometry odometry;
 
         // Contains our speeds
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);

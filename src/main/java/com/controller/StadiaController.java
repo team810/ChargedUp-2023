@@ -1,3 +1,5 @@
+package com.controller;
+
 import edu.wpi.first.wpilibj.XboxController;
 
 public class StadiaController extends XboxController {
@@ -20,7 +22,6 @@ public class StadiaController extends XboxController {
     public double getLeftY() {
         return super.getRawAxis(1);
     }
-
     @Override
     public double getRightY() {
 
