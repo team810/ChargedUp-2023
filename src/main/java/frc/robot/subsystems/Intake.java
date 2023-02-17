@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,12 +18,17 @@ public class Intake extends SubsystemBase {
 
   private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
 
+  private final PneumaticHub pHub;
+
   /** Creates a new Intake. */
   public Intake() {
     // leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
     // rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-    // piston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 7, 0);
+    pHub = new PneumaticHub(18);
+    pHub.clearStickyFaults();
+    pHub.enableCompressorDigital();
+    
     piston = new DoubleSolenoid(18, PneumaticsModuleType.REVPH, 0, 7);
 
     piston.set(DoubleSolenoid.Value.kOff);
@@ -40,7 +46,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
-    INTAKE_VALUES.withPosition(0, 0).withSize(2, 4);
+    INTAKE_VALUES.addBoolean("Compressor On?", ()-> this.pHub.getCompressor());
     // INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
   }
 

@@ -1,16 +1,13 @@
 package frc.robot;
 
-import java.nio.file.Path;
 import java.util.HashMap;
 
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.Arm;
@@ -19,14 +16,14 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Intake;
 
-public class Autos extends CommandBase {
+public class Autos {
     private Drivetrain m_drivetrain;
     private Intake m_intake; 
     private Conveyor m_conveyor;
     private Arm m_arm;
     private Gripper m_gripper;
     private SwerveAutoBuilder m_AUTO_BUILDER;
-
+    
     // Kinematics is the position of the modules on the chasis
     private final SwerveDriveKinematics m_kinematics;
 
@@ -37,7 +34,7 @@ public class Autos extends CommandBase {
         m_conveyor = conveyor;
         m_arm = arm;
         m_gripper = gripper;
-        addRequirements(m_drivetrain, m_intake, m_conveyor, m_arm, m_gripper);
+    
         addMethods();
 
         m_kinematics = new SwerveDriveKinematics(
@@ -73,7 +70,7 @@ public class Autos extends CommandBase {
 
     public void addMethods() {
 
-        // intake methods
+        // intake methodsWADWQWADSXCX6Y
         eventMap.put("Actuate Intake", new InstantCommand(m_intake::actuateIntake));
         eventMap.put("Intake In", new InstantCommand(() -> m_intake.runIntake(1)));
         eventMap.put("Intake Out", new InstantCommand(() -> m_intake.runIntake(-1)));
@@ -94,6 +91,12 @@ public class Autos extends CommandBase {
         eventMap.put("Rest Gripper", new InstantCommand(m_gripper::rest));
         eventMap.put("Grip Cone", new InstantCommand(m_gripper::gripCone));
         eventMap.put("Grip Cube", new InstantCommand(m_gripper::gripCube));
+    }
+
+    public Command getForward()
+    {
+        String path = "Path";
+        return m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup(path, Constants.DrivetrainConstants.Auto.PATH_CONSTRAINTS));
     }
 
     // Kinematics is the position of the modules on the chasis

@@ -5,9 +5,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -19,7 +18,6 @@ import frc.robot.Constants.ArmConstants;
 public class Arm extends SubsystemBase {
   private final CANSparkMax extendingMotor, pivotMotor;
   private final PIDController extenderController, pivotController;
-  private final RelativeEncoder pivotEncoder;
   private AnalogInput potReading;
   private double extenderSetpoint, pivotSetpoint;
   private final ShuffleboardLayout PIVOT, EXTENDER;
@@ -34,8 +32,6 @@ public class Arm extends SubsystemBase {
     extendingMotor.setIdleMode(IdleMode.kBrake);
 
     extendingMotor.getEncoder().setPosition(0);
-
-    pivotEncoder = pivotMotor.getEncoder();
 
     potReading = new AnalogInput(Constants.ArmConstants.STRING_POT_CHANNEL);
 
