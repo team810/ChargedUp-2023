@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 
 import com.pathplanner.lib.PathConstraints;
@@ -96,7 +97,6 @@ public class Autos extends CommandBase {
     }
 
     // Kinematics is the position of the modules on the chasis
-
     public SwerveDriveKinematics getKinematics()
     {
         return m_kinematics;
