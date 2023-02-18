@@ -120,19 +120,16 @@ public final class Constants {
             .withSize(2, 4)
             .withPosition(0, 0);
 
-        // FIXME camera height in meters on the bot
         public static final double CAMERA_HEIGHT_METERS = .155;
 
         public static final double LOWEST_TARGET_HEIGHT = .36;
         public static final double HIGHEST_TARGET_HEIGHT = 1.06;
 
-        // FIXME camera angle in degrees on the bot
         public static final double CAMERA_ANGLE = 0;
 
         public static final double CAMERA_PITCH_RADIANS = Math.toRadians(CAMERA_ANGLE);
     }
 
-    // FIXME subsytem new CAN IDs
     public static final class ArmConstants {
 
 
@@ -175,7 +172,7 @@ public final class Constants {
                 .withPosition(2, 0).withSize(2, 4);
 
         // Ports
-        public static final int GRIPPER_MOTOR = 13; // FIXME Gripper constants
+        public static final int GRIPPER_MOTOR = 14; // FIXME Gripper constants
 
         public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }
@@ -187,8 +184,8 @@ public final class Constants {
                 .withPosition(0, 0).withSize(2, 4);
 
         // Ports
-        public static final int LEFT_INTAKE_MOTOR = 9; // FIXME intake constants
-        public static final int RIGHT_INTAKE_MOTOR = 14;
+        public static final int LEFT_INTAKE_MOTOR = 9; 
+        public static final int RIGHT_INTAKE_MOTOR = 15;
     }
 
     public static final class ColorSensorConstants {
