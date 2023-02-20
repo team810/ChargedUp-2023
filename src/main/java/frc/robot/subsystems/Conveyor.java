@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
@@ -18,6 +19,7 @@ public class Conveyor extends SubsystemBase {
   private final ShuffleboardLayout CONVEYOR_TAB;
   private int gamePiece = 0; // if set to zero there is no gamePiece 1 is cone and 2 is cube
   private boolean disabled;
+
 
   /** Creates a new Conveyor. */
   public Conveyor() {
@@ -47,10 +49,11 @@ public class Conveyor extends SubsystemBase {
         gamePiece = 2;
       }
     } else {
-      runConveyor(.3);
+      runConveyor(.6);
       gamePiece = 0;
     }
   }
+
   public int getGamePiece() {
     return gamePiece;
   }
@@ -71,10 +74,9 @@ public class Conveyor extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-//    if (!disabled) // FIXME like this the conveyor and score command will not work as intended
-//    {
-//      runConveyorWithColor();
-//    }
-//
+   if (!disabled) // FIXME like this the conveyor and score command will not work as intended
+   {
+     runConveyorWithColor();
+   }
   }
 }

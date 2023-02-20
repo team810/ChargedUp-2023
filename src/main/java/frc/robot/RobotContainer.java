@@ -9,80 +9,101 @@ import frc.robot.subsystems.*;
 
 public class RobotContainer {
   private final Drivetrain m_drive = new Drivetrain();
-  private final Arm m_arm = new Arm();
+  // private final Arm m_arm = new Arm();
  private final Intake m_intake = new Intake();
-  private final Gripper m_gripper = new Gripper();
+  // private final Gripper m_gripper = new Gripper();
   private final Conveyor m_conveyor = new Conveyor();
   // private final ColorSensor colorSensor = new ColorSensor();
-  private final Limelight m_lime = new Limelight();
+  // private final Limelight m_lime = new Limelight();
 
-  private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper);
+  // private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper);
 
 
   public RobotContainer() {
 
-    // Set up the default command for the drivetrain.
+    // // Set up the default command for the drivetrain.
     m_drive.setDefaultCommand(new DefaultDriveCommand(
         m_drive,
         () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
-            DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+            DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.25),
         () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
-            DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+            DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.25),
         () -> -modifyAxis(
             OIConstants.DRIVE_GAMEPAD.getRawAxis(4) *
-                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 0.25)));
 
-    // Configure the button bindings
+    // // Configure the button bindings
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
-  //Raise/Lower Arm
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
-      new SequentialCommandGroup(
-        new InstantCommand(m_arm::lowGoalCone),
-        new WaitCommand(1),
-        new InstantCommand(m_arm::middleGoalCone),
-        new WaitCommand(1),
-        new InstantCommand(m_arm::highGoalCone),
-        new WaitCommand(1),
-        new InstantCommand(m_arm::rest)
-    ));
+  // //Raise/Lower Arm
+  //   new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
+  //     new SequentialCommandGroup(
+  //       new InstantCommand(m_arm::lowGoal),
+  //       new WaitCommand(1),
+  //       new InstantCommand(m_arm::middleGoal),
+  //       new WaitCommand(1),
+  //       new InstantCommand(m_arm::highGoal),
+  //       new WaitCommand(1),
+  //       new InstantCommand(m_arm::rest)
+  //   ));
 
     //Run conveyor
-//    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
-//      new StartEndCommand(()->m_conveyor.runConveyor(-.5),()-> m_conveyor.runConveyor(0), m_conveyor));
-//    new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).whileTrue(
-//      new StartEndCommand(()->m_conveyor.runConveyor(.5),()-> m_conveyor.runConveyor(0), m_conveyor));
+  //  new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
+  //    new StartEndCommand(()->m_conveyor.runConveyor(-.5),()-> m_conveyor.runConveyor(0), m_conveyor));
+  //  new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).whileTrue(
+  //    new StartEndCommand(()->m_conveyor.runConveyor(.5),()-> m_conveyor.runConveyor(0), m_conveyor));
 
     // Grip Cone
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
-        new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper));
-    // Grip Cube
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
-        new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper));
+  //   new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(
+  //       new StartEndCommand(m_gripper::gripCone, m_gripper::rest, m_gripper));
+  //   // Grip Cube
+  //   new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
+  //       new StartEndCommand(m_gripper::gripCube, m_gripper::rest, m_gripper));
 
-    //Actuate intake
-   new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).toggleOnTrue(
-     new StartEndCommand(m_intake::actuateIntake, m_intake::actuateIntake, m_intake));
+  //   //Actuate intake
+   
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getXButton).onTrue(
+      new InstantCommand(m_intake::setForward)
+    );
+
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).onTrue(
+      new InstantCommand(m_intake::setBackward)
+    );
+
+    //  new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(
+    //   new StartEndCommand(m_intake::set, m_intake::set, m_intake));
+ 
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).whileTrue(new StartEndCommand(
+      () -> m_intake.runIntake(.5),
+      () -> m_intake.runIntake(0), 
+      m_intake
+      ));
+
+      new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).whileTrue(new StartEndCommand(
+        () -> m_intake.runIntake(-.5),
+        () -> m_intake.runIntake(0), 
+        m_intake
+        ));
 
     // Zero gyroscope
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(m_drive::zeroGyroscope));
+    new Trigger(OIConstants.DRIVE_GAMEPAD::getLeftBumper).onTrue(new InstantCommand(m_drive::zeroGyroscope));
 
-    // Switch to AprilTag Pipeline
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).onTrue(new InstantCommand(() -> m_lime.setMode("AprilTag")));
+    // // Switch to AprilTag Pipeline
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getAButton).onTrue(new InstantCommand(() -> m_lime.setMode("AprilTag")));
 
-    // Switch to Reflective Tape
-    new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(() -> m_lime.setMode("Reflective Tape")));
+    // // Switch to Reflective Tape
+    // new Trigger(OIConstants.DRIVE_GAMEPAD::getBButton).onTrue(new InstantCommand(() -> m_lime.setMode("Reflective Tape")));
 
-    // toggle conveyor on and off
-    new Trigger(OIConstants.SECONDARY_GAMEPAD::getAButton).whileTrue(
-            new StartEndCommand(
-                    () -> m_conveyor.setDisabled(!m_conveyor.isDisabled()),
-                    () -> m_conveyor.setDisabled(m_conveyor.isDisabled()),
-                    m_conveyor
-            )
-    );
+    // // toggle conveyor on and off
+    // new Trigger(OIConstants.SECONDARY_GAMEPAD::getAButton).whileTrue(
+    //         new StartEndCommand(
+    //                 () -> m_conveyor.setDisabled(!m_conveyor.isDisabled()),
+    //                 () -> m_conveyor.setDisabled(m_conveyor.isDisabled()),
+    //                 m_conveyor
+    //         )
+    // );
 
   }
 

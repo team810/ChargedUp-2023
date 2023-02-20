@@ -5,7 +5,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -24,11 +26,16 @@ public class Intake extends SubsystemBase {
 
     pHub = new PneumaticHub(18);
     pHub.clearStickyFaults();
+
+    
     pHub.enableCompressorDigital();
 
-    piston = new DoubleSolenoid(18, PneumaticsModuleType.REVPH, 0, 7);
+    piston = pHub.makeDoubleSolenoid(0, 7);
+    // piston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 7);
+    // piston.set(DoubleSolenoid.Value.kOff);
 
-    piston.set(DoubleSolenoid.Value.kOff);
+    
+    
 
   }
 
@@ -39,8 +46,14 @@ public class Intake extends SubsystemBase {
     rightIntakeMotor.set(-speed);
   }
 
-  public void actuateIntake() {
-    piston.toggle();
+  public void setForward() {
+    piston.set(Value.kForward);
+    System.out.println("PISTONS SET FORWARD");
+  }
+
+  public void setBackward() {
+    piston.set(Value.kReverse);
+    System.out.println("PISTONS SET REVERSED");
   }
 
   public void shuffleboardInit() {
@@ -48,8 +61,14 @@ public class Intake extends SubsystemBase {
     INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
   }
 
+  public Value getSolenoidValue() {
+    return piston.get();
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // This method will be called once per scheduler
+    // System.out.println(pHub.getCompressor());
+    
   }
 }

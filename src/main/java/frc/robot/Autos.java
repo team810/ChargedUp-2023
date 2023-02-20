@@ -74,7 +74,7 @@ public class Autos {
     public void addMethods() {
 
         // intake methodsWADWQWADSXCX6Y
-        eventMap.put("Actuate Intake", new InstantCommand(m_intake::actuateIntake));
+        // eventMap.put("Actuate Intake", new InstantCommand(m_intake::actuateIntake));
         eventMap.put("Intake In", new InstantCommand(() -> m_intake.runIntake(1)));
         eventMap.put("Intake Out", new InstantCommand(() -> m_intake.runIntake(-1)));
         eventMap.put("Stop Intake", new InstantCommand(() -> m_intake.runIntake(0)));
