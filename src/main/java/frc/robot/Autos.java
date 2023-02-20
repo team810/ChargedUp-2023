@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -63,8 +64,6 @@ public class Autos {
         this.eventMap,
         false,
         m_drivetrain);
-
-
     }
 
     // Auto Variables
@@ -109,6 +108,12 @@ public class Autos {
     {
         String path = "paths";
         return null;
+    }
+
+    public Command gnerateCommand(PathPlannerTrajectory trajectory)
+    {
+        
+        return m_AUTO_BUILDER.followPath(trajectory);
     }
 
     // Kinematics is the position of the modules on the chasis

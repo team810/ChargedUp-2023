@@ -97,6 +97,7 @@ public final class Constants {
             public static final PIDConstants THETA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
 
             public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2, 4);
+            public static final PathConstraints SCORE_CONSTRAINTS = new PathConstraints(.5, .5);
         }
     }
 

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.Autos;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Conveyor;
@@ -21,14 +22,14 @@ public class ScoreCommand extends SequentialCommandGroup {
 
 
     public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, int[] target) {
+                        Conveyor conveyor, Autos auto) {
         this.arm = arm;
         this.colorSensor = colorSensor;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
         this.limelight = limelight;
         this.conveyor = conveyor;
-        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece); // FIXME wtf is the object
+        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece, auto); // FIXME wtf is the object
 
         addRequirements(this.arm, this.colorSensor, this.drivetrain, this.gripper, this.limelight, this.conveyor);
 
@@ -67,13 +68,6 @@ public class ScoreCommand extends SequentialCommandGroup {
                 }),
                 new InstantCommand(() -> conveyor.setDisabled(true))
 
-        );
-    }
-
-    public InstantCommand genTarget()
-    {
-        return new InstantCommand(
-                () -> targetNum = toTarget.getTarget()
         );
     }
 
