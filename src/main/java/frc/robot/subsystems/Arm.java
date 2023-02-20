@@ -53,16 +53,30 @@ public class Arm extends SubsystemBase {
     pivotSetpoint = 0;
   }
 
-  public void lowGoal() {
+  public void lowGoalCone() {
     pivotSetpoint = -10.429;
   }
 
-  public void middleGoal() {
+  public void middleGoalCone() {
     pivotSetpoint = -24.428;
   }
 
-  public void highGoal() {
+  public void highGoalCone() {
     pivotSetpoint = -37.642;
+  }
+
+  public void lowGoalCube(){
+
+  }
+
+  public void middleGoalCube()
+  {
+
+  }
+
+  public void highGoalCube()
+  {
+
   }
 
   private double getExtenderLength() {

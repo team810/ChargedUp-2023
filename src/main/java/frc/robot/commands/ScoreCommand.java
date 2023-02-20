@@ -17,6 +17,7 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final Conveyor conveyor;
     private final SquareToTargetCommand toTarget;
     private int targetNum;
+    private int gamePiece;
 
 
     public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
@@ -27,15 +28,13 @@ public class ScoreCommand extends SequentialCommandGroup {
         this.gripper = gripper;
         this.limelight = limelight;
         this.conveyor = conveyor;
-        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, 0); // FIXME wtf is the object
+        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece); // FIXME wtf is the object
 
         addRequirements(this.arm, this.colorSensor, this.drivetrain, this.gripper, this.limelight, this.conveyor);
 
         addCommands(
-                new ParallelCommandGroup(
-                        toTarget, // This command squares the bot to the target
-                        getGamePiece() // puts the game peice in the arm
-                ),
+                getGamePiece(),
+                toTarget,
                 armCommand(),
                 new InstantCommand(gripper::rest),
                 new InstantCommand(() -> System.out.println("Piece Placed")),
@@ -50,6 +49,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitUntilCommand(() -> conveyor.getGamePiece() != 0),
                 new InstantCommand(() ->
                 {
+                    gamePiece = conveyor.getGamePiece();
                     switch (conveyor.getGamePiece())
                     {
                         case 1:
@@ -82,21 +82,43 @@ public class ScoreCommand extends SequentialCommandGroup {
         return new SequentialCommandGroup(
                 new InstantCommand(() ->
                 {
-                    switch (targetNum)
+                    if (gamePiece == 1) // if game piece is a cone it will
                     {
-                        case 1:
-                            arm.lowGoal();
-                            break;
-                        case 2:
-                            arm.middleGoal();
-                            break;
-                        case 3:
-                            arm.highGoal();
-                            break;
-                        default:
-                            System.out.println("Probably Bad range");
-                            break;
+                        switch (targetNum)
+                        {
+                            case 1:
+                                arm.lowGoalCone();
+                                break;
+                            case 2:
+                                arm.middleGoalCone();
+                                break;
+                            case 3:
+                                arm.highGoalCone();
+                                break;
+                            default:
+                                System.out.println("Probably Bad range for cone ");
+                                break;
 
+                        }
+                    } else if (gamePiece == 2) // if the game piece is going to be a cube
+                    {
+                        switch (targetNum)
+                        {
+                            case 1:
+                                arm.lowGoalCube();
+                                break;
+                            case 2:
+                                arm.middleGoalCube();
+                                break;
+                            case 3:
+                                arm.highGoalCube();
+                                break;
+                            default:
+                                System.out.println("out of range error for cube");
+                                break;
+                        }
+                    }else{
+                        System.out.println("VERY BAD NOTHING IN THE GRIPPER, in code at least");
                     }
                 }
                 ),

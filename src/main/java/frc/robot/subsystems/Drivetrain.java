@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
@@ -126,9 +127,24 @@ public class Drivetrain extends SubsystemBase {
         private void setSpeeds(ChassisSpeeds chassisSpeeds) {
                 SwerveModuleState[] states = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
-
                 // Update virtual states
                 setStates(states);
+        }
+
+        public void lockWheels()
+        {
+                m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+                m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+        }
+
+        public void unlockWheels()
+        {
+                m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+                m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
         }
 
         // Setting each module to be that speed

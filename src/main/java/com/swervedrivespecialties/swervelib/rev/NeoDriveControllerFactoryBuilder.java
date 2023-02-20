@@ -86,6 +86,11 @@ public final class NeoDriveControllerFactoryBuilder {
         }
 
         @Override
+        public void setIdleMode(CANSparkMax.IdleMode idleMode) {
+            motor.setIdleMode(idleMode);
+        }
+
+        @Override
         public RelativeEncoder getDriveEncoder() {
             return motor.getEncoder();
         }

@@ -40,11 +40,11 @@ public class RobotContainer {
   //Raise/Lower Arm
     new Trigger(OIConstants.DRIVE_GAMEPAD::getYButton).whileTrue(
       new SequentialCommandGroup(
-        new InstantCommand(m_arm::lowGoal),
+        new InstantCommand(m_arm::lowGoalCone),
         new WaitCommand(1),
-        new InstantCommand(m_arm::middleGoal),
+        new InstantCommand(m_arm::middleGoalCone),
         new WaitCommand(1),
-        new InstantCommand(m_arm::highGoal),
+        new InstantCommand(m_arm::highGoalCone),
         new WaitCommand(1),
         new InstantCommand(m_arm::rest)
     ));

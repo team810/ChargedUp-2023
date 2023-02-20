@@ -1,5 +1,6 @@
 package com.swervedrivespecialties.swervelib;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
@@ -50,6 +51,11 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
         @Override
         public double getDriveVelocity() {
             return driveController.getStateVelocity();
+        }
+
+        @Override
+        public void setDriveMotorIdleState(CANSparkMax.IdleMode idleState) {
+            driveController.setIdleMode(idleState);
         }
 
         @Override

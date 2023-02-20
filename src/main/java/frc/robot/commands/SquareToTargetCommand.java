@@ -9,6 +9,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 
+import java.util.function.Supplier;
+
 public class SquareToTargetCommand extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
@@ -21,7 +23,7 @@ public class SquareToTargetCommand extends CommandBase {
 
     private final double error_amount = .05;
 
-    public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, int object) {
+    public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, Supplier<Integer> object) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
 
@@ -32,7 +34,7 @@ public class SquareToTargetCommand extends CommandBase {
         targetPos = currentPos;
         targetPos.transformBy(toTarget);
 
-        targetPos.transformBy(basedOnTargetTransform(object));
+        targetPos.transformBy(basedOnTargetTransform(object.get()));
 
         targetPos.transformBy(Constants.ScoreConstants.DISTANCE_FROM_TARGET);// makes it so the target pos is not on the actual target
 
