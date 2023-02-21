@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.RobotState;
+
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
@@ -54,7 +54,6 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
-
   public boolean isReversed() {
     return reversed;
   }
@@ -79,23 +78,9 @@ public class Conveyor extends SubsystemBase {
     CONVEYOR_TAB.addDouble("Velocity",
         () -> this.speed);
   }
-  private void runConveyorReversed()
-  {
-    conveyorMotor.set(-1 * ConveyorConstants.MOTOR_SPEED);
-  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-   if (!disabled && !RobotState.isTest()) // FIXME like this the conveyor and score command will not work as intended
-   {
-     if (isReversed())
-     {
-       runConveyorReversed();
-     }else{
-       runConveyorWithColor();
-     }
-   }
-
   }
 }

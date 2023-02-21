@@ -4,6 +4,7 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -13,7 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -21,8 +22,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public final class Constants {
     public static final class OIConstants {
-        public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
-        public static final XboxController SECONDARY_GAMEPAD = new XboxController(1);
+        public static final Joystick DRIVE_GAMEPAD = new Joystick(0);
+        // public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
 
 //        public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
 //        public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
@@ -145,7 +146,7 @@ public final class Constants {
 
         // PIVOT
         public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
-                .withPosition(0, 0).withSize(2, 4);
+                .withPosition(2, 0).withSize(2, 4);
 
         public static final int PIVOT_MOTOR = 12;
         public static final PIDController PIVOT_CONTROLLER = new PIDController(0.1, 0, 0);

@@ -35,7 +35,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 armCommand(),
                 new InstantCommand(gripper::rest),
                 new InstantCommand(() -> System.out.println("Piece Placed")),
-                new InstantCommand(arm::rest)
+                new InstantCommand(arm::restPivot)
         );
     }
 

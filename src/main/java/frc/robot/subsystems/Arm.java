@@ -19,8 +19,7 @@ public class Arm extends SubsystemBase {
   private final CANSparkMax extendingMotor, pivotMotor;
   private final PIDController extenderController, pivotController;
   private final AnalogInput potReading;
-  private final double extenderSetpoint;
-  private double pivotSetpoint;
+  private double extenderSetpoint, pivotSetpoint;
   private final ShuffleboardLayout PIVOT, EXTENDER;
 
   public Arm() {
@@ -30,63 +29,79 @@ public class Arm extends SubsystemBase {
     extenderController = ArmConstants.EXTENDER_CONTROLLER;
     pivotController = ArmConstants.PIVOT_CONTROLLER;
 
+    extenderController.setTolerance(.5);
+
     extendingMotor.setIdleMode(IdleMode.kBrake);
 
-    extendingMotor.getEncoder().setPosition(0);
+    pivotMotor.getEncoder().setPosition(0);
+    pivotMotor.setIdleMode(IdleMode.kBrake);
 
     potReading = new AnalogInput(Constants.ArmConstants.STRING_POT_CHANNEL);
 
     PIVOT = ArmConstants.PIVOT;
     EXTENDER = ArmConstants.EXTENDER;
 
-    extenderSetpoint = 0;
+    extenderSetpoint = -1;
+    pivotSetpoint = 0;
 
     shuffleboardInit();
   }
 
-  public void runPivot(double speed)
+  public void runExtender(double speed)
   {
+    extendingMotor.set(speed);
+  }
+
+  public void runPivot(double speed) {
     pivotMotor.set(speed);
   }
 
-  public void rest() {
+  public void restPivot() {
     pivotSetpoint = 0;
+  }
+  public void restExtender()
+  {
+    extenderSetpoint = -1;
   }
 
   public void lowGoalCone() {
-    pivotSetpoint = -10.429;
+    pivotSetpoint = 0;
   }
 
   public void middleGoalCone() {
-    pivotSetpoint = -24.428;
+    pivotSetpoint = -16;
   }
 
   public void highGoalCone() {
-    pivotSetpoint = -37.642;
+    pivotSetpoint = 0;
   }
 
-  public void lowGoalCube(){
-
-  }
-
-  public void middleGoalCube()
-  {
+  public void lowGoalCube() {
 
   }
 
-  public void highGoalCube()
-  {
+  public void middleGoalCube() {
+
+  }
+
+  public void highGoalCube() {
 
   }
 
   private double getExtenderLength() {
-    // 35 is the length pulled out by default cus of spacer, 78 ohms per inch
-    return (potReading.getAverageValue() - 35) / 78;
+    // 595 is the length pulled out by default, 78 ohms per inch
+    return (((double)potReading.getAverageValue() - 584.0) / 78.0);
   }
 
   public void shuffleboardInit() {
-    EXTENDER.addDouble("String Pot Reading", () -> getExtenderLength());
+    EXTENDER.addDouble("String Pot Reading UNmodified", () -> potReading.getAverageValue());
+    EXTENDER.addDouble("String Pot Reading modified", () -> getExtenderLength());
+
     EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
+
+    EXTENDER.addBoolean("At setPoint", () -> extenderController.atSetpoint());
+    EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
+    
 
     PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
     PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
@@ -94,8 +109,11 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    extendingMotor.set(extenderController.calculate(this.extendingMotor.getEncoder().getPosition(), 0));
-    // pivotMotor.set(pivotController.calculate(pivotEncoder.getPosition(), pivotSetpoint) * .5);
-    pivotMotor.set(Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
+    // limitSetpoint();
+    
+    // extendingMotor.set(extenderController.calculate(getExtenderLength(), this.extenderSetpoint));
+    
+    // pivotMotor.set(Math.min(
+    //     Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
   }
 }

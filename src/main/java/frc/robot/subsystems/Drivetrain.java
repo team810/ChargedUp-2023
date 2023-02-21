@@ -1,12 +1,16 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -38,9 +42,7 @@ public class Drivetrain extends SubsystemBase {
         // Contains our speeds
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-        private SwerveModuleState[] moduleState = new SwerveModuleState[4];
-
-        private double distenceTraveled[] = {0,0,0,0};
+        private SwerveModuleState[] moduleStates = new SwerveModuleState[4];
 
         public Drivetrain() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -112,11 +114,11 @@ public class Drivetrain extends SubsystemBase {
         }
 
         public void resetPose(Pose2d pose) {
-                modulePositions = new SwerveModulePosition[]{
-                        new SwerveModulePosition(),
-                        new SwerveModulePosition(),
-                        new SwerveModulePosition(),
-                        new SwerveModulePosition()
+                modulePositions = new SwerveModulePosition[] {
+                                new SwerveModulePosition(),
+                                new SwerveModulePosition(),
+                                new SwerveModulePosition(),
+                                new SwerveModulePosition()
                 };
 
                 odometry.resetPosition(getGyroscopeRotation(), modulePositions, pose);
@@ -136,34 +138,32 @@ public class Drivetrain extends SubsystemBase {
                 SwerveModuleState[] states = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
                 // Update virtual states
-                moduleState = states;
+                moduleStates = states;
         }
 
-        public void lockWheels()
-        {
-                m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-                m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+        // public void lockWheels()
+        // {
+        // m_frontLeftModule.setDriveMotorIdleState(IdleMode.kBrake);
+        // m_frontRightModule.setDriveMotorIdleState(IdleMode.kBrake);
+        // m_backLeftModule.setDriveMotorIdleState(IdleMode.kBrake);
+        // m_frontRightModule.setDriveMotorIdleState(IdleMode.kBrake);
+        // }
+
+        // public void unlockWheels()
+        // {
+        // m_frontLeftModule.setDriveMotorIdleState(IdleMode.kCoast);
+        // m_frontRightModule.setDriveMotorIdleState(IdleMode.kCoast);
+        // m_backLeftModule.setDriveMotorIdleState(IdleMode.kCoast);
+        // m_frontRightModule.setDriveMotorIdleState(IdleMode.kCoast);
+        // }
+
+        public void setModuleStates(SwerveModuleState[] states) {
+                moduleStates = states;
+
         }
 
-        public void unlockWheels()
-        {
-                m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-                m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-        }
-
-        public void setModuleStates(SwerveModuleState[] states)
-        {
-                moduleState = states;
-
-        }
         // Setting each module to be that speed
         private void setStates(SwerveModuleState[] state) {
-
-
 
                 m_frontLeftModule.set(
                                 (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
@@ -190,20 +190,19 @@ public class Drivetrain extends SubsystemBase {
 
         // Positions
         public SwerveModulePosition getPosition(int moduleNumber) {
-//                return new SwerveModulePosition(
-//                                (modules[moduleNumber].getDriveEncoder().getPosition() *
-//                                                (DrivetrainConstants.WHEEL_DIAMETER
-//                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
-//                                moduleState[moduleNumber].angle);
-
-                // This is for sim
                 return new SwerveModulePosition(
-                modulePositions[moduleNumber].distanceMeters + moduleState[moduleNumber].speedMetersPerSecond * .02,
-                        moduleState[moduleNumber].angle
-                );
+                                (modules[moduleNumber].getDriveEncoder().getPosition() *
+                                                (DrivetrainConstants.WHEEL_DIAMETER
+                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+                                new Rotation2d(modules[moduleNumber].getSteerAngle()));
+                // This is for sim
+                // return new SwerveModulePosition(
+                // modulePositions[moduleNumber].distanceMeters +
+                // moduleState[moduleNumber].speedMetersPerSecond * .02,
+                // moduleState[moduleNumber].angle
+                // );
         }
 
-        // needed for the drive command
         public void drive(ChassisSpeeds chassisSpeeds) {
                 m_chassisSpeeds = chassisSpeeds;
         }
@@ -212,12 +211,6 @@ public class Drivetrain extends SubsystemBase {
                 ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
                 drivetrain.add("Field", field2d);
 
-
-                drivetrain.addDouble("Front Left Angle", () -> moduleState[0].angle.getDegrees());
-                drivetrain.addDouble("Front Right Angle", () -> moduleState[1].angle.getDegrees());
-                drivetrain.addDouble("Back Left Angle", () -> moduleState[2].angle.getDegrees());
-                drivetrain.addDouble("Back Right Angle", () -> moduleState[3].angle.getDegrees());
-
         }
 
         @Override
@@ -225,11 +218,10 @@ public class Drivetrain extends SubsystemBase {
 
                 if (RobotState.isTeleop()) {
                         setSpeeds(this.m_chassisSpeeds);
-                        setStates(moduleState);
+                        setStates(moduleStates);
                 }
-                if (RobotState.isAutonomous())
-                {
-                        setStates(moduleState);
+                if (RobotState.isAutonomous()) {
+                        setStates(moduleStates);
                 }
 
                 modulePositions[0] = getPosition(0);
@@ -240,7 +232,5 @@ public class Drivetrain extends SubsystemBase {
                 odometry.update(getGyroscopeRotation(), modulePositions);
 
                 field2d.setRobotPose(getPose());
-
-
         }
 }

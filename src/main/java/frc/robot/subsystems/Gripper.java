@@ -24,6 +24,7 @@ public class Gripper extends SubsystemBase {
   public Gripper() {
     gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
     gripperPIDController = GripperConstants.GRIPPER_CONTROLLER;
+    gripperPIDController.setTolerance(.2);
 
     this.setPoint = 0;
 
@@ -33,6 +34,8 @@ public class Gripper extends SubsystemBase {
     gripperMotor.restoreFactoryDefaults();
     gripperMotor.setIdleMode(IdleMode.kBrake);
 
+    gripperMotor.setSmartCurrentLimit(20);
+
     shuffleboardInit();
   }
 
@@ -41,20 +44,21 @@ public class Gripper extends SubsystemBase {
   }
 
   public void rest() {
-    this.setPoint = 0;
+    this.setPoint = -4.5;
   }
 
   public void gripCube() {
-    this.setPoint = 6;
+    this.setPoint = 0;
   }
 
   public void gripCone() {
-    this.setPoint = 12;
+    this.setPoint = 10;
   }
 
   public void shuffleboardInit() {
     GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
     GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
+    GRIPPER_MOTOR.addDouble("Temp", () -> gripperMotor.getMotorTemperature());
 
     GRIPPER_PID.addDouble("Setpoint", () -> this.setPoint);
   }
@@ -62,6 +66,6 @@ public class Gripper extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    gripperMotor.set(gripperPIDController.calculate(gripperMotor.getEncoder().getPosition(), this.setPoint) * .5);
+    gripperMotor.set(gripperPIDController.calculate(gripperMotor.getEncoder().getPosition(), this.setPoint) * .4);
   }
 }
