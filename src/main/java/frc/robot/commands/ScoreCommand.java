@@ -1,17 +1,14 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Autos;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ColorSensor;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.*;
 
 public class ScoreCommand extends SequentialCommandGroup {
     private final Arm arm;
-    private final ColorSensor colorSensor;
     private final Drivetrain drivetrain;
     private final Gripper gripper;
     private final Limelight limelight;
@@ -21,17 +18,16 @@ public class ScoreCommand extends SequentialCommandGroup {
     private int gamePiece;
 
 
-    public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
+    public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
                         Conveyor conveyor, Autos auto) {
         this.arm = arm;
-        this.colorSensor = colorSensor;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
         this.limelight = limelight;
         this.conveyor = conveyor;
         this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece, auto); // FIXME wtf is the object
 
-        addRequirements(this.arm, this.colorSensor, this.drivetrain, this.gripper, this.limelight, this.conveyor);
+        addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
 
         addCommands(
                 getGamePiece(),
