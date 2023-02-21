@@ -1,27 +1,22 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Autos;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
-        Autos auto;
         // 4 modules on the drivetrain
         private final SwerveModule m_frontLeftModule;
         private final SwerveModule m_frontRightModule;
@@ -30,12 +25,10 @@ public class Drivetrain extends SubsystemBase {
         private final Field2d field2d = new Field2d();
 
         // Contains the current distances and angles of each module
-        private final SwerveModulePosition[] modulePositions = { new SwerveModulePosition(), new SwerveModulePosition(),
-                        new SwerveModulePosition(), new SwerveModulePosition() };
+        private SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
 
         // Just an array to reference each module
         private final SwerveModule[] modules = new SwerveModule[4];
-
         // Gyroscope
         private final AHRS m_navx = new AHRS(Port.kMXP);
 
@@ -44,6 +37,10 @@ public class Drivetrain extends SubsystemBase {
 
         // Contains our speeds
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+
+        private SwerveModuleState[] moduleState = new SwerveModuleState[4];
+
+        private double distenceTraveled[] = {0,0,0,0};
 
         public Drivetrain() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -96,6 +93,11 @@ public class Drivetrain extends SubsystemBase {
                 // setting current gyro reading to 0 (accounts for uneven floor)
                 zeroGyroscope();
 
+                modulePositions[0] = new SwerveModulePosition();
+                modulePositions[1] = new SwerveModulePosition();
+                modulePositions[2] = new SwerveModulePosition();
+                modulePositions[3] = new SwerveModulePosition();
+
                 // Odometry is instantiated intitally with our module positions on the chasis,
                 // Rotation (should be 0)
                 // and the current positions, each should be 0 still here
@@ -110,6 +112,13 @@ public class Drivetrain extends SubsystemBase {
         }
 
         public void resetPose(Pose2d pose) {
+                modulePositions = new SwerveModulePosition[]{
+                        new SwerveModulePosition(),
+                        new SwerveModulePosition(),
+                        new SwerveModulePosition(),
+                        new SwerveModulePosition()
+                };
+
                 odometry.resetPosition(getGyroscopeRotation(), modulePositions, pose);
         }
 
@@ -126,14 +135,35 @@ public class Drivetrain extends SubsystemBase {
         private void setSpeeds(ChassisSpeeds chassisSpeeds) {
                 SwerveModuleState[] states = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
                 SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
-
                 // Update virtual states
-                setStates(states);
+                moduleState = states;
         }
 
+        public void lockWheels()
+        {
+                m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+                m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+        }
+
+        public void unlockWheels()
+        {
+                m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+                m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+                m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
+        }
+
+        public void setModuleStates(SwerveModuleState[] states)
+        {
+                moduleState = states;
+
+        }
         // Setting each module to be that speed
-        public void setStates(SwerveModuleState[] state) {
-                odometry.update(getGyroscopeRotation(), modulePositions);
+        private void setStates(SwerveModuleState[] state) {
+
+
 
                 m_frontLeftModule.set(
                                 (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
@@ -155,22 +185,22 @@ public class Drivetrain extends SubsystemBase {
                                                 * DrivetrainConstants.MAX_VOLTAGE)
                                                 * DrivetrainConstants.SPEED_LIMIT,
                                 state[3].angle.getRadians());
+
         }
 
         // Positions
         public SwerveModulePosition getPosition(int moduleNumber) {
-                return new SwerveModulePosition(
-                                (modules[moduleNumber].getDriveEncoder().getPosition() *
-                                                (DrivetrainConstants.WHEEL_DIAMETER
-                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
-                                new Rotation2d(modules[moduleNumber].getSteerAngle()));
-        }
+//                return new SwerveModulePosition(
+//                                (modules[moduleNumber].getDriveEncoder().getPosition() *
+//                                                (DrivetrainConstants.WHEEL_DIAMETER
+//                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+//                                moduleState[moduleNumber].angle);
 
-        private void updatePositions() {
-                modulePositions[0] = getPosition(0);
-                modulePositions[1] = getPosition(1);
-                modulePositions[2] = getPosition(2);
-                modulePositions[3] = getPosition(3);
+                // This is for sim
+                return new SwerveModulePosition(
+                modulePositions[moduleNumber].distanceMeters + moduleState[moduleNumber].speedMetersPerSecond * .02,
+                        moduleState[moduleNumber].angle
+                );
         }
 
         // needed for the drive command
@@ -181,13 +211,36 @@ public class Drivetrain extends SubsystemBase {
         public void shuffleboardInit() {
                 ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
                 drivetrain.add("Field", field2d);
+
+
+                drivetrain.addDouble("Front Left Angle", () -> moduleState[0].angle.getDegrees());
+                drivetrain.addDouble("Front Right Angle", () -> moduleState[1].angle.getDegrees());
+                drivetrain.addDouble("Back Left Angle", () -> moduleState[2].angle.getDegrees());
+                drivetrain.addDouble("Back Right Angle", () -> moduleState[3].angle.getDegrees());
+
         }
 
         @Override
         public void periodic() {
-                // setting the speeds of each module
-                setSpeeds(this.m_chassisSpeeds);
-                // updating the positions of each module
-                updatePositions();
+
+                if (RobotState.isTeleop()) {
+                        setSpeeds(this.m_chassisSpeeds);
+                        setStates(moduleState);
+                }
+                if (RobotState.isAutonomous())
+                {
+                        setStates(moduleState);
+                }
+
+                modulePositions[0] = getPosition(0);
+                modulePositions[1] = getPosition(1);
+                modulePositions[2] = getPosition(2);
+                modulePositions[3] = getPosition(3);
+
+                odometry.update(getGyroscopeRotation(), modulePositions);
+
+                field2d.setRobotPose(getPose());
+
+
         }
 }

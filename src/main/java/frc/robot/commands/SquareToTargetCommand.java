@@ -1,113 +1,87 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPoint;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Autos;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 
-public class SquareToTargetCommand extends CommandBase {
+import java.util.function.Supplier;
+
+
+public class SquareToTargetCommand extends SequentialCommandGroup {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
-    private final PIDController xController = Constants.DrivetrainConstants.Auto.XY_CONTROLLER;
-    private final PIDController yController = Constants.DrivetrainConstants.Auto.XY_CONTROLLER;
-    private final PIDController thetaController = Constants.DrivetrainConstants.Auto.THETA_CONTROLLER;
-    private Pose3d targetPos;
-    private Transform3d toTarget;
-    private Pose3d currentPos;
+    private Supplier<Integer> object;
+    private Autos autos;
 
-    private final double error_amount = .05;
-
-    public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, int object) {
+    public SquareToTargetCommand(Drivetrain drivetrain, Limelight limelight, Supplier<Integer> object, Autos auto) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
+        this.object = object;
+        autos = auto;
 
-        currentPos = new Pose3d(drivetrain.getPose());
-
-        toTarget = limelight.getBestTarget().getBestCameraToTarget();
-
-        targetPos = currentPos;
-        targetPos.transformBy(toTarget);
-
-        targetPos.transformBy(basedOnTargetTransform(object));
-
-        targetPos.transformBy(Constants.ScoreConstants.DISTANCE_FROM_TARGET);// makes it so the target pos is not on the actual target
+        Init();
 
         addRequirements(this.drivetrain, this.limelight);
     }
-    public int getTarget()
+
+    public void Init()
     {
-        // This might be a point of error
+        if (object.get() == 1) // Cone
+        {
+            System.out.println("Cone");
+            limelight.setMode("Reflective Tape");
+            addCommands(targetPosCone());
 
-        // This should return the distance to the target
-        currentPos = new Pose3d(drivetrain.getPose());
-        toTarget = limelight.getBestTarget().getBestCameraToTarget();
+        } else if (object.get() == 2){ // Cube
+            System.out.println("Cube");
+            limelight.setMode("AprilTag");
+            addCommands(targetPosCube());
 
-        targetPos = currentPos;
-        targetPos.transformBy(toTarget);
-        targetPos.transformBy(basedOnTargetTransform(0));
-
-        double distanceTo = targetPos.minus(currentPos).getX();
-
-        if (
-                distanceTo > Constants.ScoreConstants.BOTTOM_ROW_RANGE[0]&&
-                distanceTo < Constants.ScoreConstants.BOTTOM_ROW_RANGE[1]
-        ){
-            return 1;
-        } else if (
-                distanceTo > Constants.ScoreConstants.MIDDLE_ROW_RANGE[0]&&
-                distanceTo < Constants.ScoreConstants.MIDDLE_ROW_RANGE[1]
-        ) {
-            return 2;
-        } else if (
-                distanceTo > Constants.ScoreConstants.TOP_ROW_RANGE[0]&&
-                distanceTo < Constants.ScoreConstants.TOP_ROW_RANGE[1]
-        ) {
-            return 3;
         }else{
-            return 0;
+            System.out.println("VERY BAD SQUARE TO TARGET IS NOT LIKING LIFE");
         }
+
+
     }
 
-    private Transform3d basedOnTargetTransform(int object) // FIXME needs to be adjusted based on cones and cubes
+    public Command targetPosCube()
     {
-        return new Transform3d();
+//        Transform3d temp = new Transform3d(new Translation3d(-.669,0,0), new Rotation3d()); // I do not know what the x and y will be
+
+        Translation2d trans = limelight.getBestTarget().getBestCameraToTarget().getTranslation().toTranslation2d();
+        trans.plus(new Translation2d(-669,0));
+
+        return autos.gnerateCommand(
+                PathPlanner.generatePath(
+                        Constants.DrivetrainConstants.Auto.SCORE_CONSTRAINTS,
+                        new PathPoint(trans, limelight.getBestTarget().getBestCameraToTarget().getRotation().toRotation2d()),
+                        new PathPoint(new Translation2d(), new Rotation2d())
+                )
+        );
     }
 
-    @Override
-    public void initialize() {
+    public Command targetPosCone()
+    {
+//        Transform3d temp = new Transform3d(new Translation3d(-.488,0,0), new Rotation3d()); // I do not know what the x and y will be
 
+        Translation2d trans = limelight.getBestTarget().getBestCameraToTarget().getTranslation().toTranslation2d();
+        trans.plus(new Translation2d(-.488, 0));
+
+        return autos.gnerateCommand(
+                PathPlanner.generatePath(
+                        Constants.DrivetrainConstants.Auto.SCORE_CONSTRAINTS,
+                        new PathPoint(trans, limelight.getBestTarget().getBestCameraToTarget().getRotation().toRotation2d()),
+                        new PathPoint(new Translation2d(), new Rotation2d())
+                )
+        );
     }
 
-    @Override
-    public void execute() {
-        ChassisSpeeds speeds;
 
-        double x_speed, y_speed, z_speed;
-
-        x_speed = xController.calculate(drivetrain.getPose().getX(), targetPos.getX());
-        y_speed = yController.calculate(drivetrain.getPose().getY(), targetPos.getY());
-        z_speed = thetaController.calculate(drivetrain.getPose().getRotation().getRadians(),
-                targetPos.getRotation().getAngle());
-
-        speeds = new ChassisSpeeds(x_speed, y_speed, z_speed);
-
-        drivetrain.drive(speeds);
-    }
-
-    @Override
-    public boolean isFinished() {
-
-        return xController.getPositionError() < error_amount &&
-                yController.getPositionError() < error_amount &&
-                thetaController.getPositionError() < error_amount;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
 }

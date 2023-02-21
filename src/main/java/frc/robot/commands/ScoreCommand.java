@@ -1,41 +1,37 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ColorSensor;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Autos;
+import frc.robot.subsystems.*;
 
 public class ScoreCommand extends SequentialCommandGroup {
     private final Arm arm;
-    private final ColorSensor colorSensor;
     private final Drivetrain drivetrain;
     private final Gripper gripper;
     private final Limelight limelight;
     private final Conveyor conveyor;
     private final SquareToTargetCommand toTarget;
     private int targetNum;
+    private int gamePiece;
 
 
-    public ScoreCommand(Arm arm, ColorSensor colorSensor, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, int[] target) {
+    public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
+                        Conveyor conveyor, Autos auto) {
         this.arm = arm;
-        this.colorSensor = colorSensor;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
         this.limelight = limelight;
         this.conveyor = conveyor;
-        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, 0); // FIXME wtf is the object
+        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece, auto); // FIXME wtf is the object
 
-        addRequirements(this.arm, this.colorSensor, this.drivetrain, this.gripper, this.limelight, this.conveyor);
+        addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
 
         addCommands(
-                new ParallelCommandGroup(
-                        toTarget, // This command squares the bot to the target
-                        getGamePiece() // puts the game peice in the arm
-                ),
+                getGamePiece(),
+                toTarget,
                 armCommand(),
                 new InstantCommand(gripper::rest),
                 new InstantCommand(() -> System.out.println("Piece Placed")),
@@ -50,6 +46,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitUntilCommand(() -> conveyor.getGamePiece() != 0),
                 new InstantCommand(() ->
                 {
+                    gamePiece = conveyor.getGamePiece();
                     switch (conveyor.getGamePiece())
                     {
                         case 1:
@@ -70,33 +67,48 @@ public class ScoreCommand extends SequentialCommandGroup {
         );
     }
 
-    public InstantCommand genTarget()
-    {
-        return new InstantCommand(
-                () -> targetNum = toTarget.getTarget()
-        );
-    }
-
     private SequentialCommandGroup armCommand()
     {
         return new SequentialCommandGroup(
                 new InstantCommand(() ->
                 {
-                    switch (targetNum)
+                    if (gamePiece == 1) // if game piece is a cone it will
                     {
-                        case 1:
-                            arm.lowGoal();
-                            break;
-                        case 2:
-                            arm.middleGoal();
-                            break;
-                        case 3:
-                            arm.highGoal();
-                            break;
-                        default:
-                            System.out.println("Probably Bad range");
-                            break;
+                        switch (targetNum)
+                        {
+                            case 1:
+                                arm.lowGoalCone();
+                                break;
+                            case 2:
+                                arm.middleGoalCone();
+                                break;
+                            case 3:
+                                arm.highGoalCone();
+                                break;
+                            default:
+                                System.out.println("Probably Bad range for cone ");
+                                break;
 
+                        }
+                    } else if (gamePiece == 2) // if the game piece is going to be a cube
+                    {
+                        switch (targetNum)
+                        {
+                            case 1:
+                                arm.lowGoalCube();
+                                break;
+                            case 2:
+                                arm.middleGoalCube();
+                                break;
+                            case 3:
+                                arm.highGoalCube();
+                                break;
+                            default:
+                                System.out.println("out of range error for cube");
+                                break;
+                        }
+                    }else{
+                        System.out.println("VERY BAD NOTHING IN THE GRIPPER, in code at least");
                     }
                 }
                 ),

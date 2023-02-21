@@ -93,10 +93,11 @@ public final class Constants {
             public static final PIDController THETA_CONTROLLER = new PIDController(0, 0, 0);
 
             // Auto
-            public static final PIDConstants XY_CONSTANTS = new PIDConstants(.4, 0, 0); // FIXME PID CONSTANTS
+            public static final PIDConstants XY_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID CONSTANTS
             public static final PIDConstants THETA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
 
-            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(2, 4);
+            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1, 4);
+            public static final PathConstraints SCORE_CONSTRAINTS = new PathConstraints(.5, .5);
         }
     }
 
@@ -161,6 +162,8 @@ public final class Constants {
 
         // Motors
         public static final int CONVEYOR_MOTOR = 10;
+
+        public static final double MOTOR_SPEED = .6;
     }
 
     public static final class GripperConstants {
