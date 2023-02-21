@@ -6,8 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
@@ -19,7 +18,7 @@ public class Conveyor extends SubsystemBase {
   private final ShuffleboardLayout CONVEYOR_TAB;
   private int gamePiece = 0; // if set to zero there is no gamePiece 1 is cone and 2 is cube
   private boolean disabled;
-
+  private boolean reversed;
 
   /** Creates a new Conveyor. */
   public Conveyor() {
@@ -30,7 +29,8 @@ public class Conveyor extends SubsystemBase {
 
     shuffleboardInit();
 
-    disabled = false;
+    disabled = true; // CONVEYOR IS DISABLED BY DEFAULT pls do not debug this
+    setReversed(false);
   }
 
   public void runConveyor(double speed) {
@@ -49,9 +49,18 @@ public class Conveyor extends SubsystemBase {
         gamePiece = 2;
       }
     } else {
-      runConveyor(.6);
+      runConveyor(ConveyorConstants.MOTOR_SPEED);
       gamePiece = 0;
     }
+  }
+
+
+  public boolean isReversed() {
+    return reversed;
+  }
+
+  public void setReversed(boolean reversed) {
+    this.reversed = reversed;
   }
 
   public int getGamePiece() {
@@ -70,13 +79,23 @@ public class Conveyor extends SubsystemBase {
     CONVEYOR_TAB.addDouble("Velocity",
         () -> this.speed);
   }
+  private void runConveyorReversed()
+  {
+    conveyorMotor.set(-1 * ConveyorConstants.MOTOR_SPEED);
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-   if (!disabled) // FIXME like this the conveyor and score command will not work as intended
+   if (!disabled && !RobotState.isTest()) // FIXME like this the conveyor and score command will not work as intended
    {
-     runConveyorWithColor();
+     if (isReversed())
+     {
+       runConveyorReversed();
+     }else{
+       runConveyorWithColor();
+     }
    }
+
   }
 }
