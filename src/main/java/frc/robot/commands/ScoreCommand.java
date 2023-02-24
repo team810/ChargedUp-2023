@@ -1,10 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Autos;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.*;
 
 public class ScoreCommand extends SequentialCommandGroup {
@@ -13,107 +10,109 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final Gripper gripper;
     private final Limelight limelight;
     private final Conveyor conveyor;
-    private final SquareToTargetCommand toTarget;
-    private int targetNum;
-    private int gamePiece;
-
-
+    private int target;
+    private ToTargetCommand toTarget;
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, Autos auto) {
+                        Conveyor conveyor, int target) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
         this.limelight = limelight;
         this.conveyor = conveyor;
-        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece, auto); // FIXME wtf is the object
 
-        addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
+        this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
 
+        this.target = target;
         addCommands(
-                getGamePiece(),
                 toTarget,
-                armCommand(),
-                new InstantCommand(gripper::rest),
-                new InstantCommand(() -> System.out.println("Piece Placed")),
-                new InstantCommand(arm::restPivot)
+                new InstantCommand(() -> drivetrain.drive(new ChassisSpeeds(0,0,0))), // Just making sure that the robot is not moving at all
+                setTarget(),
+                gripGamePiece(),
+                armToGoal(),
+                new WaitCommand(3),
+                extenderToGoal(),
+                new WaitCommand(2),
+                releaseGrip(),
+                new WaitCommand(2),
+                new InstantCommand(() -> arm.restExtender()),
+                new InstantCommand(() -> gripper.gripCone()),
+                new WaitCommand(1.5),
+                new InstantCommand(() -> arm.restPivot()),
+                new WaitCommand(2),
+                new InstantCommand(() -> gripper.setSetPoint(-5.57142162322998)),
+                new InstantCommand(() -> System.out.println("finished"))
         );
+        addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
     }
 
-    private SequentialCommandGroup getGamePiece() // this is getting the game pice to the gripper from the conveyer belit
-    {
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> conveyor.setDisabled(false)),
-                new WaitUntilCommand(() -> conveyor.getGamePiece() != 0),
-                new InstantCommand(() ->
-                {
-                    gamePiece = conveyor.getGamePiece();
-                    switch (conveyor.getGamePiece())
-                    {
-                        case 1:
-                            gripper.gripCone();
-                            System.out.println("Gripping something");
-                            break;
-                        case 2:
-                            gripper.gripCube();
-                            System.out.println("Gripping something");
-                            break;
-                        case 0:
-                            System.out.println("LIFE IS A LIE");
-                            break;
-                    }
-                }),
-                new InstantCommand(() -> conveyor.setDisabled(true))
 
-        );
+    private Command setTarget() {
+        return new InstantCommand(() -> {
+            if (conveyor.getGamePiece() == 1) { // cone
+                target = 2;
+                System.out.println("Hello World\n");
+            } else if (conveyor.getGamePiece() == 2) { // cube
+                target = 1;
+            } else {
+                System.out.println("NO target");
+            }
+        });
     }
 
-    private SequentialCommandGroup armCommand()
+    private Command gripGamePiece()
     {
-        return new SequentialCommandGroup(
-                new InstantCommand(() ->
-                {
-                    if (gamePiece == 1) // if game piece is a cone it will
-                    {
-                        switch (targetNum)
-                        {
-                            case 1:
-                                arm.lowGoalCone();
-                                break;
-                            case 2:
-                                arm.middleGoalCone();
-                                break;
-                            case 3:
-                                arm.highGoalCone();
-                                break;
-                            default:
-                                System.out.println("Probably Bad range for cone ");
-                                break;
+        return new InstantCommand(() ->
+        {
+            gripper.gripCone();
+        });
+    }
 
-                        }
-                    } else if (gamePiece == 2) // if the game piece is going to be a cube
-                    {
-                        switch (targetNum)
-                        {
-                            case 1:
-                                arm.lowGoalCube();
-                                break;
-                            case 2:
-                                arm.middleGoalCube();
-                                break;
-                            case 3:
-                                arm.highGoalCube();
-                                break;
-                            default:
-                                System.out.println("out of range error for cube");
-                                break;
-                        }
-                    }else{
-                        System.out.println("VERY BAD NOTHING IN THE GRIPPER, in code at least");
-                    }
-                }
-                ),
-                new WaitCommand(1)
-        );
+    public Command releaseGrip()
+    {
+        return new InstantCommand(() -> {
+            gripper.rest();
+        });
+    }
+
+    private Command armToGoal()
+    {
+        return new InstantCommand(() -> {
+            switch (target) {
+                case 1:
+                    arm.setPivotSetpoint(-9.5);
+                    break;
+                case 2:
+                    arm.setPivotSetpoint(-35.5);
+                    break;
+                case 3:
+                    arm.setPivotSetpoint(-40);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+    private Command extenderToGoal()
+    {
+        return new InstantCommand(() ->
+        {
+            switch (target)
+            {
+                case 1:
+                    arm.setExtenderSetpoint(-2.5);
+                    break;
+                case 2:
+                    arm.setExtenderSetpoint(5);
+                    break;
+                case 3:
+                    arm.setExtenderSetpoint(20.5);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
     }
 
 }

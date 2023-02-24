@@ -12,16 +12,16 @@ import frc.robot.Constants.ColorSensorConstants;
 
 public class ColorSensor extends SubsystemBase {
     private final ColorSensorV3 m_colorSensorV3;
+
     private final ColorMatch m_colorMatcher;
-
     private final Color kYellowTarget = new Color(0.355, 0.555, 0.090);
-    private final Color kPurpleTarget = new Color(0.203, 0.317, 0.479);
 
+    private final Color kPurpleTarget = new Color(0.203, 0.317, 0.479);
     private Color detectedColor;
+
     private double IR;
     private String colorString;
     private ColorMatchResult match;
-
     private final ShuffleboardLayout COLOR_TAB = ColorSensorConstants.COLOR_SENSOR;
 
     public ColorSensor() {
@@ -86,4 +86,6 @@ public class ColorSensor extends SubsystemBase {
             colorString = "Unknown";
         }
     }
+
+
 }

@@ -1,22 +1,16 @@
 package frc.robot;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ScoreCommand;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.*;
+
+import java.util.HashMap;
 
 public class Autos {
     private final Drivetrain m_drivetrain;
@@ -38,7 +32,7 @@ public class Autos {
         m_gripper = gripper;
         this.limelight = limelight;
 
-        score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor, this);
+        score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,2);
 
         addMethods();
 

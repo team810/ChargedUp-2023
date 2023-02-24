@@ -3,20 +3,16 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
@@ -42,7 +38,12 @@ public class Drivetrain extends SubsystemBase {
         // Contains our speeds
         private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-        private SwerveModuleState[] moduleStates = new SwerveModuleState[4];
+        private SwerveModuleState[] moduleStates = {
+                new SwerveModuleState(),
+                new SwerveModuleState(),
+                new SwerveModuleState(),
+                new SwerveModuleState()
+        };
 
         public Drivetrain() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -106,11 +107,17 @@ public class Drivetrain extends SubsystemBase {
                 odometry = new SwerveDriveOdometry(DrivetrainConstants.KINEMATICS,
                                 m_navx.getRotation2d(), modulePositions);
 
+                m_navx.resetDisplacement();
+
+
+
+
         }
 
         // Resetting
         public void zeroGyroscope() {
                 m_navx.zeroYaw();
+
         }
 
         public void resetPose(Pose2d pose) {
@@ -162,8 +169,9 @@ public class Drivetrain extends SubsystemBase {
 
         }
 
+
         // Setting each module to be that speed
-        private void setStates(SwerveModuleState[] state) {
+        public void setStates(SwerveModuleState[] state) {
 
                 m_frontLeftModule.set(
                                 (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
@@ -185,6 +193,28 @@ public class Drivetrain extends SubsystemBase {
                                                 * DrivetrainConstants.MAX_VOLTAGE)
                                                 * DrivetrainConstants.SPEED_LIMIT,
                                 state[3].angle.getRadians());
+
+
+
+
+                SmartDashboard.putNumber("Front Left Angle", state[0].angle.getDegrees());
+                SmartDashboard.putNumber("Front Right Angle", state[1].angle.getDegrees());
+                SmartDashboard.putNumber("Back Left Angle", state[2].angle.getDegrees());
+                SmartDashboard.putNumber("Back Right Angle", state[3].angle.getDegrees());
+
+                SmartDashboard.putNumber("Front Left Speed", (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+                        * DrivetrainConstants.MAX_VOLTAGE)
+                        * DrivetrainConstants.SPEED_LIMIT);
+                SmartDashboard.putNumber("Front Right Speed", (state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+                        * DrivetrainConstants.MAX_VOLTAGE)
+                        * DrivetrainConstants.SPEED_LIMIT);
+                SmartDashboard.putNumber("Back Left Speed", (state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+                        * DrivetrainConstants.MAX_VOLTAGE)
+                        * DrivetrainConstants.SPEED_LIMIT);
+                SmartDashboard.putNumber("Back Right Speed", (state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+                        * DrivetrainConstants.MAX_VOLTAGE)
+                        * DrivetrainConstants.SPEED_LIMIT);
+
 
         }
 
@@ -217,6 +247,7 @@ public class Drivetrain extends SubsystemBase {
         public void periodic() {
 
                 if (RobotState.isTeleop()) {
+
                         setSpeeds(this.m_chassisSpeeds);
                         setStates(moduleStates);
                 }

@@ -24,17 +24,29 @@ public class Intake extends SubsystemBase {
     rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
     pHub = new PneumaticHub(18);
+
     pHub.clearStickyFaults();
 
-    
+
     pHub.enableCompressorDigital();
 
     piston = pHub.makeDoubleSolenoid(0, 7);
+
+    shuffleboardInit();
+  }
+
+  public void out()
+  {
+    piston.set(Value.kForward);
+  }
+  public void in()
+  {
+    piston.set(Value.kReverse);
   }
 
   public void runIntake(double speed) {
-    leftIntakeMotor.set(speed);
-    rightIntakeMotor.set(-speed);
+    leftIntakeMotor.set(-speed);
+    rightIntakeMotor.set(speed);
   }
 
   public void toggleIntake()
@@ -45,6 +57,7 @@ public class Intake extends SubsystemBase {
   public void shuffleboardInit() {
     INTAKE_VALUES.addBoolean("Compressor On?", ()-> this.pHub.getCompressor());
     INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+//    INTAKE_VALUES.add("sol", pHub);
   }
 
   public Value getSolenoidValue() {

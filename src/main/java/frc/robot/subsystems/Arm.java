@@ -41,12 +41,20 @@ public class Arm extends SubsystemBase {
     PIVOT = ArmConstants.PIVOT;
     EXTENDER = ArmConstants.EXTENDER;
 
-    extenderSetpoint = -1;
+    extenderSetpoint = -1.5;
     pivotSetpoint = 0;
 
     shuffleboardInit();
   }
 
+  public void setPivotSetpoint(double change)
+  {
+    pivotSetpoint = change;
+  }
+  public void setExtenderSetpoint(double change)
+  {
+    extenderSetpoint = change;
+  }
   public void runExtender(double speed)
   {
     extendingMotor.set(speed);
@@ -61,7 +69,7 @@ public class Arm extends SubsystemBase {
   }
   public void restExtender()
   {
-    extenderSetpoint = -1;
+    extenderSetpoint = -1.5;
   }
 
   public void lowGoalCone() {
@@ -111,9 +119,10 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     // limitSetpoint();
     
-    // extendingMotor.set(extenderController.calculate(getExtenderLength(), this.extenderSetpoint));
+     extendingMotor.set(
+             Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
     
-    // pivotMotor.set(Math.min(
-    //     Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
+     pivotMotor.set(Math.min(
+         Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
   }
 }

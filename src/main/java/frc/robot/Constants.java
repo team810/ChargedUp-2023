@@ -90,7 +90,7 @@ public final class Constants {
 
         public static final class Auto {
             // TeleOP
-            public static final PIDController XY_CONTROLLER = new PIDController(0, 0, 0);
+            public static final PIDController XY_CONTROLLER = new PIDController(.2, .01, .01);
             public static final PIDController THETA_CONTROLLER = new PIDController(0, 0, 0);
 
             // Auto

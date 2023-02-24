@@ -37,6 +37,13 @@ public class Gripper extends SubsystemBase {
     gripperMotor.setSmartCurrentLimit(20);
 
     shuffleboardInit();
+
+    setSetPoint(-5.57142162322998);
+  }
+
+  public void setSetPoint(double setPoint)
+  {
+    this.setPoint = setPoint;
   }
 
   public void runGripper(double speed) {
@@ -44,7 +51,7 @@ public class Gripper extends SubsystemBase {
   }
 
   public void rest() {
-    this.setPoint = -4.5;
+    this.setPoint = -3.8;
   }
 
   public void gripCube() {

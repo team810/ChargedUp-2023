@@ -6,18 +6,19 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
 
 public class Conveyor extends SubsystemBase {
-  private final CANSparkMax conveyorMotor;
+  public final CANSparkMax conveyorMotor;
   private final ColorSensor colorSensor;
+
   private double speed;
   private final ShuffleboardLayout CONVEYOR_TAB;
   private int gamePiece = 0; // if set to zero there is no gamePiece 1 is cone and 2 is cube
-  private boolean disabled;
+
+  private boolean enabled;
   private boolean reversed;
 
   /** Creates a new Conveyor. */
@@ -27,31 +28,67 @@ public class Conveyor extends SubsystemBase {
 
     CONVEYOR_TAB = ConveyorConstants.CONVEYOR_LAYOUT;
 
+    enabled = false;
+    reversed = false;
+
     shuffleboardInit();
 
-    disabled = true; // CONVEYOR IS DISABLED BY DEFAULT pls do not debug this
-    setReversed(false);
   }
 
-  public void runConveyor(double speed) {
-    this.speed = speed;
-    conveyorMotor.set(speed);
-  }
-
-  // To move conveyor during scoring
-
-  public void runConveyorWithColor() {
-    if (colorSensor.getColor().equals("Yellow") || colorSensor.getColor().equals("Purple")) {
-      runConveyor(0);
-      if (colorSensor.getColor().equals("Yellow")) {
-        gamePiece = 1;
-      } else if (colorSensor.getColor().equals("Purple")) {
-        gamePiece = 2;
-      }
-    } else {
-      runConveyor(ConveyorConstants.MOTOR_SPEED);
-      gamePiece = 0;
+  private void updateGamePiece()
+  {
+    if (colorSensor.getColor().equals("Yellow"))
+    {
+      setGamePiece(1);
+    } else if (colorSensor.getColor().equals("Purple")) {
+      setGamePiece(2);
+    }else{
+      setGamePiece(0);
     }
+    updateMotor();
+  }
+
+  void updateMotor()
+  {
+    if (enabled && gamePiece == 0)
+    {
+      if (!reversed)
+      {
+        conveyorMotor.set(ConveyorConstants.MOTOR_SPEED);
+      }else{
+        conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
+      }
+    }else{
+      conveyorMotor.set(0);
+    }
+  }
+  @Override
+  public void periodic() {
+    updateGamePiece();
+
+  }
+
+  public void shuffleboardInit() {
+    CONVEYOR_TAB.addDouble("Velocity",
+            () -> this.speed);
+  }
+
+  public int getGamePiece() {
+    return gamePiece;
+  }
+
+  private void setGamePiece(int gamePiece) {
+    this.gamePiece = gamePiece;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    updateMotor();
+
+    this.enabled = enabled;
   }
 
   public boolean isReversed() {
@@ -59,28 +96,7 @@ public class Conveyor extends SubsystemBase {
   }
 
   public void setReversed(boolean reversed) {
+    updateMotor();
     this.reversed = reversed;
-  }
-
-  public int getGamePiece() {
-    return gamePiece;
-  }
-
-  public boolean isDisabled() {
-    return disabled;
-  }
-
-  public void setDisabled(boolean disabled) {
-    this.disabled = disabled;
-  }
-
-  public void shuffleboardInit() {
-    CONVEYOR_TAB.addDouble("Velocity",
-        () -> this.speed);
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
   }
 }
