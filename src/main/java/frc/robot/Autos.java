@@ -34,7 +34,7 @@ public class Autos {
 
         score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,2);
 
-        addMethods();
+//        addMethods();
 
 
         // Auto Variables
@@ -44,7 +44,7 @@ public class Autos {
             DrivetrainConstants.KINEMATICS,
             DrivetrainConstants.Auto.XY_CONSTANTS,
             DrivetrainConstants.Auto.THETA_CONSTANTS,
-            m_drivetrain::setModuleStates,
+            m_drivetrain::setStates,
             this.eventMap,
             false,
         m_drivetrain);
@@ -77,6 +77,7 @@ public class Autos {
 
     public Command genPath(String path)
     {
+
         return m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup(path, Constants.DrivetrainConstants.Auto.PATH_CONSTRAINTS));
     }
     public Command gnerateCommand(PathPlannerTrajectory trajectory)

@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
   private final DoubleSolenoid piston;
   private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
-  private final PneumaticHub pHub;
+  private final PneumaticHub pneumaticHub;
 
 
   /** Creates a new Intake. */
@@ -23,14 +23,14 @@ public class Intake extends SubsystemBase {
     leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
     rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-    pHub = new PneumaticHub(18);
+    pneumaticHub = new PneumaticHub(18);
 
-    pHub.clearStickyFaults();
+    pneumaticHub.clearStickyFaults();
 
 
-    pHub.enableCompressorDigital();
+    pneumaticHub.enableCompressorDigital();
 
-    piston = pHub.makeDoubleSolenoid(0, 7);
+    piston = pneumaticHub.makeDoubleSolenoid(0, 7);
 
     shuffleboardInit();
   }
@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
-    INTAKE_VALUES.addBoolean("Compressor On?", ()-> this.pHub.getCompressor());
+    INTAKE_VALUES.addBoolean("Compressor On?", ()-> this.pneumaticHub.getCompressor());
     INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
 //    INTAKE_VALUES.add("sol", pHub);
   }

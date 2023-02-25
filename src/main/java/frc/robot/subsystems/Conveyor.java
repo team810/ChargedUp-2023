@@ -20,6 +20,7 @@ public class Conveyor extends SubsystemBase {
 
   private boolean enabled;
   private boolean reversed;
+  private boolean scoring;
 
   /** Creates a new Conveyor. */
   public Conveyor() {
@@ -30,6 +31,7 @@ public class Conveyor extends SubsystemBase {
 
     enabled = false;
     reversed = false;
+    scoring = false;
 
     shuffleboardInit();
 
@@ -59,7 +61,10 @@ public class Conveyor extends SubsystemBase {
         conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
       }
     }else{
-      conveyorMotor.set(0);
+      if (!scoring)
+      {
+        conveyorMotor.set(0);
+      }
     }
   }
   @Override
@@ -87,7 +92,6 @@ public class Conveyor extends SubsystemBase {
 
   public void setEnabled(boolean enabled) {
     updateMotor();
-
     this.enabled = enabled;
   }
 
@@ -98,5 +102,13 @@ public class Conveyor extends SubsystemBase {
   public void setReversed(boolean reversed) {
     updateMotor();
     this.reversed = reversed;
+  }
+
+  public boolean isScoring() {
+    return scoring;
+  }
+
+  public void setScoring(boolean scoring) {
+    this.scoring = scoring;
   }
 }

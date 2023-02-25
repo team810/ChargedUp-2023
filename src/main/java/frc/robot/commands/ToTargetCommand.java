@@ -14,7 +14,7 @@ public class ToTargetCommand extends CommandBase {
     private final Conveyor conveyor;
     private final Drivetrain drivetrain;
     private final Limelight limelight;
-    private final double ERROR_AMOUNT_X = .5;
+    private final double ERROR_AMOUNT_X = .75;
     private final double X_OFFSET = 8.25;
     private final PIDController Xcontroller;
 

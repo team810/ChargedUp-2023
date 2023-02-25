@@ -46,6 +46,7 @@ public class Drivetrain extends SubsystemBase {
         };
 
         public Drivetrain() {
+                m_navx.reset();
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
                 // The module has two NEOs on it. One for steering and one for driving.
                 m_frontLeftModule = Mk3SwerveModuleHelper.createNeo(
@@ -91,6 +92,12 @@ public class Drivetrain extends SubsystemBase {
                 modules[2] = m_backLeftModule;
                 modules[3] = m_backRightModule;
 
+//                m_frontLeftModule.getDriveEncoder().setMeasurementPeriod(100);
+//                m_frontRightModule.getDriveEncoder().setMeasurementPeriod(100);
+//                m_backLeftModule.getDriveEncoder().setMeasurementPeriod(100);
+//                m_backRightModule.getDriveEncoder().setMeasurementPeriod(100);
+
+                m_navx.zeroYaw();
                 shuffleboardInit();
 
                 // setting current gyro reading to 0 (accounts for uneven floor)
@@ -107,11 +114,9 @@ public class Drivetrain extends SubsystemBase {
                 odometry = new SwerveDriveOdometry(DrivetrainConstants.KINEMATICS,
                                 m_navx.getRotation2d(), modulePositions);
 
-                m_navx.resetDisplacement();
 
 
-
-
+                odometry.resetPosition(getGyroscopeRotation(),modulePositions,new Pose2d(0,0,new Rotation2d()));
         }
 
         // Resetting
@@ -194,36 +199,21 @@ public class Drivetrain extends SubsystemBase {
                                                 * DrivetrainConstants.SPEED_LIMIT,
                                 state[3].angle.getRadians());
 
-
-
-
-                SmartDashboard.putNumber("Front Left Angle", state[0].angle.getDegrees());
-                SmartDashboard.putNumber("Front Right Angle", state[1].angle.getDegrees());
-                SmartDashboard.putNumber("Back Left Angle", state[2].angle.getDegrees());
-                SmartDashboard.putNumber("Back Right Angle", state[3].angle.getDegrees());
-
-                SmartDashboard.putNumber("Front Left Speed", (state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-                        * DrivetrainConstants.MAX_VOLTAGE)
-                        * DrivetrainConstants.SPEED_LIMIT);
-                SmartDashboard.putNumber("Front Right Speed", (state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-                        * DrivetrainConstants.MAX_VOLTAGE)
-                        * DrivetrainConstants.SPEED_LIMIT);
-                SmartDashboard.putNumber("Back Left Speed", (state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-                        * DrivetrainConstants.MAX_VOLTAGE)
-                        * DrivetrainConstants.SPEED_LIMIT);
-                SmartDashboard.putNumber("Back Right Speed", (state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-                        * DrivetrainConstants.MAX_VOLTAGE)
-                        * DrivetrainConstants.SPEED_LIMIT);
+                modules[0] = m_frontLeftModule;
+                modules[1] = m_frontRightModule;
+                modules[2] = m_backLeftModule;
+                modules[3] = m_backRightModule;
 
 
         }
 
         // Positions
         public SwerveModulePosition getPosition(int moduleNumber) {
+
                 return new SwerveModulePosition(
                                 (modules[moduleNumber].getDriveEncoder().getPosition() *
-                                                (DrivetrainConstants.WHEEL_DIAMETER
-                                                                * Math.PI / (DrivetrainConstants.GEAR_RATIO * 2048.0))),
+                                                (4 * Math.PI
+                                                        / (DrivetrainConstants.GEAR_RATIO))),
                                 new Rotation2d(modules[moduleNumber].getSteerAngle()));
                 // This is for sim
                 // return new SwerveModulePosition(
@@ -231,6 +221,23 @@ public class Drivetrain extends SubsystemBase {
                 // moduleState[moduleNumber].speedMetersPerSecond * .02,
                 // moduleState[moduleNumber].angle
                 // );
+        }
+
+        public void setStatesNoSpeedMod(SwerveModuleState[] state)
+        {
+                m_frontLeftModule.set(
+                        state[0].speedMetersPerSecond,
+                        state[0].angle.getRadians());
+                m_frontRightModule.set(
+                        state[1].speedMetersPerSecond,
+                        state[1].angle.getRadians());
+                m_backLeftModule.set(
+                        state[2].speedMetersPerSecond,
+                        state[2].angle.getRadians());
+                m_backRightModule.set(
+                        state[3].speedMetersPerSecond,
+                        state[3].angle.getRadians());
+
         }
 
         public void drive(ChassisSpeeds chassisSpeeds) {
@@ -252,7 +259,7 @@ public class Drivetrain extends SubsystemBase {
                         setStates(moduleStates);
                 }
                 if (RobotState.isAutonomous()) {
-                        setStates(moduleStates);
+
                 }
 
                 modulePositions[0] = getPosition(0);
@@ -263,5 +270,13 @@ public class Drivetrain extends SubsystemBase {
                 odometry.update(getGyroscopeRotation(), modulePositions);
 
                 field2d.setRobotPose(getPose());
+
+                SmartDashboard.putData("DATA", field2d);
+                SmartDashboard.putData("Life", m_navx);
+                SmartDashboard.putNumber("Rot",getPose().getRotation().getDegrees());
+                SmartDashboard.putNumber("X",getPose().getX());
+                SmartDashboard.putNumber("Y",getPose().getY());
+
+
         }
 }

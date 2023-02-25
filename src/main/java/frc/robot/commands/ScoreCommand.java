@@ -26,6 +26,12 @@ public class ScoreCommand extends SequentialCommandGroup {
         addCommands(
                 toTarget,
                 new InstantCommand(() -> drivetrain.drive(new ChassisSpeeds(0,0,0))), // Just making sure that the robot is not moving at all
+                new InstantCommand(() -> conveyor.setScoring(true)),
+                new InstantCommand(() -> gripper.rest()),
+                new InstantCommand(() -> conveyor.conveyorMotor.set(.3)),
+                new WaitCommand(1),
+                new InstantCommand(() -> conveyor.conveyorMotor.set(0)),
+                new InstantCommand(() -> conveyor.setScoring(false)),
                 setTarget(),
                 gripGamePiece(),
                 armToGoal(),
@@ -39,7 +45,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitCommand(1.5),
                 new InstantCommand(() -> arm.restPivot()),
                 new WaitCommand(2),
-                new InstantCommand(() -> gripper.setSetPoint(-5.57142162322998)),
+                new InstantCommand(() -> gripper.deffultstate()),
                 new InstantCommand(() -> System.out.println("finished"))
         );
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
@@ -49,7 +55,7 @@ public class ScoreCommand extends SequentialCommandGroup {
     private Command setTarget() {
         return new InstantCommand(() -> {
             if (conveyor.getGamePiece() == 1) { // cone
-                target = 2;
+//                target = 3;
                 System.out.println("Hello World\n");
             } else if (conveyor.getGamePiece() == 2) { // cube
                 target = 1;

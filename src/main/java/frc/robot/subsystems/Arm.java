@@ -41,7 +41,7 @@ public class Arm extends SubsystemBase {
     PIVOT = ArmConstants.PIVOT;
     EXTENDER = ArmConstants.EXTENDER;
 
-    extenderSetpoint = -1.5;
+    extenderSetpoint = 0;
     pivotSetpoint = 0;
 
     shuffleboardInit();

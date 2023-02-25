@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public final class Constants {
     public static final class OIConstants {
         public static final Joystick DRIVE_GAMEPAD = new Joystick(0);
-        // public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
+         public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
 
 //        public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
 //        public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
@@ -50,7 +50,7 @@ public final class Constants {
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
         public static final double WHEEL_DIAMETER = 0.0968375;
-        public static final double GEAR_RATIO = 12.8;
+        public static final double GEAR_RATIO = 12.16;
 
         // PORT #s and OFFSETS
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 6;
@@ -91,13 +91,13 @@ public final class Constants {
         public static final class Auto {
             // TeleOP
             public static final PIDController XY_CONTROLLER = new PIDController(.2, .01, .01);
-            public static final PIDController THETA_CONTROLLER = new PIDController(0, 0, 0);
+            public static final PIDController THETA_CONTROLLER = new PIDController(.1, 0, 0);
 
             // Auto
-            public static final PIDConstants XY_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID CONSTANTS
-            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(0, 0, 0); // FIXME PID constants THETA
+            public static final PIDConstants XY_CONSTANTS = new PIDConstants(.6, 0, 0); // FIXME PID CONSTANTS
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(2, 0, 0); // FIXME PID constants THETA
 
-            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1, 4);
+            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1, 3);
             public static final PathConstraints SCORE_CONSTRAINTS = new PathConstraints(.5, .5);
         }
     }
@@ -164,7 +164,7 @@ public final class Constants {
         // Motors
         public static final int CONVEYOR_MOTOR = 10;
 
-        public static final double MOTOR_SPEED = .6;
+        public static final double MOTOR_SPEED = .65;
     }
 
     public static final class GripperConstants {

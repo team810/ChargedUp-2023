@@ -38,7 +38,12 @@ public class Gripper extends SubsystemBase {
 
     shuffleboardInit();
 
-    setSetPoint(-5.57142162322998);
+    deffultstate();
+  }
+
+  public void deffultstate()
+  {
+    setSetPoint(-4.547614097595215);
   }
 
   public void setSetPoint(double setPoint)
