@@ -21,9 +21,8 @@ public class ConveyorCommand extends SequentialCommandGroup {
 
         addRequirements(this.conveyor);
 
-
         addCommands(
-                new InstantCommand(() -> conveyor.conveyorMotor.set(CONVEYOR_SPEED)),
+                new InstantCommand(() -> conveyor.conveyorMotor.set(.2)),
                 new InstantCommand(() -> {
                     if (conveyor.getGamePiece() == 1)
                     {

@@ -50,7 +50,7 @@ public final class Constants {
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.635;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.635;
         public static final double WHEEL_DIAMETER = 0.0968375;
-        public static final double GEAR_RATIO = 12.16;
+        public static final double GEAR_RATIO = 8.16;
 
         // PORT #s and OFFSETS
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 6;
@@ -94,10 +94,10 @@ public final class Constants {
             public static final PIDController THETA_CONTROLLER = new PIDController(.1, 0, 0);
 
             // Auto
-            public static final PIDConstants XY_CONSTANTS = new PIDConstants(.6, 0, 0); // FIXME PID CONSTANTS
-            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(2, 0, 0); // FIXME PID constants THETA
+            public static final PIDConstants XY_CONSTANTS = new PIDConstants(25, 0, 0); // FIXME PID CONSTANTS
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(1, 0, 0); // FIXME PID constants THETA
 
-            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(1, 3);
+            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.5, 3);
             public static final PathConstraints SCORE_CONSTRAINTS = new PathConstraints(.5, .5);
         }
     }

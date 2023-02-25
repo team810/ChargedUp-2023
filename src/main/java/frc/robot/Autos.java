@@ -5,7 +5,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ScoreCommand;
 import frc.robot.subsystems.*;
@@ -25,6 +24,7 @@ public class Autos {
 
 
     public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper, Limelight limelight) {
+//        PathPlannerServer.startServer(5811);
         m_drivetrain = drivetrain;
         m_intake = intake;
         m_conveyor = conveyor;
@@ -34,7 +34,7 @@ public class Autos {
 
         score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,2);
 
-//        addMethods();
+        addMethods();
 
 
         // Auto Variables
@@ -57,20 +57,11 @@ public class Autos {
     public void addMethods() {
 
         // intake methodsWADWQWADSXCX6Y
-        // eventMap.put("Actuate Intake", new InstantCommand(m_intake::actuateIntake));
-        eventMap.put("Intake In", new WaitCommand(3));
-        eventMap.put("Intake Out",new WaitCommand(3));
+        eventMap.put("Intake In", new InstantCommand(m_intake::in));
+        eventMap.put("Intake Out", new InstantCommand(m_intake::out));
         eventMap.put("Stop Intake", new InstantCommand(() -> m_intake.runIntake(0)));
 
-        // arm methods
-//        eventMap.put("Rest Arm", new InstantCommand(m_arm::rest));
-//        eventMap.put("Set Arm to Middle Goal", new InstantCommand(m_arm::middleGoalCone));
-//        eventMap.put("Set Arm to High Goal", new InstantCommand(m_arm::highGoalCone));
-//
-//        // gripper methods
-//        eventMap.put("Rest Gripper", new InstantCommand(m_gripper::rest));
-//        eventMap.put("Grip Cone", new InstantCommand(m_gripper::gripCone));
-//        eventMap.put("Grip Cube", new InstantCommand(m_gripper::gripCube));
+
 
         eventMap.put("Score", score);
     }

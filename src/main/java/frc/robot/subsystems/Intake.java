@@ -44,6 +44,7 @@ public class Intake extends SubsystemBase {
     piston.set(Value.kReverse);
   }
 
+
   public void runIntake(double speed) {
     leftIntakeMotor.set(-speed);
     rightIntakeMotor.set(speed);
@@ -66,6 +67,6 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler
+
   }
 }

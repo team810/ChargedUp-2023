@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -62,13 +65,35 @@ public class ToTargetCommand extends CommandBase {
 
             ChassisSpeeds speeds = new ChassisSpeeds(0,-1 * xSpeed,0);
 
-            drivetrain.drive(speeds);
+            if (RobotState.isAutonomous())
+            {
+                SwerveModuleState[] states = Constants.DrivetrainConstants.KINEMATICS.toSwerveModuleStates(speeds);
+                SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+
+                drivetrain.setStates(states);
+            }
+            if (RobotState.isTeleop())
+            {
+                drivetrain.drive(speeds);
+            }
 
         }
 
         if (isFinished())
         {
-            drivetrain.drive(new ChassisSpeeds(0,0,0));
+            ChassisSpeeds speeds = new ChassisSpeeds(0,0,0);
+
+            if (RobotState.isAutonomous())
+            {
+                SwerveModuleState[] states = Constants.DrivetrainConstants.KINEMATICS.toSwerveModuleStates(speeds);
+                SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+
+                drivetrain.setStates(states);
+            }
+            if (RobotState.isTeleop())
+            {
+                drivetrain.drive(speeds);
+            }
         }
 
     }

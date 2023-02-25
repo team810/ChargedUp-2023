@@ -116,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
 
 
 
-                odometry.resetPosition(getGyroscopeRotation(),modulePositions,new Pose2d(0,0,new Rotation2d()));
+                resetPose(new Pose2d(0,0,new Rotation2d(0)));
         }
 
         // Resetting
@@ -132,6 +132,12 @@ public class Drivetrain extends SubsystemBase {
                                 new SwerveModulePosition(),
                                 new SwerveModulePosition()
                 };
+
+                modules[0].getDriveEncoder().setPosition(0);
+                modules[1].getDriveEncoder().setPosition(0);
+                modules[2].getDriveEncoder().setPosition(0);
+                modules[3].getDriveEncoder().setPosition(0);
+
 
                 odometry.resetPosition(getGyroscopeRotation(), modulePositions, pose);
         }
@@ -210,10 +216,9 @@ public class Drivetrain extends SubsystemBase {
         // Positions
         public SwerveModulePosition getPosition(int moduleNumber) {
 
+//                modules[moduleNumber].getDriveEncoder().setPositionConversionFactor((4 * Math.PI / modules[moduleNumber].getDriveEncoder().getCountsPerRevolution()));
                 return new SwerveModulePosition(
-                                (modules[moduleNumber].getDriveEncoder().getPosition() *
-                                                (4 * Math.PI
-                                                        / (DrivetrainConstants.GEAR_RATIO))),
+                                modules[moduleNumber].getDriveEncoder().getPosition(),
                                 new Rotation2d(modules[moduleNumber].getSteerAngle()));
                 // This is for sim
                 // return new SwerveModulePosition(
@@ -259,7 +264,7 @@ public class Drivetrain extends SubsystemBase {
                         setStates(moduleStates);
                 }
                 if (RobotState.isAutonomous()) {
-
+                        
                 }
 
                 modulePositions[0] = getPosition(0);

@@ -26,12 +26,7 @@ public class ScoreCommand extends SequentialCommandGroup {
         addCommands(
                 toTarget,
                 new InstantCommand(() -> drivetrain.drive(new ChassisSpeeds(0,0,0))), // Just making sure that the robot is not moving at all
-                new InstantCommand(() -> conveyor.setScoring(true)),
-                new InstantCommand(() -> gripper.rest()),
-                new InstantCommand(() -> conveyor.conveyorMotor.set(.3)),
-                new WaitCommand(1),
-                new InstantCommand(() -> conveyor.conveyorMotor.set(0)),
-                new InstantCommand(() -> conveyor.setScoring(false)),
+
                 setTarget(),
                 gripGamePiece(),
                 armToGoal(),

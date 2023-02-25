@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,12 +37,11 @@ public class Gripper extends SubsystemBase {
 
     shuffleboardInit();
 
-    deffultstate();
-  }
 
+  }
   public void deffultstate()
   {
-    setSetPoint(-4.547614097595215);
+    setSetPoint(.5);
   }
 
   public void setSetPoint(double setPoint)
@@ -70,7 +68,7 @@ public class Gripper extends SubsystemBase {
   public void shuffleboardInit() {
     GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
     GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
-    GRIPPER_MOTOR.addDouble("Temp", () -> gripperMotor.getMotorTemperature());
+    GRIPPER_MOTOR.addDouble("Temp", gripperMotor::getMotorTemperature);
 
     GRIPPER_PID.addDouble("Setpoint", () -> this.setPoint);
   }
