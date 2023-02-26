@@ -44,7 +44,7 @@ public class RobotContainer {
                 new InstantCommand(m_drive::zeroGyroscope)
         );
 
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(1)).onTrue(
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(1)).whileTrue(
                 new ParallelCommandGroup(
                         new StartEndCommand(
                                 m_intake::runIntakeReversed,
@@ -97,6 +97,10 @@ public class RobotContainer {
         );
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).toggleOnTrue(
                 new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, 3)
+        );
+
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(9)).onTrue(
+                new InstantCommand(m_gripper::deffultstate)
         );
 
     }

@@ -52,13 +52,16 @@ public class Conveyor extends SubsystemBase {
 
   void updateMotor()
   {
+
     if (enabled)
     {
       if (!reversed)
       {
-        if (gamePiece != 0)
+        if (gamePiece == 0)
         {
           conveyorMotor.set(ConveyorConstants.MOTOR_SPEED);
+        }else{
+          conveyorMotor.set(0);
         }
       }else{
         conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
@@ -73,7 +76,7 @@ public class Conveyor extends SubsystemBase {
   @Override
   public void periodic() {
     updateGamePiece();
-
+    updateMotor();
   }
 
   public void shuffleboardInit() {

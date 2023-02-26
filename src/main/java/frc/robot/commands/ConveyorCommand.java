@@ -21,6 +21,9 @@ public class ConveyorCommand extends SequentialCommandGroup {
         addRequirements(this.conveyor);
 
         addCommands(
+                new InstantCommand(() -> System.out.println("Hello World")),
+                new InstantCommand(() -> conveyor.setScoring(true)),
+                new InstantCommand(() -> conveyor.setEnabled(false)),
                 new InstantCommand(() -> conveyor.conveyorMotor.set(.2)),
                 new InstantCommand(() -> {
                     if (conveyor.getGamePiece() == 1)
@@ -29,13 +32,12 @@ public class ConveyorCommand extends SequentialCommandGroup {
                     } else if (conveyor.getGamePiece() == 2) {
                         waitTime = CUBE_TIME;
                     }else{
-                        waitTime = 0;
+                        waitTime = 2;
                         System.out.println("ERROR");
                     }
                 }),
                 new WaitCommand(waitTime),
-                new InstantCommand(() -> conveyor.conveyorMotor.set(0)),
-                new InstantCommand(() -> conveyor.setEnabled(false))
+                new InstantCommand(() -> conveyor.setScoring(false))
         );
     }
 }

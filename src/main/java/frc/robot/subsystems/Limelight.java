@@ -31,7 +31,7 @@ public class Limelight extends SubsystemBase {
 
     m_camera = new PhotonCamera("photonvision");
 
-    setMode("AprilTag");
+    setMode("Reflective Tape");
     this.table.getEntry("ledMode").setInteger(1);
     m_camera.setLED(VisionLEDMode.kOn);
     // m_camera.setPipelineIndex(0);

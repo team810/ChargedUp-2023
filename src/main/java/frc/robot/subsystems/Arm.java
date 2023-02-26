@@ -78,6 +78,7 @@ public class Arm extends SubsystemBase {
 
     EXTENDER.addBoolean("At setPoint", () -> extenderController.atSetpoint());
     EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
+    EXTENDER.addDouble("Temp", () -> extendingMotor.getMotorTemperature());
     
 
     PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());

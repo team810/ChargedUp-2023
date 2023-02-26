@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,25 +24,29 @@ public class Gripper extends SubsystemBase {
   public Gripper() {
     gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
     gripperPIDController = GripperConstants.GRIPPER_CONTROLLER;
-    gripperPIDController.setTolerance(.2);
-
+    gripperPIDController.setTolerance(.1);
+    RelativeEncoder encoder = gripperMotor.getEncoder();
     this.setPoint = 0;
 
     gripperPIDController.reset();
 
     gripperMotor.clearFaults();
     gripperMotor.restoreFactoryDefaults();
-    gripperMotor.setIdleMode(IdleMode.kBrake);
-
     gripperMotor.setSmartCurrentLimit(20);
 
+    gripperMotor.setIdleMode(IdleMode.kBrake);
+
+
+    gripperMotor.getEncoder().setPosition(0);
     shuffleboardInit();
-
-
+  }
+  public void openUp()
+  {
+    setSetPoint(-1.4);
   }
   public void deffultstate()
   {
-    setSetPoint(.5);
+    setSetPoint(-.5);
   }
 
   public void setSetPoint(double setPoint)
@@ -54,28 +59,28 @@ public class Gripper extends SubsystemBase {
   }
 
   public void rest() {
-    this.setPoint = -3.8;
+    setSetPoint(-1.214286208152771);
   }
 
   public void gripCube() {
-    this.setPoint = 0;
+    this.setPoint = 3;
   }
 
   public void gripCone() {
-    this.setPoint = 10;
+    setSetPoint(3);
   }
 
   public void shuffleboardInit() {
     GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
     GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
     GRIPPER_MOTOR.addDouble("Temp", gripperMotor::getMotorTemperature);
-
     GRIPPER_PID.addDouble("Setpoint", () -> this.setPoint);
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    gripperMotor.set(gripperPIDController.calculate(gripperMotor.getEncoder().getPosition(), this.setPoint) * .4);
+    gripperMotor.set(gripperPIDController.calculate(gripperMotor.getEncoder().getPosition(), this.setPoint));
   }
 }
