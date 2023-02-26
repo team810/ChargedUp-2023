@@ -12,9 +12,9 @@ import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
-  private DoubleSolenoid piston;
+  private final DoubleSolenoid piston;
   private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
-  private PneumaticHub pneumaticHub;
+  private final PneumaticHub pneumaticHub;
 
 
   /** Creates a new Intake. */

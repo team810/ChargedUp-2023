@@ -51,6 +51,4 @@ public class DefaultDriveCommand extends CommandBase {
         m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
     }
 
-
-
 }

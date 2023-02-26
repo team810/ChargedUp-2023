@@ -12,7 +12,6 @@ public class ConveyorCommand extends SequentialCommandGroup {
     private final double CONE_TIME = .5;
     private final double CUBE_TIME = .5;
 
-    private final double CONVEYOR_SPEED = .1;
 
     double waitTime = 0;
     public ConveyorCommand(Conveyor conveyor) {
@@ -40,4 +39,5 @@ public class ConveyorCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> conveyor.setScoring(false))
         );
     }
+
 }

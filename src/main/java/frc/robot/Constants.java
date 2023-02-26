@@ -1,10 +1,8 @@
-
 package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -23,7 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public final class Constants {
     public static final class OIConstants {
         public static final Joystick DRIVE_GAMEPAD = new Joystick(0);
-         public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
+        public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
 
 //        public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
 //        public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
@@ -119,8 +117,8 @@ public final class Constants {
         public static final ShuffleboardTab tab = Shuffleboard.getTab("Limelight");
 
         public static final ShuffleboardLayout CAMERA_VALUES = tab.getLayout("Limelight Values", BuiltInLayouts.kList)
-            .withSize(2, 4)
-            .withPosition(0, 0);
+                .withSize(2, 4)
+                .withPosition(0, 0);
 
         public static final double CAMERA_HEIGHT_METERS = .155;
 
@@ -187,7 +185,7 @@ public final class Constants {
         public static final ShuffleboardLayout INTAKE_VALUES = intakeTab.getLayout("Motor Values", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2, 4);
 
-        public static final int LEFT_INTAKE_MOTOR = 9; 
+        public static final int LEFT_INTAKE_MOTOR = 9;
         public static final int RIGHT_INTAKE_MOTOR = 15;
 
         public static final double INTAKE_MOTOR_SPEED = .45;
@@ -203,13 +201,12 @@ public final class Constants {
                 .withPosition(0, 0);
     }
 
-    public static final class ScoreConstants
-    {
+    public static final class ScoreConstants {
         public static final Transform3d DISTANCE_FROM_TARGET = new Transform3d(new Translation3d(-.5, 0, 0), new Rotation3d());
 
-        public static final int[] BOTTOM_ROW_RANGE = {0,0};
-        public static final int[] MIDDLE_ROW_RANGE = {0,0};
-        public static final int[] TOP_ROW_RANGE = {0,0};
+        public static final int[] BOTTOM_ROW_RANGE = {0, 0};
+        public static final int[] MIDDLE_ROW_RANGE = {0, 0};
+        public static final int[] TOP_ROW_RANGE = {0, 0};
 
     }
 }

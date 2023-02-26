@@ -100,7 +100,7 @@ public class RobotContainer {
         );
 
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(9)).onTrue(
-                new InstantCommand(m_gripper::deffultstate)
+                new InstantCommand(m_gripper::closeGripper)
         );
 
     }
@@ -136,6 +136,4 @@ public class RobotContainer {
 
         return value * DrivetrainConstants.SPEED_LIMIT;
     }
-
-
 }

@@ -11,7 +11,7 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final Limelight limelight;
     private final Conveyor conveyor;
     private int target;
-    private ToTargetCommand toTarget;
+    private final ToTargetCommand toTarget;
 
 
 
@@ -38,33 +38,8 @@ public class ScoreCommand extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 toTarget,
-                new InstantCommand(gripper::openUp),
-                new InstantCommand(() -> drivetrain.drive(new ChassisSpeeds(0,0,0))), // Just making sure that the robot is not moving at all
-
-
-                new InstantCommand(() -> System.out.println("Hello World")),
-                new InstantCommand(() -> conveyor.setScoring(true)),
-                new InstantCommand(() -> conveyor.setEnabled(false)),
-                new InstantCommand(() -> conveyor.conveyorMotor.set(.1)),
-                new InstantCommand(() -> {
-                    if (conveyor.getGamePiece() == 1)
-                    {
-                        waitTime = CONE_TIME;
-                    } else if (conveyor.getGamePiece() == 2) {
-                        waitTime = CUBE_TIME;
-                    }else{
-                        waitTime = 2;
-                        System.out.println("ERROR");
-                    }
-                    waitTime = .45;
-                }),
-                new WaitCommand(waitTime),
-                new InstantCommand(() -> conveyor.setScoring(false)),
-
-
-
-
-                setTarget(),
+                new InstantCommand(gripper::openGripper),
+                new InstantCommand(() -> drivetrain.drive(new ChassisSpeeds(0,0,0))), // Just making sure that the robot is not moving at all setTarget(),
                 gripGamePiece(),
                 armToGoal(),
                 new WaitCommand(1.5),
@@ -72,13 +47,12 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitCommand(.9),
                 releaseGrip(),
                 new WaitCommand(.5),
-                new InstantCommand(() -> arm.restExtender()),
-                new InstantCommand(() -> gripper.gripCone()),
+                new InstantCommand(arm::restExtender),
+                new InstantCommand(gripper::closeGripper),
                 new WaitCommand(.8),
-                new InstantCommand(() -> arm.restPivot()),
+                new InstantCommand(arm::restPivot),
                 new WaitCommand(2),
-                new InstantCommand(() -> gripper.openUp()),
-                new InstantCommand(() -> System.out.println("finished"))
+                new InstantCommand(gripper::openGripper)
         );
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
     }
@@ -108,7 +82,7 @@ public class ScoreCommand extends SequentialCommandGroup {
     public Command releaseGrip()
     {
         return new InstantCommand(() -> {
-            gripper.openUp();
+            gripper.openGripper();
         });
     }
 

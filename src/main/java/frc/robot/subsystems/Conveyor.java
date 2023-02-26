@@ -22,7 +22,7 @@ public class Conveyor extends SubsystemBase {
   private boolean reversed;
   private boolean scoring;
 
-  /** Creates a new Conveyor. */
+
   public Conveyor() {
     conveyorMotor = new CANSparkMax(ConveyorConstants.CONVEYOR_MOTOR, MotorType.kBrushless);
     colorSensor = new ColorSensor();

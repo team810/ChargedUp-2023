@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,8 +16,8 @@ public class Autos {
     private final Conveyor m_conveyor;
     private final Arm m_arm;
     private final Gripper m_gripper;
-    private Limelight limelight;
-    private ScoreCommand score;
+    private final Limelight limelight;
+    private final ScoreCommand score;
     private final SwerveAutoBuilder m_AUTO_BUILDER;
 
 
@@ -67,9 +66,5 @@ public class Autos {
     public Command genPath(String path)
     {
         return m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup(path, Constants.DrivetrainConstants.Auto.PATH_CONSTRAINTS));
-    }
-    public Command gnerateCommand(PathPlannerTrajectory trajectory)
-    {
-        return m_AUTO_BUILDER.followPath(trajectory);
     }
 }

@@ -38,14 +38,7 @@ public class ToTargetCommand extends CommandBase {
 
     @Override
     public void initialize() {
-//        if (conveyor.getGamePiece() == 1)
-//        {
-//
-//        } else if (conveyor.getGamePiece() == 2) {
-//            limelight.setMode("AprilTag");
-//        }else{
-//            System.out.println("BAD");
-//        }
+
         limelight.setMode("Reflective Tape");
     }
 

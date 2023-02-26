@@ -16,64 +16,64 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Limelight extends SubsystemBase {
-  // Entries on camera server
-  private final NetworkTableEntry pipeline = CameraConstants.pipeline;
-  private final NetworkTableEntry targetPixelsX = CameraConstants.targetPixelsX;
-  private final NetworkTable table = CameraConstants.table;
-  private final HttpCamera feed;
-  private final PhotonCamera m_camera;
+    // Entries on camera server
+    private final NetworkTableEntry pipeline = CameraConstants.pipeline;
+    private final NetworkTableEntry targetPixelsX = CameraConstants.targetPixelsX;
+    private final NetworkTable table = CameraConstants.table;
+    private final HttpCamera feed;
+    private final PhotonCamera m_camera;
 
-  private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
+    private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
 
-  public Limelight() {
-    feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
-    CameraServer.startAutomaticCapture(feed);
+    public Limelight() {
+        feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
+        CameraServer.startAutomaticCapture(feed);
 
-    m_camera = new PhotonCamera("photonvision");
+        m_camera = new PhotonCamera("photonvision");
 
-    setMode("Reflective Tape");
-    this.table.getEntry("ledMode").setInteger(1);
-    m_camera.setLED(VisionLEDMode.kOn);
-    // m_camera.setPipelineIndex(0);
-
-    shuffleInit();
-  }
-
-  public double getTargetPixelsX() {
-    return this.targetPixelsX.getDouble(-1);
-  }
-
-  public PhotonTrackedTarget getBestTarget() {
-    return m_camera.getLatestResult().getBestTarget();
-  }
-
-  public boolean hasTarget()
-  {
-    return m_camera.getLatestResult().hasTargets();
-  }
-  public void setMode(String pipeline) {
-    switch (pipeline) {
-      case "AprilTag":
-        // long range 0, short 1
-        this.pipeline.setInteger(0);
-        this.table.getEntry("ledMode").setInteger(0);
-        // m_camera.setLED(VisionLEDMode.kOff);
-        break;
-      case "Reflective Tape":
-        this.pipeline.setInteger(3);
+        setMode("Reflective Tape");
         this.table.getEntry("ledMode").setInteger(1);
-        // m_camera.setLED(VisionLEDMode.kOn);
-        break;
-    }
-  }
+        m_camera.setLED(VisionLEDMode.kOn);
+        // m_camera.setPipelineIndex(0);
 
-  public void shuffleInit() {
+        shuffleInit();
+    }
+
+    public double getTargetPixelsX() {
+        return this.targetPixelsX.getDouble(-1);
+    }
+
+    public PhotonTrackedTarget getBestTarget() {
+        return m_camera.getLatestResult().getBestTarget();
+    }
+
+    public boolean hasTarget() {
+        return m_camera.getLatestResult().hasTargets();
+    }
+
+    public void setMode(String pipeline) {
+        switch (pipeline) {
+            case "AprilTag":
+                // long range 0, short 1
+                this.pipeline.setInteger(0);
+                this.table.getEntry("ledMode").setInteger(0);
+                // m_camera.setLED(VisionLEDMode.kOff);
+                break;
+            case "Reflective Tape":
+                this.pipeline.setInteger(3);
+                this.table.getEntry("ledMode").setInteger(1);
+                // m_camera.setLED(VisionLEDMode.kOn);
+                break;
+        }
+    }
+
+    public void shuffleInit() {
 //    this.cameraValues.addBoolean("Is Valid?", () -> m_camera.hasTargets());
 //    this.cameraValues.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
-  }
+    }
 
-  @Override
-  public void periodic() {
+    @Override
+    public void periodic() {
 
-  }
+    }
 }
