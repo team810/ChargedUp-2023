@@ -94,11 +94,11 @@ public final class Constants {
             public static final PIDController THETA_CONTROLLER = new PIDController(.1, 0, 0);
 
             // Auto
-            public static final PIDConstants XY_CONSTANTS = new PIDConstants(25, 0, 0); // FIXME PID CONSTANTS
-            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(1, 0, 0); // FIXME PID constants THETA
+            public static final PIDConstants XY_CONSTANTS = new PIDConstants(25, 0, 0);
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(15, 0, 0); // FIXME PID constants THETA
 
-            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.5, 3);
-            public static final PathConstraints SCORE_CONSTRAINTS = new PathConstraints(.5, .5);
+            public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.8, 3);
+
         }
     }
 
@@ -187,9 +187,10 @@ public final class Constants {
         public static final ShuffleboardLayout INTAKE_VALUES = intakeTab.getLayout("Motor Values", BuiltInLayouts.kList)
                 .withPosition(0, 0).withSize(2, 4);
 
-        // Ports
         public static final int LEFT_INTAKE_MOTOR = 9; 
         public static final int RIGHT_INTAKE_MOTOR = 15;
+
+        public static final double INTAKE_MOTOR_SPEED = .45;
     }
 
     public static final class ColorSensorConstants {

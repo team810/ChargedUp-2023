@@ -41,8 +41,8 @@ public class Arm extends SubsystemBase {
     PIVOT = ArmConstants.PIVOT;
     EXTENDER = ArmConstants.EXTENDER;
 
-    extenderSetpoint = -2;
-    pivotSetpoint = 0;
+    restPivot();
+    restExtender();
 
     shuffleboardInit();
   }
@@ -55,46 +55,15 @@ public class Arm extends SubsystemBase {
   {
     extenderSetpoint = change;
   }
-  public void runExtender(double speed)
-  {
-    extendingMotor.set(speed);
-  }
-
-  public void runPivot(double speed) {
-    pivotMotor.set(speed);
-  }
-
   public void restPivot() {
     pivotSetpoint = 0;
   }
   public void restExtender()
   {
-    extenderSetpoint = -1.5;
+    extenderSetpoint = -2;
   }
 
-  public void lowGoalCone() {
-    pivotSetpoint = 0;
-  }
 
-  public void middleGoalCone() {
-    pivotSetpoint = -16;
-  }
-
-  public void highGoalCone() {
-    pivotSetpoint = 0;
-  }
-
-  public void lowGoalCube() {
-
-  }
-
-  public void middleGoalCube() {
-
-  }
-
-  public void highGoalCube() {
-
-  }
 
   private double getExtenderLength() {
     // 595 is the length pulled out by default, 78 ohms per inch
@@ -122,7 +91,7 @@ public class Arm extends SubsystemBase {
      extendingMotor.set(
              Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
     
-     pivotMotor.set(Math.min(
-         Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
+     pivotMotor.set(
+             Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.3), .3));
   }
 }

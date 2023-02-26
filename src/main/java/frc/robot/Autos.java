@@ -59,16 +59,13 @@ public class Autos {
         // intake methodsWADWQWADSXCX6Y
         eventMap.put("Intake In", new InstantCommand(m_intake::in));
         eventMap.put("Intake Out", new InstantCommand(m_intake::out));
-        eventMap.put("Stop Intake", new InstantCommand(() -> m_intake.runIntake(0)));
-
-
+        eventMap.put("Stop Intake", new InstantCommand(m_intake::stopIntake));
 
         eventMap.put("Score", score);
     }
 
     public Command genPath(String path)
     {
-
         return m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup(path, Constants.DrivetrainConstants.Auto.PATH_CONSTRAINTS));
     }
     public Command gnerateCommand(PathPlannerTrajectory trajectory)

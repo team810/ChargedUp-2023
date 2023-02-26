@@ -32,23 +32,23 @@ public class RobotContainer {
                         DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.25),
                 () -> -modifyAxis(
                         OIConstants.DRIVE_GAMEPAD.getRawAxis(3) *
-                                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 0.25)));
+                                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 0.25))
+        );
 
-        CommandScheduler.getInstance().schedule(new StartupCommands(m_gripper));
-        CommandScheduler.getInstance().run();
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
+        // Driving gamepad
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(12)).onTrue(
-                new InstantCommand(() -> m_drive.zeroGyroscope())
+                new InstantCommand(m_drive::zeroGyroscope)
         );
 
-        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(1)).onTrue(
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(1)).onTrue(
                 new ParallelCommandGroup(
                         new StartEndCommand(
-                                () -> m_intake.runIntake(-.45),
-                                () -> m_intake.runIntake(0),
+                                m_intake::runIntakeReversed,
+                                m_intake::stopIntake,
                                 m_intake
                         ),
                         new StartEndCommand(
@@ -64,10 +64,10 @@ public class RobotContainer {
                         )
                 )
         );
-        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(4)).whileTrue(
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(4)).whileTrue(
                 new StartEndCommand(
-                        () -> m_intake.runIntake(.45),
-                        () -> m_intake.runIntake(0),
+                        m_intake::runIntake,
+                        m_intake::stopIntake,
                         m_intake
                 ).alongWith(
                         new StartEndCommand(
@@ -81,23 +81,36 @@ public class RobotContainer {
                                 },
                                 m_conveyor
                         )));
-        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(2)).onTrue(
+
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(2)).onTrue(
                 new InstantCommand(m_intake::out)
         );
 
-        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(3)).onTrue(
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(3)).onTrue(
                 new InstantCommand(m_intake::in)
         );
 
 
-        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5)).toggleOnTrue(
+
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).toggleOnTrue(
                 new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, 2)
         );
-        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6)).toggleOnTrue(
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).toggleOnTrue(
                 new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, 3)
         );
 
     }
+
+    public void teleopInit()
+    {
+        CommandScheduler.getInstance().schedule(new StartupCommands(m_gripper));
+    }
+
+    public Command getAutonomousCommand() {
+
+        return autos.genPath("Rot Tunning");
+    }
+
 
     private static double deadband(double value, double deadband) {
         if (Math.abs(value) > deadband) {
@@ -119,20 +132,6 @@ public class RobotContainer {
 
         return value * DrivetrainConstants.SPEED_LIMIT;
     }
-
-    public Command getAutonomousCommand() {
-
-//    return autos.genPath("NewPath");
-//    return new ToTargetCommand(m_conveyor, m_drive, m_lime);
-        return autos.genPath("New Path");
-    }
-
-    public void teleopInit()
-    {
-        CommandScheduler.getInstance().schedule(new StartupCommands(m_gripper));
-
-    }
-
 
 
 }

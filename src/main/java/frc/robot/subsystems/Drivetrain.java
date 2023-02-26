@@ -264,7 +264,7 @@ public class Drivetrain extends SubsystemBase {
                         setStates(moduleStates);
                 }
                 if (RobotState.isAutonomous()) {
-                        
+
                 }
 
                 modulePositions[0] = getPosition(0);

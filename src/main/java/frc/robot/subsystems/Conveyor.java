@@ -14,7 +14,7 @@ public class Conveyor extends SubsystemBase {
   public final CANSparkMax conveyorMotor;
   private final ColorSensor colorSensor;
 
-  private double speed;
+
   private final ShuffleboardLayout CONVEYOR_TAB;
   private int gamePiece = 0; // if set to zero there is no gamePiece 1 is cone and 2 is cube
 
@@ -52,11 +52,14 @@ public class Conveyor extends SubsystemBase {
 
   void updateMotor()
   {
-    if (enabled && gamePiece == 0)
+    if (enabled)
     {
       if (!reversed)
       {
-        conveyorMotor.set(ConveyorConstants.MOTOR_SPEED);
+        if (gamePiece != 0)
+        {
+          conveyorMotor.set(ConveyorConstants.MOTOR_SPEED);
+        }
       }else{
         conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
       }
@@ -75,7 +78,8 @@ public class Conveyor extends SubsystemBase {
 
   public void shuffleboardInit() {
     CONVEYOR_TAB.addDouble("Velocity",
-            () -> this.speed);
+            () -> conveyorMotor.getEncoder().getVelocity());
+
   }
 
   public int getGamePiece() {

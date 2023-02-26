@@ -18,7 +18,6 @@ public class ConveyorCommand extends SequentialCommandGroup {
     public ConveyorCommand(Conveyor conveyor) {
         this.conveyor = conveyor;
 
-
         addRequirements(this.conveyor);
 
         addCommands(

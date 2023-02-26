@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -13,9 +12,9 @@ import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
-  private final DoubleSolenoid piston;
+  private DoubleSolenoid piston;
   private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
-  private final PneumaticHub pneumaticHub;
+  private PneumaticHub pneumaticHub;
 
 
   /** Creates a new Intake. */
@@ -44,11 +43,22 @@ public class Intake extends SubsystemBase {
     piston.set(Value.kReverse);
   }
 
-
-  public void runIntake(double speed) {
-    leftIntakeMotor.set(-speed);
-    rightIntakeMotor.set(speed);
+  public void runIntake()
+  {
+    leftIntakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+    rightIntakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
   }
+  public void stopIntake()
+  {
+    leftIntakeMotor.set(0);
+    rightIntakeMotor.set(0);
+  }
+  public void runIntakeReversed()
+  {
+    leftIntakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
+    rightIntakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+  }
+
 
   public void toggleIntake()
   {
@@ -56,17 +66,12 @@ public class Intake extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
-    INTAKE_VALUES.addBoolean("Compressor On?", ()-> this.pneumaticHub.getCompressor());
     INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
-//    INTAKE_VALUES.add("sol", pHub);
+
   }
 
   public Value getSolenoidValue() {
     return piston.get();
   }
 
-  @Override
-  public void periodic() {
-
-  }
 }

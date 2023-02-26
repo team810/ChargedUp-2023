@@ -19,9 +19,9 @@ public class StartupCommands extends ParallelCommandGroup {
     public Command gripperCommand()
     {
         return new SequentialCommandGroup( // This is so the gripper does not get caught on the conveyor belt.
-                new InstantCommand(gripper::deffultstate),
-                new WaitCommand(1),
-                new InstantCommand(gripper::rest)
+                new InstantCommand(gripper::deffultstate)
+//                new WaitCommand(.5),
+//                new InstantCommand(gripper::rest)
         );
     }
 }
