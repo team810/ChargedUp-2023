@@ -32,8 +32,9 @@ public class RobotContainer {
                         DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.25),
                 () -> -modifyAxis(
                         OIConstants.DRIVE_GAMEPAD.getRawAxis(3) *
-                                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 0.25))
-        );
+                                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 0.25),
+                OIConstants.DRIVE_GAMEPAD::getPOV
+        ));
 
         configureButtonBindings();
     }
