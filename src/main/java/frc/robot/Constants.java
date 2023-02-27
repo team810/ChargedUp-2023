@@ -4,10 +4,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -199,14 +196,5 @@ public final class Constants {
                 .getLayout("Color Sensor", BuiltInLayouts.kList)
                 .withSize(2, 4)
                 .withPosition(0, 0);
-    }
-
-    public static final class ScoreConstants {
-        public static final Transform3d DISTANCE_FROM_TARGET = new Transform3d(new Translation3d(-.5, 0, 0), new Rotation3d());
-
-        public static final int[] BOTTOM_ROW_RANGE = {0, 0};
-        public static final int[] MIDDLE_ROW_RANGE = {0, 0};
-        public static final int[] TOP_ROW_RANGE = {0, 0};
-
     }
 }

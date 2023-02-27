@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.*;
 
@@ -12,15 +11,8 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final Conveyor conveyor;
     private int target;
     private final ToTargetCommand toTarget;
+    private int gamePiece;
 
-
-
-    private final double CONE_TIME = 1;
-    private final double CUBE_TIME = 1;
-
-    private final double CONVEYOR_SPEED = .1;
-
-    double waitTime = .4;
 
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
                         Conveyor conveyor, int target) {
@@ -32,16 +24,15 @@ public class ScoreCommand extends SequentialCommandGroup {
 
         this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
 
-
-
         this.target = target;
         addCommands(
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 toTarget,
                 new InstantCommand(gripper::openGripper),
-                new InstantCommand(() -> drivetrain.drive(new ChassisSpeeds(0,0,0))), // Just making sure that the robot is not moving at all setTarget(),
+                new ConveyorCommand(conveyor), // This is the command so the conveyor positions the game piece.
+                new InstantCommand(() -> {gamePiece = conveyor.getGamePiece();}), // this sets the game piece after the conveyor runs
                 gripGamePiece(),
-                armToGoal(),
+                armToGoal(), // I think that I can increase the arm speed to make the scoring procces faster
                 new WaitCommand(1.5),
                 extenderToGoal(),
                 new WaitCommand(.9),
@@ -75,18 +66,23 @@ public class ScoreCommand extends SequentialCommandGroup {
     {
         return new InstantCommand(() ->
         {
-            gripper.gripCone();
+            if (conveyor.getGamePiece() == 1)
+            {
+                gripper.gripCone();
+            } else if (conveyor.getGamePiece() == 2) {
+                gripper.gripCube();
+            }else{
+                gripper.gripCube(); // FIXME this is not a good default state
+            }
         });
     }
 
     public Command releaseGrip()
     {
-        return new InstantCommand(() -> {
-            gripper.openGripper();
-        });
+        return new InstantCommand(gripper::openGripper);
     }
 
-    private Command armToGoal()
+    private Command armToConeGoal()
     {
         return new InstantCommand(() -> {
             switch (target) {
@@ -105,7 +101,42 @@ public class ScoreCommand extends SequentialCommandGroup {
             }
         });
     }
-    private Command extenderToGoal()
+
+    private Command armToCubeGoal()
+    {
+        // FIXME cube constants
+        return new InstantCommand(() -> {
+            switch (target) {
+                case 1:
+                    arm.setPivotSetpoint(-9.5);
+                    break;
+                case 2:
+                    arm.setPivotSetpoint(-35.5);
+                    break;
+                case 3:
+                    arm.setPivotSetpoint(-40);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+
+
+    private Command armToGoal()
+    {
+        if (gamePiece == 1)
+        {
+            return armToConeGoal();
+        } else if (gamePiece == 2) {
+            return armToCubeGoal();
+        }else{
+            return armToConeGoal();
+        }
+    }
+
+    private Command extenderToConeGoal()
     {
         return new InstantCommand(() ->
         {
@@ -125,6 +156,41 @@ public class ScoreCommand extends SequentialCommandGroup {
                     break;
             }
         });
+    }
+
+    public Command extenderToCubeGoal()
+    {
+        // FIXME cube extender constants
+        return new InstantCommand(() ->
+        {
+            switch (target)
+            {
+                case 1:
+                    arm.setExtenderSetpoint(-2.5);
+                    break;
+                case 2:
+                    arm.setExtenderSetpoint(5);
+                    break;
+                case 3:
+                    arm.setExtenderSetpoint(20.5);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+
+    private Command extenderToGoal()
+    {
+        if (gamePiece == 1)
+        {
+            return extenderToConeGoal();
+        } else if (gamePiece == 2) {
+            return extenderToCubeGoal();
+        }else{
+            return extenderToConeGoal();
+        }
     }
 
 }

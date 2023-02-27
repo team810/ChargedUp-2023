@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Conveyor;
@@ -39,7 +38,16 @@ public class ToTargetCommand extends CommandBase {
     @Override
     public void initialize() {
 
-        limelight.setMode("Reflective Tape");
+
+
+        if (conveyor.getGamePiece() == 1)
+        {
+            limelight.setMode("Reflective Tape");
+        } else if (conveyor.getGamePiece() == 2) {
+            limelight.setMode("AprilTag");
+        }else{
+            limelight.setMode("Reflective Tape");
+        }
     }
 
     @Override
@@ -47,11 +55,7 @@ public class ToTargetCommand extends CommandBase {
 
         if (limelight.hasTarget())
         {
-            SmartDashboard.putData("Pid controller" , Xcontroller);
-            SmartDashboard.putNumber("Pid calc point",limelight.getBestTarget().getYaw());
             double xSpeed = Xcontroller.calculate(limelight.getBestTarget().getYaw(),X_OFFSET);
-            SmartDashboard.putBoolean("At setpoint", Xcontroller.atSetpoint());
-            System.out.println(xSpeed);
 
             xSpeed = Math.min(xSpeed, .75);
             xSpeed = Math.max(xSpeed, -.75);
