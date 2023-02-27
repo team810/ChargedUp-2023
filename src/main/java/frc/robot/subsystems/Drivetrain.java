@@ -206,8 +206,11 @@ public class Drivetrain extends SubsystemBase {
         modules[1] = m_frontRightModule;
         modules[2] = m_backLeftModule;
         modules[3] = m_backRightModule;
+    }
 
-
+    public double getPitch()
+    {
+        return m_navx.getPitch();
     }
 
     // Positions
