@@ -73,11 +73,6 @@ public class Conveyor extends SubsystemBase {
       }
     }
   }
-  @Override
-  public void periodic() {
-    updateGamePiece();
-    updateMotor();
-  }
 
   public void shuffleboardInit() {
     CONVEYOR_TAB.addDouble("Velocity",
@@ -118,4 +113,11 @@ public class Conveyor extends SubsystemBase {
   public void setScoring(boolean scoring) {
     this.scoring = scoring;
   }
+  
+  @Override
+  public void periodic() {
+    updateGamePiece();
+    updateMotor();
+  }
+
 }

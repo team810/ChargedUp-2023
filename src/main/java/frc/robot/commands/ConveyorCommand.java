@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Conveyor;
 
-
 public class ConveyorCommand extends SequentialCommandGroup {
     private final Conveyor conveyor;
 
@@ -24,37 +23,30 @@ public class ConveyorCommand extends SequentialCommandGroup {
         addCommands(
                 init(),
                 new WaitCommand(waitTime),
-                end()
-        );
+                end());
     }
 
-    public Command init()
-    {
-        return new InstantCommand(() ->
-            {
-                System.out.println("Conveyor Command Started");
+    public Command init() {
+        return new InstantCommand(() -> {
+            System.out.println("Conveyor Command Started");
 
-                conveyor.setScoring(true);
-                conveyor.setEnabled(false);
+            conveyor.setScoring(true);
+            conveyor.setEnabled(false);
 
-                conveyor.conveyorMotor.set(CONVEYOR_SPEED);
+            conveyor.conveyorMotor.set(CONVEYOR_SPEED);
 
-                if (conveyor.getGamePiece() == 1)
-                {
-                    waitTime = CONE_TIME;
-                } else if (conveyor.getGamePiece() == 2) {
-                    waitTime = CUBE_TIME;
-                }else{
-                    waitTime = CONE_TIME;
-                }
+            if (conveyor.getGamePiece() == 1) {
+                waitTime = CONE_TIME;
+            } else if (conveyor.getGamePiece() == 2) {
+                waitTime = CUBE_TIME;
+            } else {
+                waitTime = CONE_TIME;
             }
-        );
+        });
     }
 
-    public Command end()
-    {
-        return new InstantCommand(() ->
-        {
+    public Command end() {
+        return new InstantCommand(() -> {
             conveyor.conveyorMotor.set(0);
 
             conveyor.setScoring(false);

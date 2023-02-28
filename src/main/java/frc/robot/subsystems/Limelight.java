@@ -4,16 +4,16 @@
 
 package frc.robot.subsystems;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
-import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Limelight extends SubsystemBase {
     // Entries on camera server
@@ -23,7 +23,7 @@ public class Limelight extends SubsystemBase {
     private final HttpCamera feed;
     private final PhotonCamera m_camera;
 
-    private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
+    // private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
 
     public Limelight() {
         feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
@@ -44,7 +44,10 @@ public class Limelight extends SubsystemBase {
     }
 
     public PhotonTrackedTarget getBestTarget() {
-        return m_camera.getLatestResult().getBestTarget();
+        if (m_camera.getLatestResult() == null)
+            return new PhotonTrackedTarget();
+        else
+            return m_camera.getLatestResult().getBestTarget();
     }
 
     public boolean hasTarget() {
@@ -68,8 +71,9 @@ public class Limelight extends SubsystemBase {
     }
 
     public void shuffleInit() {
-//    this.cameraValues.addBoolean("Is Valid?", () -> m_camera.hasTargets());
-//    this.cameraValues.addCamera("Live View", "photonvision", "http://10.8.10.11:5800");
+        // this.cameraValues.addBoolean("Is Valid?", () -> m_camera.hasTargets());
+        // this.cameraValues.addCamera("Live View", "photonvision",
+        // "http://10.8.10.11:5800");
     }
 
     @Override

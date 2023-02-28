@@ -63,7 +63,6 @@ public class Arm extends SubsystemBase {
         extenderSetpoint = -2;
     }
 
-
     private double getExtenderLength() {
         // 595 is the length pulled out by default, 78 ohms per inch
         return (((double) potReading.getAverageValue() - 584.0) / 78.0);
@@ -79,7 +78,6 @@ public class Arm extends SubsystemBase {
         EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
         EXTENDER.addDouble("Temp", () -> extendingMotor.getMotorTemperature());
 
-
         PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
         PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
     }
@@ -92,6 +90,8 @@ public class Arm extends SubsystemBase {
                 Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
         pivotMotor.set(
-                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.45), .45));
+                Math.min(Math.max(
+                        pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint),
+                        -.45), .45));
     }
 }

@@ -1,7 +1,14 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Limelight;
 
 public class ScoreCommand extends SequentialCommandGroup {
     private final Arm arm;
@@ -13,9 +20,8 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final ToTargetCommand toTarget;
     private int gamePiece;
 
-
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, int target) {
+            Conveyor conveyor, int target) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
@@ -30,7 +36,9 @@ public class ScoreCommand extends SequentialCommandGroup {
                 toTarget,
                 new InstantCommand(gripper::openGripper),
                 new ConveyorCommand(conveyor), // This is the command so the conveyor positions the game piece.
-                new InstantCommand(() -> {gamePiece = conveyor.getGamePiece();}), // this sets the game piece after the conveyor runs
+                new InstantCommand(() -> {
+                    gamePiece = conveyor.getGamePiece();
+                }), // this sets the game piece after the conveyor runs
                 gripGamePiece(),
                 new WaitCommand(.25),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
@@ -45,47 +53,41 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitCommand(.8),
                 new InstantCommand(arm::restPivot),
                 new WaitCommand(2),
-                new InstantCommand(gripper::openGripper)
-        );
+                new InstantCommand(gripper::openGripper));
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
     }
 
+    // private Command setTarget() {
+    //     return new InstantCommand(() -> {
+    //         if (conveyor.getGamePiece() == 1) { // cone
+    //             // target = 3;
+    //             System.out.println("Hello World\n");
+    //         } else if (conveyor.getGamePiece() == 2) { // cube
+    //             target = 1;
+    //         } else {
+    //             System.out.println("NO target");
+    //         }
+    //     });
+    // }
 
-    private Command setTarget() {
+    private Command gripGamePiece() {
         return new InstantCommand(() -> {
-            if (conveyor.getGamePiece() == 1) { // cone
-//                target = 3;
-                System.out.println("Hello World\n");
-            } else if (conveyor.getGamePiece() == 2) { // cube
-                target = 1;
-            } else {
-                System.out.println("NO target");
-            }
-        });
-    }
-
-    private Command gripGamePiece()
-    {
-        return new InstantCommand(() ->
-        {
-            if (conveyor.getGamePiece() == 1)
-            {
+            if (conveyor.getGamePiece() == 1) {
                 gripper.gripCone();
             } else if (conveyor.getGamePiece() == 2) {
                 gripper.gripCube();
-            }else{
-                gripper.gripCube(); // FIXME this is not a good default state
             }
+            // else{
+            // gripper.gripCube(); // this is not a good default state
+            // }
         });
     }
 
-    public Command releaseGrip()
-    {
+    public Command releaseGrip() {
         return new InstantCommand(gripper::openGripper);
     }
 
-    private Command armToConeGoal()
-    {
+    private Command armToConeGoal() {
         return new InstantCommand(() -> {
             switch (target) {
                 case 1:
@@ -104,8 +106,7 @@ public class ScoreCommand extends SequentialCommandGroup {
         });
     }
 
-    private Command armToCubeGoal()
-    {
+    private Command armToCubeGoal() {
         // FIXME cube constants
         return new InstantCommand(() -> {
             switch (target) {
@@ -125,25 +126,19 @@ public class ScoreCommand extends SequentialCommandGroup {
         });
     }
 
-
-    private Command armToGoal()
-    {
-        if (gamePiece == 1)
-        {
+    private Command armToGoal() {
+        if (gamePiece == 1) {
             return armToConeGoal();
         } else if (gamePiece == 2) {
             return armToCubeGoal();
-        }else{
+        } else {
             return armToConeGoal();
         }
     }
 
-    private Command extenderToConeGoal()
-    {
-        return new InstantCommand(() ->
-        {
-            switch (target)
-            {
+    private Command extenderToConeGoal() {
+        return new InstantCommand(() -> {
+            switch (target) {
                 case 1:
                     arm.setExtenderSetpoint(-2.5);
                     break;
@@ -160,13 +155,10 @@ public class ScoreCommand extends SequentialCommandGroup {
         });
     }
 
-    public Command extenderToCubeGoal()
-    {
+    public Command extenderToCubeGoal() {
         // FIXME cube extender constants
-        return new InstantCommand(() ->
-        {
-            switch (target)
-            {
+        return new InstantCommand(() -> {
+            switch (target) {
                 case 1:
                     arm.setExtenderSetpoint(-2.5);
                     break;
@@ -183,14 +175,12 @@ public class ScoreCommand extends SequentialCommandGroup {
         });
     }
 
-    private Command extenderToGoal()
-    {
-        if (gamePiece == 1)
-        {
+    private Command extenderToGoal() {
+        if (gamePiece == 1) {
             return extenderToConeGoal();
         } else if (gamePiece == 2) {
             return extenderToCubeGoal();
-        }else{
+        } else {
             return extenderToConeGoal();
         }
     }
