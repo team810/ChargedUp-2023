@@ -16,104 +16,82 @@ import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-  private final CANSparkMax extendingMotor, pivotMotor;
-  private final PIDController extenderController, pivotController;
-  private final AnalogInput potReading;
-  private double extenderSetpoint, pivotSetpoint;
-  private final ShuffleboardLayout PIVOT, EXTENDER;
+    private final CANSparkMax extendingMotor, pivotMotor;
+    private final PIDController extenderController, pivotController;
+    private final AnalogInput potReading;
+    private double extenderSetpoint, pivotSetpoint;
+    private final ShuffleboardLayout PIVOT, EXTENDER;
 
-  public Arm() {
-    extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
-    pivotMotor = new CANSparkMax(ArmConstants.PIVOT_MOTOR, MotorType.kBrushless);
+    public Arm() {
+        extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
+        pivotMotor = new CANSparkMax(ArmConstants.PIVOT_MOTOR, MotorType.kBrushless);
 
-    extenderController = ArmConstants.EXTENDER_CONTROLLER;
-    pivotController = ArmConstants.PIVOT_CONTROLLER;
+        extenderController = ArmConstants.EXTENDER_CONTROLLER;
+        pivotController = ArmConstants.PIVOT_CONTROLLER;
 
-    extenderController.setTolerance(.5);
+        extenderController.setTolerance(.5);
 
-    extendingMotor.setIdleMode(IdleMode.kBrake);
+        extendingMotor.setIdleMode(IdleMode.kBrake);
 
-    pivotMotor.getEncoder().setPosition(0);
-    pivotMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.getEncoder().setPosition(0);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
 
-    potReading = new AnalogInput(Constants.ArmConstants.STRING_POT_CHANNEL);
+        potReading = new AnalogInput(Constants.ArmConstants.STRING_POT_CHANNEL);
 
-    PIVOT = ArmConstants.PIVOT;
-    EXTENDER = ArmConstants.EXTENDER;
+        PIVOT = ArmConstants.PIVOT;
+        EXTENDER = ArmConstants.EXTENDER;
 
-    extenderSetpoint = -1;
-    pivotSetpoint = 0;
+        restPivot();
+        restExtender();
 
-    shuffleboardInit();
-  }
+        shuffleboardInit();
+    }
 
-  public void runExtender(double speed)
-  {
-    extendingMotor.set(speed);
-  }
+    public void setPivotSetpoint(double change) {
+        pivotSetpoint = change;
+    }
 
-  public void runPivot(double speed) {
-    pivotMotor.set(speed);
-  }
+    public void setExtenderSetpoint(double change) {
+        extenderSetpoint = change;
+    }
 
-  public void restPivot() {
-    pivotSetpoint = 0;
-  }
-  public void restExtender()
-  {
-    extenderSetpoint = -1;
-  }
+    public void restPivot() {
+        pivotSetpoint = 0;
+    }
 
-  public void lowGoalCone() {
-    pivotSetpoint = 0;
-  }
+    public void restExtender() {
+        extenderSetpoint = -2;
+    }
 
-  public void middleGoalCone() {
-    pivotSetpoint = -16;
-  }
 
-  public void highGoalCone() {
-    pivotSetpoint = 0;
-  }
+    private double getExtenderLength() {
+        // 595 is the length pulled out by default, 78 ohms per inch
+        return (((double) potReading.getAverageValue() - 584.0) / 78.0);
+    }
 
-  public void lowGoalCube() {
+    public void shuffleboardInit() {
+        EXTENDER.addDouble("String Pot Reading UNmodified", () -> potReading.getAverageValue());
+        EXTENDER.addDouble("String Pot Reading modified", () -> getExtenderLength());
 
-  }
+        EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
 
-  public void middleGoalCube() {
+        EXTENDER.addBoolean("At setPoint", () -> extenderController.atSetpoint());
+        EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
+        EXTENDER.addDouble("Temp", () -> extendingMotor.getMotorTemperature());
 
-  }
 
-  public void highGoalCube() {
+        PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
+        PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
+    }
 
-  }
+    @Override
+    public void periodic() {
+        // limitSetpoint();
 
-  private double getExtenderLength() {
-    // 595 is the length pulled out by default, 78 ohms per inch
-    return (((double)potReading.getAverageValue() - 584.0) / 78.0);
-  }
+        extendingMotor.set(
+                Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
-  public void shuffleboardInit() {
-    EXTENDER.addDouble("String Pot Reading UNmodified", () -> potReading.getAverageValue());
-    EXTENDER.addDouble("String Pot Reading modified", () -> getExtenderLength());
-
-    EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
-
-    EXTENDER.addBoolean("At setPoint", () -> extenderController.atSetpoint());
-    EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
-    
-
-    PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
-    PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
-  }
-
-  @Override
-  public void periodic() {
-    // limitSetpoint();
-    
-    // extendingMotor.set(extenderController.calculate(getExtenderLength(), this.extenderSetpoint));
-    
-    // pivotMotor.set(Math.min(
-    //     Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.2), .2));
-  }
+        pivotMotor.set(
+                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.45), .45));
+    }
 }

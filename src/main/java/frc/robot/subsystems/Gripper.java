@@ -1,71 +1,70 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
-  private final CANSparkMax gripperMotor;
-  private final PIDController gripperPIDController;
-  private double setPoint;
-  private final ShuffleboardLayout GRIPPER_MOTOR = GripperConstants.GRIPPER_M_VALUES;
-  private final ShuffleboardLayout GRIPPER_PID = GripperConstants.GRIPPER_M_VALUES;
+    private final CANSparkMax gripperMotor;
+    private final PIDController gripperPIDController;
+    private double setPoint;
+    private final ShuffleboardLayout GRIPPER_MOTOR = GripperConstants.GRIPPER_M_VALUES;
+    private final ShuffleboardLayout GRIPPER_PID = GripperConstants.GRIPPER_M_VALUES;
 
-  /** Creates a new Gripper. */
-  public Gripper() {
-    gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
-    gripperPIDController = GripperConstants.GRIPPER_CONTROLLER;
-    gripperPIDController.setTolerance(.2);
+    public Gripper() {
+        gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
+        gripperPIDController = GripperConstants.GRIPPER_CONTROLLER;
+        gripperPIDController.setTolerance(.1);
 
-    this.setPoint = 0;
+        this.setPoint = 0;
 
-    gripperPIDController.reset();
+        gripperPIDController.reset();
 
-    gripperMotor.clearFaults();
-    gripperMotor.restoreFactoryDefaults();
-    gripperMotor.setIdleMode(IdleMode.kBrake);
+        gripperMotor.clearFaults();
+        gripperMotor.restoreFactoryDefaults();
+        gripperMotor.setSmartCurrentLimit(20);
 
-    gripperMotor.setSmartCurrentLimit(20);
+        gripperMotor.setIdleMode(IdleMode.kBrake);
 
-    shuffleboardInit();
-  }
+        gripperMotor.getEncoder().setPosition(0);
+        shuffleboardInit();
+    }
 
-  public void runGripper(double speed) {
-    this.gripperMotor.set(speed);
-  }
 
-  public void rest() {
-    this.setPoint = -4.5;
-  }
+    public void openGripper() {
+        setPoint(-1.4);
+    }
 
-  public void gripCube() {
-    this.setPoint = 0;
-  }
+    public void closeGripper() {
+        setPoint(0);
+    }
 
-  public void gripCone() {
-    this.setPoint = 10;
-  }
+    public void gripCube() {
+        setPoint(3);
+    }
 
-  public void shuffleboardInit() {
-    GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
-    GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
-    GRIPPER_MOTOR.addDouble("Temp", () -> gripperMotor.getMotorTemperature());
+    public void gripCone() {
+        setPoint(10);
+    }
 
-    GRIPPER_PID.addDouble("Setpoint", () -> this.setPoint);
-  }
+    public void setPoint(double setPoint) {
+        this.setPoint = setPoint;
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    gripperMotor.set(gripperPIDController.calculate(gripperMotor.getEncoder().getPosition(), this.setPoint) * .4);
-  }
+    public void shuffleboardInit() {
+        GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
+        GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
+        GRIPPER_MOTOR.addDouble("Temp", gripperMotor::getMotorTemperature);
+        GRIPPER_PID.addDouble("Setpoint", () -> this.setPoint);
+
+    }
+
+    @Override
+    public void periodic() {
+        gripperMotor.set(gripperPIDController.calculate(gripperMotor.getEncoder().getPosition(), this.setPoint));
+    }
 }

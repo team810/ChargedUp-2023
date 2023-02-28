@@ -1,10 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Autos;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.*;
 
 public class ScoreCommand extends SequentialCommandGroup {
@@ -13,107 +9,190 @@ public class ScoreCommand extends SequentialCommandGroup {
     private final Gripper gripper;
     private final Limelight limelight;
     private final Conveyor conveyor;
-    private final SquareToTargetCommand toTarget;
-    private int targetNum;
+    private int target;
+    private final ToTargetCommand toTarget;
     private int gamePiece;
 
 
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, Autos auto) {
+                        Conveyor conveyor, int target) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
         this.limelight = limelight;
         this.conveyor = conveyor;
-        this.toTarget = new SquareToTargetCommand(drivetrain, limelight, () -> gamePiece, auto); // FIXME wtf is the object
 
-        addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
+        this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
 
+        this.target = target;
         addCommands(
-                getGamePiece(),
+                new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 toTarget,
-                armCommand(),
-                new InstantCommand(gripper::rest),
-                new InstantCommand(() -> System.out.println("Piece Placed")),
-                new InstantCommand(arm::restPivot)
+                new InstantCommand(gripper::openGripper),
+                new ConveyorCommand(conveyor), // This is the command so the conveyor positions the game piece.
+                new InstantCommand(() -> {gamePiece = conveyor.getGamePiece();}), // this sets the game piece after the conveyor runs
+                gripGamePiece(),
+                new WaitCommand(.25),
+                new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
+                armToGoal(), // I think that I can increase the arm speed to make the scoring procces faster
+                new WaitCommand(1.5),
+                extenderToGoal(),
+                new WaitCommand(1.1),
+                releaseGrip(),
+                new WaitCommand(.5),
+                new InstantCommand(arm::restExtender),
+                new InstantCommand(gripper::closeGripper),
+                new WaitCommand(.8),
+                new InstantCommand(arm::restPivot),
+                new WaitCommand(2),
+                new InstantCommand(gripper::openGripper)
         );
+        addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
     }
 
-    private SequentialCommandGroup getGamePiece() // this is getting the game pice to the gripper from the conveyer belit
-    {
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> conveyor.setDisabled(false)),
-                new WaitUntilCommand(() -> conveyor.getGamePiece() != 0),
-                new InstantCommand(() ->
-                {
-                    gamePiece = conveyor.getGamePiece();
-                    switch (conveyor.getGamePiece())
-                    {
-                        case 1:
-                            gripper.gripCone();
-                            System.out.println("Gripping something");
-                            break;
-                        case 2:
-                            gripper.gripCube();
-                            System.out.println("Gripping something");
-                            break;
-                        case 0:
-                            System.out.println("LIFE IS A LIE");
-                            break;
-                    }
-                }),
-                new InstantCommand(() -> conveyor.setDisabled(true))
 
-        );
+    private Command setTarget() {
+        return new InstantCommand(() -> {
+            if (conveyor.getGamePiece() == 1) { // cone
+//                target = 3;
+                System.out.println("Hello World\n");
+            } else if (conveyor.getGamePiece() == 2) { // cube
+                target = 1;
+            } else {
+                System.out.println("NO target");
+            }
+        });
     }
 
-    private SequentialCommandGroup armCommand()
+    private Command gripGamePiece()
     {
-        return new SequentialCommandGroup(
-                new InstantCommand(() ->
-                {
-                    if (gamePiece == 1) // if game piece is a cone it will
-                    {
-                        switch (targetNum)
-                        {
-                            case 1:
-                                arm.lowGoalCone();
-                                break;
-                            case 2:
-                                arm.middleGoalCone();
-                                break;
-                            case 3:
-                                arm.highGoalCone();
-                                break;
-                            default:
-                                System.out.println("Probably Bad range for cone ");
-                                break;
+        return new InstantCommand(() ->
+        {
+            if (conveyor.getGamePiece() == 1)
+            {
+                gripper.gripCone();
+            } else if (conveyor.getGamePiece() == 2) {
+                gripper.gripCube();
+            }else{
+                gripper.gripCube(); // FIXME this is not a good default state
+            }
+        });
+    }
 
-                        }
-                    } else if (gamePiece == 2) // if the game piece is going to be a cube
-                    {
-                        switch (targetNum)
-                        {
-                            case 1:
-                                arm.lowGoalCube();
-                                break;
-                            case 2:
-                                arm.middleGoalCube();
-                                break;
-                            case 3:
-                                arm.highGoalCube();
-                                break;
-                            default:
-                                System.out.println("out of range error for cube");
-                                break;
-                        }
-                    }else{
-                        System.out.println("VERY BAD NOTHING IN THE GRIPPER, in code at least");
-                    }
-                }
-                ),
-                new WaitCommand(1)
-        );
+    public Command releaseGrip()
+    {
+        return new InstantCommand(gripper::openGripper);
+    }
+
+    private Command armToConeGoal()
+    {
+        return new InstantCommand(() -> {
+            switch (target) {
+                case 1:
+                    arm.setPivotSetpoint(-9.5);
+                    break;
+                case 2:
+                    arm.setPivotSetpoint(-35.5);
+                    break;
+                case 3:
+                    arm.setPivotSetpoint(-40);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+
+    private Command armToCubeGoal()
+    {
+        // FIXME cube constants
+        return new InstantCommand(() -> {
+            switch (target) {
+                case 1:
+                    arm.setPivotSetpoint(-9.5);
+                    break;
+                case 2:
+                    arm.setPivotSetpoint(-35.5);
+                    break;
+                case 3:
+                    arm.setPivotSetpoint(-40);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+
+
+    private Command armToGoal()
+    {
+        if (gamePiece == 1)
+        {
+            return armToConeGoal();
+        } else if (gamePiece == 2) {
+            return armToCubeGoal();
+        }else{
+            return armToConeGoal();
+        }
+    }
+
+    private Command extenderToConeGoal()
+    {
+        return new InstantCommand(() ->
+        {
+            switch (target)
+            {
+                case 1:
+                    arm.setExtenderSetpoint(-2.5);
+                    break;
+                case 2:
+                    arm.setExtenderSetpoint(5);
+                    break;
+                case 3:
+                    arm.setExtenderSetpoint(20.5);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+
+    public Command extenderToCubeGoal()
+    {
+        // FIXME cube extender constants
+        return new InstantCommand(() ->
+        {
+            switch (target)
+            {
+                case 1:
+                    arm.setExtenderSetpoint(-2.5);
+                    break;
+                case 2:
+                    arm.setExtenderSetpoint(5);
+                    break;
+                case 3:
+                    arm.setExtenderSetpoint(20.5);
+                    break;
+                default:
+                    System.out.println("how did you get here");
+                    break;
+            }
+        });
+    }
+
+    private Command extenderToGoal()
+    {
+        if (gamePiece == 1)
+        {
+            return extenderToConeGoal();
+        } else if (gamePiece == 2) {
+            return extenderToCubeGoal();
+        }else{
+            return extenderToConeGoal();
+        }
     }
 
 }

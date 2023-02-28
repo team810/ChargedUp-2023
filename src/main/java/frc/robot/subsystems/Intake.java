@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -12,47 +11,66 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
-  private final DoubleSolenoid piston;
-  private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
-  private final PneumaticHub pHub;
+    private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
+    private final DoubleSolenoid piston;
+    private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
+    private final PneumaticHub pneumaticHub;
 
 
-  /** Creates a new Intake. */
-  public Intake() {
-    leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
-    rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
+    /**
+     * Creates a new Intake.
+     */
+    public Intake() {
+        leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
+        rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-    pHub = new PneumaticHub(18);
-    pHub.clearStickyFaults();
+        pneumaticHub = new PneumaticHub(18);
 
-    
-    pHub.enableCompressorDigital();
+        pneumaticHub.clearStickyFaults();
 
-    piston = pHub.makeDoubleSolenoid(0, 7);
-  }
 
-  public void runIntake(double speed) {
-    leftIntakeMotor.set(speed);
-    rightIntakeMotor.set(-speed);
-  }
+        pneumaticHub.enableCompressorDigital();
 
-  public void toggleIntake()
-  {
-    this.piston.toggle();
-  }
+        piston = pneumaticHub.makeDoubleSolenoid(0, 7);
 
-  public void shuffleboardInit() {
-    INTAKE_VALUES.addBoolean("Compressor On?", ()-> this.pHub.getCompressor());
-    INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
-  }
+        shuffleboardInit();
+    }
 
-  public Value getSolenoidValue() {
-    return piston.get();
-  }
+    public void out() {
+        piston.set(Value.kForward);
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler
-  }
+    public void in() {
+        piston.set(Value.kReverse);
+    }
+
+    public void runIntake() {
+        leftIntakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+        rightIntakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
+    }
+
+    public void stopIntake() {
+        leftIntakeMotor.set(0);
+        rightIntakeMotor.set(0);
+    }
+
+    public void runIntakeReversed() {
+        leftIntakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
+        rightIntakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
+    }
+
+
+    public void toggleIntake() {
+        this.piston.toggle();
+    }
+
+    public void shuffleboardInit() {
+        INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+
+    }
+
+    public Value getSolenoidValue() {
+        return piston.get();
+    }
+
 }
