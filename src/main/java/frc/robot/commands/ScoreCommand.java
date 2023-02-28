@@ -32,10 +32,12 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new ConveyorCommand(conveyor), // This is the command so the conveyor positions the game piece.
                 new InstantCommand(() -> {gamePiece = conveyor.getGamePiece();}), // this sets the game piece after the conveyor runs
                 gripGamePiece(),
+                new WaitCommand(.25),
+                new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
                 armToGoal(), // I think that I can increase the arm speed to make the scoring procces faster
                 new WaitCommand(1.5),
                 extenderToGoal(),
-                new WaitCommand(.9),
+                new WaitCommand(1.1),
                 releaseGrip(),
                 new WaitCommand(.5),
                 new InstantCommand(arm::restExtender),

@@ -13,8 +13,8 @@ public class ConveyorCommand extends SequentialCommandGroup {
     private final double CONE_TIME = .5; // FIXME times need to be worked out
     private final double CUBE_TIME = .5;
 
-    private final double CONVEYOR_SPEED = .15;
-    double waitTime = 0;
+    private final double CONVEYOR_SPEED = .25;
+    double waitTime = .5;
 
     public ConveyorCommand(Conveyor conveyor) {
         this.conveyor = conveyor;

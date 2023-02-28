@@ -92,6 +92,6 @@ public class Arm extends SubsystemBase {
                 Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
         pivotMotor.set(
-                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.3), .3));
+                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.45), .45));
     }
 }

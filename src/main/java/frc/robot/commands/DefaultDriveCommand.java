@@ -15,9 +15,9 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_rotationSupplier;
     private final DoubleSupplier mDpad;
 
-    private final PIDController rotController = new PIDController(15,0,0);
+    private final PIDController rotController = new PIDController(1,0,0);
     private double setPoint = 0;
-    private boolean dpadTurning = false;
+    private boolean dpadTurning = true;
 
     public DefaultDriveCommand(Drivetrain drivetrainSubsystem,
             DoubleSupplier translationXSupplier,
@@ -40,15 +40,17 @@ public class DefaultDriveCommand extends CommandBase {
 
         // this is for driving controls and setting the angle easily.
         double rot;
-        if (mDpad.getAsDouble() == -1 || dpadTurning)
+        if (mDpad.getAsDouble() == -1 || !dpadTurning)
         {
             rot = m_rotationSupplier.getAsDouble();
         }else {
             setPoint = mDpad.getAsDouble();
             rot = rotController.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setPoint);
 
-            rot = Math.min(rot, -0.75);
-            rot = Math.max(rot, .75);
+            rot = Math.min(rot, 5);
+            rot = Math.max(rot, -5);
+
+            System.out.println(rot);
         }
 
 

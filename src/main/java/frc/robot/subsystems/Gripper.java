@@ -48,7 +48,7 @@ public class Gripper extends SubsystemBase {
     }
 
     public void gripCone() {
-        setPoint(3);
+        setPoint(10);
     }
 
     public void setPoint(double setPoint) {
