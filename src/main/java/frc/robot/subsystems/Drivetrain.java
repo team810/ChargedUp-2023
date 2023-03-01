@@ -249,6 +249,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void shuffleboardInit() {
+
         ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
         drivetrain.add("Field", field2d);
 

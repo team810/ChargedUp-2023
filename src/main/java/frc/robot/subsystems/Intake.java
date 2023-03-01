@@ -16,6 +16,8 @@ public class Intake extends SubsystemBase {
     private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
     private final PneumaticHub pneumaticHub;
 
+    private Boolean scoring;
+
 
     /**
      * Creates a new Intake.
@@ -37,7 +39,12 @@ public class Intake extends SubsystemBase {
     }
 
     public void out() {
-        piston.set(Value.kForward);
+        if (!scoring)
+        {
+            piston.set(Value.kForward);
+        }else{
+            piston.set(Value.kReverse);
+        }
     }
 
     public void in() {
@@ -66,11 +73,17 @@ public class Intake extends SubsystemBase {
 
     public void shuffleboardInit() {
         INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
-
     }
 
     public Value getSolenoidValue() {
         return piston.get();
     }
 
+    public Boolean getScoring() {
+        return scoring;
+    }
+
+    public void setScoring(Boolean mScoring) {
+        scoring = mScoring;
+    }
 }

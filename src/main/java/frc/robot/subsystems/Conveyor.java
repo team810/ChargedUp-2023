@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
@@ -13,6 +14,7 @@ import frc.robot.Constants.ConveyorConstants;
 public class Conveyor extends SubsystemBase {
   public final CANSparkMax conveyorMotor;
   private final ColorSensor colorSensor;
+  private final Ultrasonic mUltrasonic;
 
 
   private final ShuffleboardLayout CONVEYOR_TAB;
@@ -28,6 +30,10 @@ public class Conveyor extends SubsystemBase {
     colorSensor = new ColorSensor();
 
     CONVEYOR_TAB = ConveyorConstants.CONVEYOR_LAYOUT;
+
+    mUltrasonic = new Ultrasonic(0,1);
+    mUltrasonic.setEnabled(true);
+
 
     enabled = false;
     reversed = false;
@@ -80,6 +86,7 @@ public class Conveyor extends SubsystemBase {
   }
 
   public void shuffleboardInit() {
+    CONVEYOR_TAB.addDouble("Ultrasonic distance", mUltrasonic::getRangeInches);
     CONVEYOR_TAB.addDouble("Velocity",
             () -> conveyorMotor.getEncoder().getVelocity());
 

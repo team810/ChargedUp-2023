@@ -94,10 +94,10 @@ public class RobotContainer {
 
 
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).toggleOnTrue(
-                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, 2)
+                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,2)
         );
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).toggleOnTrue(
-                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, 3)
+                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,3)
         );
 
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(9)).onTrue(
@@ -109,6 +109,7 @@ public class RobotContainer {
     public void teleopInit()
     {
         CommandScheduler.getInstance().schedule(new StartupCommands(m_gripper));
+
     }
 
     public Command getAutonomousCommand() {

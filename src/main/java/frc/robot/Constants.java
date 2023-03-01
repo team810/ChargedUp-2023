@@ -90,7 +90,7 @@ public final class Constants {
 
             // Auto
             public static final PIDConstants XY_CONSTANTS = new PIDConstants(25, 0, 0);
-            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(15, 0, 0); // FIXME PID constants THETA
+            public static final PIDConstants THETA_CONSTANTS = new PIDConstants(15, 0, 0);
 
             public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.8, 3);
 
@@ -171,7 +171,7 @@ public final class Constants {
                 .withPosition(2, 0).withSize(2, 4);
 
         // Ports
-        public static final int GRIPPER_MOTOR = 14; // FIXME Gripper constants
+        public static final int GRIPPER_MOTOR = 14;
 
         public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
     }

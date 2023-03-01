@@ -15,7 +15,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 
 
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, int target) {
+                        Conveyor conveyor, Intake intake, int target) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
@@ -26,6 +26,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 
         this.target = target;
         addCommands(
+                new InstantCommand(() -> intake.setScoring(true)),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 toTarget,
                 new InstantCommand(gripper::openGripper),
@@ -45,6 +46,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitCommand(.8),
                 new InstantCommand(arm::restPivot),
                 new WaitCommand(2),
+                new InstantCommand(() -> intake.setScoring(false)),
                 new InstantCommand(gripper::openGripper)
         );
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
@@ -196,3 +198,4 @@ public class ScoreCommand extends SequentialCommandGroup {
     }
 
 }
+
