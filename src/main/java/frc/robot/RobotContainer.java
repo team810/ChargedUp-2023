@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.ScoreCommand;
 import frc.robot.commands.StartupCommands;
 import frc.robot.subsystems.*;
 
@@ -23,7 +22,7 @@ public class RobotContainer {
     public RobotContainer() {
         m_lime.setMode("Reflective Tape");
 
-        // Set up the default command for the drivetrain.
+//        // Set up the default command for the drivetrain.
         m_drive.setDefaultCommand(new DefaultDriveCommand(
                 m_drive,
                 () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
@@ -65,23 +64,23 @@ public class RobotContainer {
                         )
                 )
         );
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(4)).whileTrue(
-                new StartEndCommand(
-                        m_intake::runIntake,
-                        m_intake::stopIntake,
-                        m_intake
-                ).alongWith(
-                        new StartEndCommand(
-                                () -> {
-                                    m_conveyor.setReversed(false);
-                                    m_conveyor.setEnabled(true);
-                                },
-                                () -> {
-                                    m_conveyor.setReversed(false);
-                                    m_conveyor.setEnabled(false);
-                                },
-                                m_conveyor
-                        )));
+//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(4)).whileTrue(
+//                new StartEndCommand(
+//                        m_intake::runIntake,
+//                        m_intake::stopIntake,
+//                        m_intake
+//                ).alongWith(
+//                        new StartEndCommand(
+//                                () -> {
+//                                    m_conveyor.setReversed(false);
+//                                    m_conveyor.setEnabled(true);
+//                                },
+//                                () -> {
+//                                    m_conveyor.setReversed(false);
+//                                    m_conveyor.setEnabled(false);
+//                                },
+//                                m_conveyor
+//                        )));
 
         new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(2)).onTrue(
                 new InstantCommand(m_intake::out)
@@ -92,18 +91,50 @@ public class RobotContainer {
         );
 
 
+//
+//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).toggleOnTrue(
+//                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,2)
+//        );
+//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).toggleOnTrue(
+//                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,3)
+//        );
+//
+//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(9)).onTrue(
+//                new InstantCommand(m_gripper::closeGripper)
+//        );
 
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).toggleOnTrue(
-                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,2)
-        );
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).toggleOnTrue(
-                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,3)
-        );
 
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(9)).onTrue(
-                new InstantCommand(m_gripper::closeGripper)
-        );
+        // Reset pos
+//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).whileTrue(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() ->
+//                        {
+//                            m_arm.restExtender();
+//                            m_arm.restExtender();
+//
+//                        }),
+//                        new StartupCommands(m_gripper)
+//                )
+//        );
 
+
+        // The pid controller needs to be off for this
+        // Manual
+        //Extender
+
+//        new Trigger(()->OIConstants.DRIVE_GAMEPAD.getRawButton(5)).whileTrue(
+//                new StartEndCommand(()-> m_arm.runExtender(.4), ()-> m_arm.runExtender(0), m_arm)
+//        );
+//        new Trigger(()->OIConstants.DRIVE_GAMEPAD.getRawButton(6)).whileTrue(
+//                new StartEndCommand(()-> m_arm.runExtender(-.4), ()-> m_arm.runExtender(0), m_arm)
+//        );
+//
+//        new Trigger(()->OIConstants.DRIVE_GAMEPAD.getRawButton(1)).whileTrue(
+//                new StartEndCommand(()-> m_arm.runPivot(.2), ()-> m_arm.runPivot(0), m_arm)
+//        );
+//        new Trigger(()->OIConstants.DRIVE_GAMEPAD.getRawButton(4)).whileTrue(
+//                new StartEndCommand(()-> m_arm.runPivot(-.2), ()-> m_arm.runPivot(0), m_arm)
+//        );
     }
 
     public void teleopInit()

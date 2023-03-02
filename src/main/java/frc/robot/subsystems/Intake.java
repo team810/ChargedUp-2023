@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
         pneumaticHub.enableCompressorDigital();
 
         piston = pneumaticHub.makeDoubleSolenoid(0, 7);
-
+        scoring = false;
         shuffleboardInit();
     }
 

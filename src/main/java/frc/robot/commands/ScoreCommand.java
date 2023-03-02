@@ -26,6 +26,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 
         this.target = target;
         addCommands(
+                new InstantCommand(() -> intake.in()),
                 new InstantCommand(() -> intake.setScoring(true)),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 toTarget,

@@ -17,9 +17,20 @@ import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
     private final CANSparkMax extendingMotor, pivotMotor;
+
+    public PIDController getExtenderController() {
+        return extenderController;
+    }
+
     private final PIDController extenderController, pivotController;
     private final AnalogInput potReading;
-    private double extenderSetpoint, pivotSetpoint;
+    private double extenderSetpoint;
+
+    public double getPivotSetpoint() {
+        return pivotSetpoint;
+    }
+
+    private double pivotSetpoint;
     private final ShuffleboardLayout PIVOT, EXTENDER;
 
     public Arm() {
@@ -63,6 +74,14 @@ public class Arm extends SubsystemBase {
         extenderSetpoint = -2;
     }
 
+    public void runExtender(double speed)
+    {
+        extendingMotor.set(speed);
+    }
+
+    public void runPivot(double speed) {
+        pivotMotor.set(speed);
+    }
 
     private double getExtenderLength() {
         // 595 is the length pulled out by default, 78 ohms per inch
@@ -88,10 +107,10 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // limitSetpoint();
 
-        extendingMotor.set(
-                Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
+//        extendingMotor.set(
+//                Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
-        pivotMotor.set(
-                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.45), .45));
+//        pivotMotor.set(
+//                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.45), .45));
     }
 }
