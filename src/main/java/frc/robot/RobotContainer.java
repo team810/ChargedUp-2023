@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.ScoreCommand;
 import frc.robot.commands.StartupCommands;
 import frc.robot.subsystems.*;
 
@@ -44,7 +45,7 @@ public class RobotContainer {
                 new InstantCommand(m_drive::zeroGyroscope)
         );
 
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(1)).whileTrue(
+        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(1)).whileTrue(
                 new ParallelCommandGroup(
                         new StartEndCommand(
                                 m_intake::runIntakeReversed,
@@ -64,58 +65,59 @@ public class RobotContainer {
                         )
                 )
         );
-//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(4)).whileTrue(
-//                new StartEndCommand(
-//                        m_intake::runIntake,
-//                        m_intake::stopIntake,
-//                        m_intake
-//                ).alongWith(
-//                        new StartEndCommand(
-//                                () -> {
-//                                    m_conveyor.setReversed(false);
-//                                    m_conveyor.setEnabled(true);
-//                                },
-//                                () -> {
-//                                    m_conveyor.setReversed(false);
-//                                    m_conveyor.setEnabled(false);
-//                                },
-//                                m_conveyor
-//                        )));
 
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(2)).onTrue(
+        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(4)).whileTrue(
+                new StartEndCommand(
+                        m_intake::runIntake,
+                        m_intake::stopIntake,
+                        m_intake
+                ).alongWith(
+                        new StartEndCommand(
+                                () -> {
+                                    m_conveyor.setReversed(false);
+                                    m_conveyor.setEnabled(true);
+                                },
+                                () -> {
+                                    m_conveyor.setReversed(false);
+                                    m_conveyor.setEnabled(false);
+                                },
+                                m_conveyor
+                        )));
+
+        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(2)).onTrue(
                 new InstantCommand(m_intake::out)
         );
-
-        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(3)).onTrue(
+        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(3)).onTrue(
                 new InstantCommand(m_intake::in)
         );
 
 
-//
-//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).toggleOnTrue(
-//                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,2)
-//        );
-//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).toggleOnTrue(
-//                new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,3)
-//        );
-//
-//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(9)).onTrue(
-//                new InstantCommand(m_gripper::closeGripper)
-//        );
 
+        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5)).toggleOnTrue(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> m_intake.in()),
+                        new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,2, 1)
+                )
+        );
+        new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6)).toggleOnTrue(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> m_intake.in()),
+                        new ScoreCommand(m_arm, m_drive, m_gripper, m_lime, m_conveyor, m_intake,3, 1)
+                )
+
+        );
 
         // Reset pos
-//        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).whileTrue(
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() ->
-//                        {
-//                            m_arm.restExtender();
-//                            m_arm.restExtender();
-//
-//                        }),
-//                        new StartupCommands(m_gripper)
-//                )
-//        );
+        new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).whileTrue(
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> m_arm.restExtender()),
+                                new WaitCommand(.75),
+                                new InstantCommand(() -> m_arm.restPivot())
+                        ),
+                        new StartupCommands(m_gripper)
+                )
+        );
 
 
         // The pid controller needs to be off for this

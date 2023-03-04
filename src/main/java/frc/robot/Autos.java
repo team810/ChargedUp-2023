@@ -32,7 +32,7 @@ public class Autos {
         m_gripper = gripper;
         this.limelight = limelight;
 
-        score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,intake,2);
+        score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,intake,2, 1);
 
         addMethods();
 

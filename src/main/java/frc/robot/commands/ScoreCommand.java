@@ -15,7 +15,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 
 
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-                        Conveyor conveyor, Intake intake, int target) {
+                        Conveyor conveyor, Intake intake, int target, int targetGrid) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
@@ -36,9 +36,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 gripGamePiece(),
                 new WaitCommand(.25),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
-                armToGoal(), // I think that I can increase the arm speed to make the scoring procces faster
-                new WaitCommand(1.5),
-                extenderToGoal(),
+                new RaiseArmCommand(arm, target, targetGrid),
                 new WaitCommand(1.1),
                 releaseGrip(),
                 new WaitCommand(.5),
@@ -85,117 +83,6 @@ public class ScoreCommand extends SequentialCommandGroup {
     public Command releaseGrip()
     {
         return new InstantCommand(gripper::openGripper);
-    }
-
-    private Command armToConeGoal()
-    {
-        return new InstantCommand(() -> {
-            switch (target) {
-                case 1:
-                    arm.setPivotSetpoint(-9.5);
-                    break;
-                case 2:
-                    arm.setPivotSetpoint(-35.5);
-                    break;
-                case 3:
-                    arm.setPivotSetpoint(-40);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    private Command armToCubeGoal()
-    {
-        // FIXME cube constants
-        return new InstantCommand(() -> {
-            switch (target) {
-                case 1:
-                    arm.setPivotSetpoint(-9.5);
-                    break;
-                case 2:
-                    arm.setPivotSetpoint(-35.5);
-                    break;
-                case 3:
-                    arm.setPivotSetpoint(-40);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-
-    private Command armToGoal()
-    {
-        if (gamePiece == 1)
-        {
-            return armToConeGoal();
-        } else if (gamePiece == 2) {
-            return armToCubeGoal();
-        }else{
-            return armToConeGoal();
-        }
-    }
-
-    private Command extenderToConeGoal()
-    {
-        return new InstantCommand(() ->
-        {
-            switch (target)
-            {
-                case 1:
-                    arm.setExtenderSetpoint(-2.5);
-                    break;
-                case 2:
-                    arm.setExtenderSetpoint(5);
-                    break;
-                case 3:
-                    arm.setExtenderSetpoint(20.5);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    public Command extenderToCubeGoal()
-    {
-        // FIXME cube extender constants
-        return new InstantCommand(() ->
-        {
-            switch (target)
-            {
-                case 1:
-                    arm.setExtenderSetpoint(-2.5);
-                    break;
-                case 2:
-                    arm.setExtenderSetpoint(5);
-                    break;
-                case 3:
-                    arm.setExtenderSetpoint(20.5);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    private Command extenderToGoal()
-    {
-        if (gamePiece == 1)
-        {
-            return extenderToConeGoal();
-        } else if (gamePiece == 2) {
-            return extenderToCubeGoal();
-        }else{
-            return extenderToConeGoal();
-        }
     }
 
 }

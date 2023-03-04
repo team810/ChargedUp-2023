@@ -37,7 +37,7 @@ public class Gripper extends SubsystemBase {
 
 
     public void openGripper() {
-        setPoint(-1.4);
+        setPoint(-4.5);
     }
 
     public void closeGripper() {
