@@ -172,8 +172,11 @@ public final class Constants {
                                 .getLayout("PID Values", BuiltInLayouts.kList)
                                 .withPosition(2, 0).withSize(2, 4);
 
-                // Ports
-                public static final int GRIPPER_MOTOR = 14; // FIXME Gripper constants
+
+        // Ports
+        public static final int GRIPPER_MOTOR = 14;
+
+             
 
                 public static final PIDController GRIPPER_CONTROLLER = new PIDController(.15, 0, 0);
         }

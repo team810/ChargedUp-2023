@@ -17,9 +17,20 @@ import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
     private final CANSparkMax extendingMotor, pivotMotor;
+
+    public PIDController getExtenderController() {
+        return extenderController;
+    }
+
     private final PIDController extenderController, pivotController;
     private final AnalogInput potReading;
-    private double extenderSetpoint, pivotSetpoint;
+    private double extenderSetpoint;
+
+    public double getPivotSetpoint() {
+        return pivotSetpoint;
+    }
+
+    private double pivotSetpoint;
     private final ShuffleboardLayout PIVOT, EXTENDER;
 
     public Arm() {
@@ -62,6 +73,15 @@ public class Arm extends SubsystemBase {
     public void restExtender() {
         extenderSetpoint = -2;
     }
+    public void runExtender(double speed)
+    {
+        extendingMotor.set(speed);
+    }
+
+    public void runPivot(double speed) {
+        pivotMotor.set(speed);
+    }
+
 
     private double getExtenderLength() {
         // 595 is the length pulled out by default, 78 ohms per inch
