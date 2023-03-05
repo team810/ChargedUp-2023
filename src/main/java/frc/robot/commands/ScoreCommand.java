@@ -8,6 +8,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 
 public class ScoreCommand extends SequentialCommandGroup {
@@ -22,7 +23,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
 
-                        Conveyor conveyor, Intake intake, int target, int targetGrid) {
+            Conveyor conveyor, Intake intake, int target, int targetGrid) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
@@ -55,23 +56,22 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new InstantCommand(arm::restPivot),
                 new WaitCommand(2),
                 new InstantCommand(() -> intake.setScoring(false)),
-                new InstantCommand(gripper::openGripper)
-        );
+                new InstantCommand(gripper::openGripper));
 
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
     }
 
     // private Command setTarget() {
-    //     return new InstantCommand(() -> {
-    //         if (conveyor.getGamePiece() == 1) { // cone
-    //             // target = 3;
-    //             System.out.println("Hello World\n");
-    //         } else if (conveyor.getGamePiece() == 2) { // cube
-    //             target = 1;
-    //         } else {
-    //             System.out.println("NO target");
-    //         }
-    //     });
+    // return new InstantCommand(() -> {
+    // if (conveyor.getGamePiece() == 1) { // cone
+    // // target = 3;
+    // System.out.println("Hello World\n");
+    // } else if (conveyor.getGamePiece() == 2) { // cube
+    // target = 1;
+    // } else {
+    // System.out.println("NO target");
+    // }
+    // });
     // }
 
     private Command gripGamePiece() {
@@ -80,9 +80,8 @@ public class ScoreCommand extends SequentialCommandGroup {
                 gripper.gripCone();
             } else if (conveyor.getGamePiece() == 2) {
                 gripper.gripCube();
-            }
-            else{
-            gripper.gripCube(); // this is not a good default state
+            } else {
+                gripper.gripCube(); // this is not a good default state
             }
         });
     }
@@ -91,4 +90,3 @@ public class ScoreCommand extends SequentialCommandGroup {
         return new InstantCommand(gripper::openGripper);
     }
 }
-

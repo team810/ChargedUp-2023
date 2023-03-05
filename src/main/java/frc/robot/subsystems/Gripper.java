@@ -56,6 +56,11 @@ public class Gripper extends SubsystemBase {
         this.setPoint = setPoint;
     }
 
+    public double getSetpoint()
+    {
+        return this.setPoint;
+    }
+
     public void shuffleboardInit() {
         GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
         GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());

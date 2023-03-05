@@ -29,7 +29,6 @@ public class Autos {
 
     public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper,
             Limelight limelight) {
-        // PathPlannerServer.startServer(5811);
         m_drivetrain = drivetrain;
         m_intake = intake;
         m_conveyor = conveyor;
