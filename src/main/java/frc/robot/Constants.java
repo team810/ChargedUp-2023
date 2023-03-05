@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -18,7 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public final class Constants {
         public static final class OIConstants {
-                public static final Joystick DRIVE_GAMEPAD = new Joystick(0);
+                public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
                 public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
 
                 // public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
@@ -83,7 +84,7 @@ public final class Constants {
                                                 DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
                 // Max speed is scary
-                public static final double SPEED_LIMIT = .5;
+                public static final double SPEED_LIMIT = .8;
 
                 public static final class Auto {
                         // TeleOP
@@ -174,7 +175,7 @@ public final class Constants {
                 // Ports
                 public static final int GRIPPER_MOTOR = 14; // FIXME Gripper constants
 
-                public static final PIDController GRIPPER_CONTROLLER = new PIDController(.1, 0, 0);
+                public static final PIDController GRIPPER_CONTROLLER = new PIDController(.15, 0, 0);
         }
 
         public static final class IntakeConstants {

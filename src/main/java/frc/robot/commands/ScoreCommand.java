@@ -77,9 +77,9 @@ public class ScoreCommand extends SequentialCommandGroup {
             } else if (conveyor.getGamePiece() == 2) {
                 gripper.gripCube();
             }
-            // else{
-            // gripper.gripCube(); // this is not a good default state
-            // }
+            else{
+            gripper.gripCube(); // this is not a good default state
+            }
         });
     }
 
@@ -127,13 +127,16 @@ public class ScoreCommand extends SequentialCommandGroup {
     }
 
     private Command armToGoal() {
-        if (gamePiece == 1) {
-            return armToConeGoal();
-        } else if (gamePiece == 2) {
-            return armToCubeGoal();
-        } else {
-            return armToConeGoal();
-        }
+
+        return armToConeGoal();
+
+        // if (gamePiece == 1) {
+        //     return armToConeGoal();
+        // } else if (gamePiece == 2) {
+        //     return armToCubeGoal();
+        // } else {
+        //     return armToConeGoal();
+        // }
     }
 
     private Command extenderToConeGoal() {
@@ -176,13 +179,14 @@ public class ScoreCommand extends SequentialCommandGroup {
     }
 
     private Command extenderToGoal() {
-        if (gamePiece == 1) {
-            return extenderToConeGoal();
-        } else if (gamePiece == 2) {
-            return extenderToCubeGoal();
-        } else {
-            return extenderToConeGoal();
-        }
+        return extenderToConeGoal();
+        // if (gamePiece == 1) {
+        //     return extenderToConeGoal();
+        // } else if (gamePiece == 2) {
+        //     return extenderToCubeGoal();
+        // } else {
+        //     return extenderToConeGoal();
+        // }
     }
 
 }

@@ -36,21 +36,21 @@ public class RobotContainer {
                 // Set up the default command for the drivetrain.
                 m_drive.setDefaultCommand(new DefaultDriveCommand(
                                 m_drive,
-                                () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
+                                () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(1) *
                                                 DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.25),
-                                () -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
+                                () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getRawAxis(0) *
                                                 DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.25),
                                 () -> -modifyAxis(
                                                 OIConstants.DRIVE_GAMEPAD.getRawAxis(3) *
                                                                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-                                                                * 0.25)));
+                                                                * 0.75)));
 
                 configureButtonBindings();
         }
 
         private void configureButtonBindings() {
                 // Driving gamepad
-                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(12)).onTrue(
+                new Trigger(() -> .75 < OIConstants.DRIVE_GAMEPAD.getLeftTriggerAxis()).onTrue(
                                 new InstantCommand(m_drive::zeroGyroscope));
 
                 new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(1)).whileTrue(
@@ -108,6 +108,7 @@ public class RobotContainer {
         public Command getAutonomousCommand() {
                 // TODO: Set new path before each match
                 return autos.genPath("Charge Station");
+                // return null;
         }
 
         private static double deadband(double value, double deadband) {

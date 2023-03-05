@@ -65,7 +65,7 @@ public class Arm extends SubsystemBase {
 
     private double getExtenderLength() {
         // 595 is the length pulled out by default, 78 ohms per inch
-        return (((double) potReading.getAverageValue() - 584.0) / 78.0);
+        return (((double) potReading.getAverageValue() - 1543) / 78);
     }
 
     public void shuffleboardInit() {
