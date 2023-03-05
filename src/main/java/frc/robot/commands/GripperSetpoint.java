@@ -31,7 +31,7 @@ public class GripperSetpoint extends CommandBase {
   public void execute() {
     if(RobotState.isTeleop())
     {
-      m_gripper.setPoint(m_gripper.getSetpoint() + speed.getAsDouble() * .7);
+      m_gripper.setPoint(m_gripper.getSetpoint() + speed.getAsDouble());
     }
   }
 
