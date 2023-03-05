@@ -232,9 +232,13 @@ public class Drivetrain extends SubsystemBase {
     {
         DrivetrainConstants.SPEED_LIMIT = .8;
     }
-    public void slow()
+    public void normal()
     {
         DrivetrainConstants.SPEED_LIMIT = .5;
+    }
+    public void slow()
+    {
+        DrivetrainConstants.SPEED_LIMIT = .3;
     }
 
     public void setStatesNoSpeedMod(SwerveModuleState[] state) {

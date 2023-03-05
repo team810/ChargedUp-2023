@@ -17,6 +17,7 @@ import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
     private final CANSparkMax extendingMotor, pivotMotor;
+    private boolean isManual;
 
     public PIDController getExtenderController() {
         return extenderController;
@@ -52,6 +53,8 @@ public class Arm extends SubsystemBase {
         PIVOT = ArmConstants.PIVOT;
         EXTENDER = ArmConstants.EXTENDER;
 
+        this.isManual = false;
+
         restPivot();
         restExtender();
 
@@ -73,18 +76,19 @@ public class Arm extends SubsystemBase {
     public void restExtender() {
         extenderSetpoint = -2;
     }
-    public void runExtender(double speed)
-    {
+
+    public void runExtender(double speed) {
+        this.isManual = true;
         extendingMotor.set(speed);
     }
 
     public void runPivot(double speed) {
+        this.isManual = true;
         pivotMotor.set(speed);
     }
 
-
     private double getExtenderLength() {
-        // 595 is the length pulled out by default, 78 ohms per inch
+        // 1543 is the length pulled out by default, 78 ohms per inch
         return (((double) potReading.getAverageValue() - 1543) / 78);
     }
 
@@ -106,6 +110,18 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // limitSetpoint();
 
+        // if (!isManual) {
+        // extendingMotor.set(
+        // Math.min(Math.max(extenderController.calculate(getExtenderLength(),
+        // this.extenderSetpoint), -.5),
+        // .5));
+
+        // pivotMotor.set(
+        // Math.min(Math.max(
+        // pivotController.calculate(this.pivotMotor.getEncoder().getPosition(),
+        // this.pivotSetpoint),
+        // -.45), .45));
+        // }
         extendingMotor.set(
                 Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
@@ -113,5 +129,9 @@ public class Arm extends SubsystemBase {
                 Math.min(Math.max(
                         pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint),
                         -.45), .45));
+    }
+
+    public void usePID() {
+        this.isManual = false;
     }
 }

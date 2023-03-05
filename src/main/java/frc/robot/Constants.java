@@ -23,8 +23,7 @@ public final class Constants {
                 // public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
 
                 // public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
-                public static final StadiaController SECONDARY_GAMEPAD = new
-                StadiaController(1);
+                public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
         }
 
         public static final class DrivetrainConstants {
@@ -172,11 +171,8 @@ public final class Constants {
                                 .getLayout("PID Values", BuiltInLayouts.kList)
                                 .withPosition(2, 0).withSize(2, 4);
 
-
-        // Ports
-        public static final int GRIPPER_MOTOR = 14;
-
-             
+                // Ports
+                public static final int GRIPPER_MOTOR = 14;
 
                 public static final PIDController GRIPPER_CONTROLLER = new PIDController(.15, 0, 0);
         }

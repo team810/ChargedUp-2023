@@ -2,21 +2,22 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8690403263159472,
-        "y": 3.8784532863183374
+        "x": 14.59406479440634,
+        "y": 1.646705946764246
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7178203768172247,
-        "y": 4.609347218694437
+        "x": 14.29674288735168,
+        "y": 0.8805302632003253
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "conveyor",
           "score"
         ],
         "executionBehavior": "sequential",
@@ -26,12 +27,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.332860195132155,
-        "y": 4.727233336819615
+        "x": 11.129121031423235,
+        "y": 0.8347884313457634
       },
       "prevControl": {
-        "x": 3.3308281910681474,
-        "y": 4.762599172257168
+        "x": 12.592859650769231,
+        "y": 0.6746920198547947
       },
       "nextControl": null,
       "holonomicAngle": 0,

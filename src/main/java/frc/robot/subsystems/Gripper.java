@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,7 +38,7 @@ public class Gripper extends SubsystemBase {
 
 
     public void openGripper() {
-        setPoint(-4.5);
+        setPoint(-1.5);
     }
 
     public void closeGripper() {

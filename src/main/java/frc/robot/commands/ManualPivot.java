@@ -6,39 +6,41 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 
-public class GripperSetpoint extends CommandBase {
-  Gripper m_gripper;
+public class ManualPivot extends CommandBase {
+  private Arm m_arm;
+  private Intake m_intake;
   private DoubleSupplier speed;
-  /** Creates a new GripperSetpoint. */
-  public GripperSetpoint(Gripper m_gripper, DoubleSupplier speed) {
+
+  /** Creates a new ManualPivot. */
+  public ManualPivot(Arm m_arm, Intake m_intake, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_gripper = m_gripper;
+    this.m_arm = m_arm;
+    this.m_intake = m_intake;
     this.speed = speed;
 
-    addRequirements(m_gripper);
+    addRequirements(m_arm, m_intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    // m_intake.in();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotState.isTeleop())
-    {
-      m_gripper.setPoint(m_gripper.getSetpoint() + speed.getAsDouble() * .7);
-    }
+    m_intake.in();
+    m_arm.runPivot(-this.speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
