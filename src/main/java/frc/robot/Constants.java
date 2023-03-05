@@ -84,7 +84,7 @@ public final class Constants {
                                                 DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
                 // Max speed is scary
-                public static final double SPEED_LIMIT = .8;
+                public static double SPEED_LIMIT = .8;
 
                 public static final class Auto {
                         // TeleOP

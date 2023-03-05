@@ -37,24 +37,23 @@ public class ToTargetCommand extends CommandBase {
     @Override
     public void initialize() {
 
-        finished = !limelight.hasTarget();
+        // finished = !limelight.hasTarget();
 
-        if (conveyor.getGamePiece() == 1) {
-            if (conveyor.getGamePiece() == 1) {
-
-                limelight.setMode("Reflective Tape");
-            } else if (conveyor.getGamePiece() == 2) {
-                limelight.setMode("AprilTag");
-            } else {
-                limelight.setMode("Reflective Tape");
-            }
-        }
+        // if (conveyor.getGamePiece() == 1) {
+        //     if (conveyor.getGamePiece() == 1) {
+        //         limelight.setMode("Reflective Tape");
+        //     } else if (conveyor.getGamePiece() == 2) {
+        //         limelight.setMode("AprilTag");
+        //     } else {
+        //         limelight.setMode("Reflective Tape");
+        //     }
+        // }
     }
 
     @Override
     public void execute() {
 
-        if (limelight.hasTarget()) {
+        if (limelight.hasTarget() && !(limelight.getBestTarget().equals(null))) {
 
             double xSpeed = Xcontroller.calculate(limelight.getBestTarget().getYaw(), X_OFFSET);
 

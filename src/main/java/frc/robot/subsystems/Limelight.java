@@ -51,7 +51,10 @@ public class Limelight extends SubsystemBase {
     }
 
     public boolean hasTarget() {
-        return m_camera.getLatestResult().hasTargets();
+        if(m_camera.getLatestResult().equals(null))
+            return false;
+        else
+            return m_camera.getLatestResult().hasTargets();
     }
 
     public void setMode(String pipeline) {

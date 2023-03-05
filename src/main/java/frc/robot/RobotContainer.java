@@ -46,16 +46,20 @@ public class RobotContainer {
                                                                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
                 m_gripper.setDefaultCommand(
-                        new GripperSetpoint(m_gripper, ()-> OIConstants.SECONDARY_GAMEPAD.getRightY())
-                );
+                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRightY()));
 
                 configureButtonBindings();
         }
 
         private void configureButtonBindings() {
                 // Primary
+                //Zero gyro
                 new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(12)).onTrue(
                                 new InstantCommand(m_drive::zeroGyroscope));
+                //Speed limit
+                new Trigger(()-> OIConstants.DRIVE_GAMEPAD.getLeftBumper()).toggleOnTrue(
+                        new StartEndCommand(()-> m_drive.fast(), ()-> m_drive.slow(), m_drive)
+                );
 
                 // Intake Reverse
                 new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getAButton()).whileTrue(
@@ -120,14 +124,12 @@ public class RobotContainer {
                                                                 new InstantCommand(() -> m_arm.restPivot())),
                                                 new StartupCommands(m_gripper)));
 
-                //Close Gripper
-                new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getPOV() == 0).whileTrue(
-                        new InstantCommand(m_gripper::gripCone)
-                );
-                //Open Gripper
-                new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getPOV() == 180).whileTrue(
-                        new InstantCommand(m_gripper::openGripper)
-                );
+                // Close Gripper
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 0).whileTrue(
+                                new InstantCommand(m_gripper::gripCone));
+                // Open Gripper
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 180).whileTrue(
+                                new InstantCommand(m_gripper::openGripper));
         }
 
         public void teleopInit() {
