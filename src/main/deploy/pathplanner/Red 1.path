@@ -10,14 +10,13 @@
         "x": 14.12521101789707,
         "y": 4.459828605819836
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "conveyor",
           "score"
         ],
         "executionBehavior": "sequential",
@@ -35,7 +34,7 @@
         "y": 4.665666849165367
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,

@@ -112,20 +112,20 @@ public class RobotContainer {
                                                                                 m_conveyor)));
                 // Intake toggle
                 new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getXButton()).onTrue(
-                                new InstantCommand(m_intake::toggleIntake));
+                                new InstantCommand(m_intake::in));
                 new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getBButton()).onTrue(
-                        new InstantCommand(m_intake::toggleIntake));        
+                        new InstantCommand(m_intake::out));        
 
                 // Medium score
                 new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6)).toggleOnTrue(
                                 new SequentialCommandGroup(
                                                 new InstantCommand(() -> m_intake.in()),
-                                                new RaiseArmCommand(m_arm, 2, 1)));
+                                                new RaiseArmCommand(m_arm, 2, 2)));
                 // High score
                 new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12)).toggleOnTrue(
                                 new SequentialCommandGroup(
                                                 new InstantCommand(() -> m_intake.in()),
-                                                new RaiseArmCommand(m_arm, 3, 1))
+                                                new RaiseArmCommand(m_arm, 3, 2))
 
                 );
 
@@ -138,12 +138,43 @@ public class RobotContainer {
                                                                 new InstantCommand(() -> m_arm.restPivot())),
                                                 new StartupCommands(m_gripper)));
 
+                // //Conveyor 9 = hamburger
+                // new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getRawButton(14)).whileTrue(
+                //         new StartEndCommand(
+                //                 () -> {
+                //                         m_conveyor.setEnabled(true);
+                //                         m_conveyor.setReversed(false);
+                //                         m_conveyor.setOvorride(true);
+                //                 }, 
+                //                 () -> 
+                //                 {
+                //                         m_conveyor.setEnabled(true);
+                //                         m_conveyor.setReversed(false);
+                //                         m_conveyor.setOvorride(true);
+                //                 }, m_conveyor)
+                // );
+                // //14 = cube
+                // new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getRawButton(14)).whileTrue(
+                //         new StartEndCommand(
+                //                 () -> {
+                //                         m_conveyor.setEnabled(true);
+                //                         m_conveyor.setReversed(true);
+                //                         m_conveyor.setOvorride(true);
+                //                 }, 
+                //                 () -> 
+                //                 {
+                //                         m_conveyor.setEnabled(true);
+                //                         m_conveyor.setReversed(true);
+                //                         m_conveyor.setOvorride(true);
+                //                 }, m_conveyor)
+                // );
+
                 // Close Gripper
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 0).whileTrue(
-                                new InstantCommand(m_gripper::gripCone));
+                // new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 0).whileTrue(
+                //                 new InstantCommand(m_gripper::gripCone));
                 // Open Gripper
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 180).whileTrue(
-                                new InstantCommand(m_gripper::openGripper));
+                // new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 180).whileTrue(
+                //                 new InstantCommand(m_gripper::openGripper));
         }
 
         public void teleopInit() {
@@ -152,8 +183,8 @@ public class RobotContainer {
 
         public Command getAutonomousCommand() {
 
-                // return autos.genPath("Red Forward");
-                return null;
+                return autos.genPath("Red 2");
+                // return null;
         }
 
         private static double deadband(double value, double deadband) {

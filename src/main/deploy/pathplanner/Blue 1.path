@@ -17,7 +17,6 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "conveyor",
           "score"
         ],
         "executionBehavior": "sequential",

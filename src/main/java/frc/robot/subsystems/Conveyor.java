@@ -23,7 +23,7 @@ public class Conveyor extends SubsystemBase {
   private boolean enabled;
   private boolean reversed;
   private boolean scoring;
-
+  private boolean override;
 
   public Conveyor() {
     conveyorMotor = new CANSparkMax(ConveyorConstants.CONVEYOR_MOTOR, MotorType.kBrushless);
@@ -41,6 +41,20 @@ public class Conveyor extends SubsystemBase {
 
     shuffleboardInit();
 
+  }
+
+  public void setOvorride(boolean override)
+  {
+    this.override = override;
+  }
+  public boolean getOverride()
+  {
+    return override;
+  }
+
+  public void runConveyor(double speed)
+  {
+    conveyorMotor.set(speed);
   }
 
   private void updateGamePiece()
@@ -63,7 +77,7 @@ public class Conveyor extends SubsystemBase {
     {
       if (!reversed)
       {
-        if (gamePiece == 0)
+        if (gamePiece == 0 ||  override)
         {
           conveyorMotor.set(ConveyorConstants.MOTOR_SPEED);
         }else{
