@@ -8,6 +8,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 
 public class ScoreCommand extends SequentialCommandGroup {
@@ -21,7 +22,8 @@ public class ScoreCommand extends SequentialCommandGroup {
     private int gamePiece;
 
     public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-            Conveyor conveyor, int target) {
+
+            Conveyor conveyor, Intake intake, int target, int targetGrid) {
         this.arm = arm;
         this.drivetrain = drivetrain;
         this.gripper = gripper;
@@ -32,6 +34,8 @@ public class ScoreCommand extends SequentialCommandGroup {
 
         this.target = target;
         addCommands(
+                new InstantCommand(() -> intake.in()),
+                new InstantCommand(() -> intake.setScoring(true)),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 toTarget,
                 new InstantCommand(gripper::openGripper),
@@ -42,9 +46,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 gripGamePiece(),
                 new WaitCommand(.25),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
-                armToGoal(), // I think that I can increase the arm speed to make the scoring procces faster
-                new WaitCommand(1.5),
-                extenderToGoal(),
+                new RaiseArmCommand(arm, target, targetGrid),
                 new WaitCommand(1.1),
                 releaseGrip(),
                 new WaitCommand(.5),
@@ -53,21 +55,23 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitCommand(.8),
                 new InstantCommand(arm::restPivot),
                 new WaitCommand(2),
+                new InstantCommand(() -> intake.setScoring(false)),
                 new InstantCommand(gripper::openGripper));
+
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
     }
 
     // private Command setTarget() {
-    //     return new InstantCommand(() -> {
-    //         if (conveyor.getGamePiece() == 1) { // cone
-    //             // target = 3;
-    //             System.out.println("Hello World\n");
-    //         } else if (conveyor.getGamePiece() == 2) { // cube
-    //             target = 1;
-    //         } else {
-    //             System.out.println("NO target");
-    //         }
-    //     });
+    // return new InstantCommand(() -> {
+    // if (conveyor.getGamePiece() == 1) { // cone
+    // // target = 3;
+    // System.out.println("Hello World\n");
+    // } else if (conveyor.getGamePiece() == 2) { // cube
+    // target = 1;
+    // } else {
+    // System.out.println("NO target");
+    // }
+    // });
     // }
 
     private Command gripGamePiece() {
@@ -76,9 +80,8 @@ public class ScoreCommand extends SequentialCommandGroup {
                 gripper.gripCone();
             } else if (conveyor.getGamePiece() == 2) {
                 gripper.gripCube();
-            }
-            else{
-            gripper.gripCube(); // this is not a good default state
+            } else {
+                gripper.gripCube(); // this is not a good default state
             }
         });
     }
@@ -86,107 +89,4 @@ public class ScoreCommand extends SequentialCommandGroup {
     public Command releaseGrip() {
         return new InstantCommand(gripper::openGripper);
     }
-
-    private Command armToConeGoal() {
-        return new InstantCommand(() -> {
-            switch (target) {
-                case 1:
-                    arm.setPivotSetpoint(-9.5);
-                    break;
-                case 2:
-                    arm.setPivotSetpoint(-35.5);
-                    break;
-                case 3:
-                    arm.setPivotSetpoint(-40);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    private Command armToCubeGoal() {
-        // FIXME cube constants
-        return new InstantCommand(() -> {
-            switch (target) {
-                case 1:
-                    arm.setPivotSetpoint(-9.5);
-                    break;
-                case 2:
-                    arm.setPivotSetpoint(-35.5);
-                    break;
-                case 3:
-                    arm.setPivotSetpoint(-40);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    private Command armToGoal() {
-
-        return armToConeGoal();
-
-        // if (gamePiece == 1) {
-        //     return armToConeGoal();
-        // } else if (gamePiece == 2) {
-        //     return armToCubeGoal();
-        // } else {
-        //     return armToConeGoal();
-        // }
-    }
-
-    private Command extenderToConeGoal() {
-        return new InstantCommand(() -> {
-            switch (target) {
-                case 1:
-                    arm.setExtenderSetpoint(-2.5);
-                    break;
-                case 2:
-                    arm.setExtenderSetpoint(5);
-                    break;
-                case 3:
-                    arm.setExtenderSetpoint(20.5);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    public Command extenderToCubeGoal() {
-        // FIXME cube extender constants
-        return new InstantCommand(() -> {
-            switch (target) {
-                case 1:
-                    arm.setExtenderSetpoint(-2.5);
-                    break;
-                case 2:
-                    arm.setExtenderSetpoint(5);
-                    break;
-                case 3:
-                    arm.setExtenderSetpoint(20.5);
-                    break;
-                default:
-                    System.out.println("how did you get here");
-                    break;
-            }
-        });
-    }
-
-    private Command extenderToGoal() {
-        return extenderToConeGoal();
-        // if (gamePiece == 1) {
-        //     return extenderToConeGoal();
-        // } else if (gamePiece == 2) {
-        //     return extenderToCubeGoal();
-        // } else {
-        //     return extenderToConeGoal();
-        // }
-    }
-
 }

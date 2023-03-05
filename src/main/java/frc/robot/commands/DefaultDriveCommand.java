@@ -12,11 +12,6 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
-    // private final DoubleSupplier mDpad;
-
-    // private final PIDController rotController = new PIDController(1, 0, 0);
-    // private double setPoint = 0;
-    // private boolean dpadTurning = true;
 
     public DefaultDriveCommand(Drivetrain drivetrainSubsystem,
             DoubleSupplier translationXSupplier,
@@ -26,7 +21,6 @@ public class DefaultDriveCommand extends CommandBase {
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
-        // mDpad = dpad;
 
         addRequirements(drivetrainSubsystem);
     }

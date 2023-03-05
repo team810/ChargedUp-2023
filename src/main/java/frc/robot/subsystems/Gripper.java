@@ -10,6 +10,7 @@ import frc.robot.Constants.GripperConstants;
 
 public class Gripper extends SubsystemBase {
     private final CANSparkMax gripperMotor;
+
     private final PIDController gripperPIDController;
     private double setPoint;
     private final ShuffleboardLayout GRIPPER_MOTOR = GripperConstants.GRIPPER_M_VALUES;
@@ -36,7 +37,7 @@ public class Gripper extends SubsystemBase {
 
 
     public void openGripper() {
-        setPoint(-1.4);
+        setPoint(-4.5);
     }
 
     public void closeGripper() {
@@ -55,12 +56,16 @@ public class Gripper extends SubsystemBase {
         this.setPoint = setPoint;
     }
 
+    public double getSetpoint()
+    {
+        return this.setPoint;
+    }
+
     public void shuffleboardInit() {
         GRIPPER_MOTOR.addDouble("Velocity", () -> gripperMotor.getEncoder().getVelocity());
         GRIPPER_MOTOR.addDouble("Position", () -> gripperMotor.getEncoder().getPosition());
         GRIPPER_MOTOR.addDouble("Temp", gripperMotor::getMotorTemperature);
         GRIPPER_PID.addDouble("Setpoint", () -> this.setPoint);
-
     }
 
     @Override
