@@ -11,7 +11,6 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 
-
 public class ToTargetCommand extends CommandBase {
     private final Conveyor conveyor;
     private final Drivetrain drivetrain;
@@ -32,7 +31,6 @@ public class ToTargetCommand extends CommandBase {
         Xcontroller.setSetpoint(X_OFFSET);
         Xcontroller.disableContinuousInput();
 
-
         addRequirements(this.conveyor, this.drivetrain, this.limelight);
     }
 
@@ -43,10 +41,12 @@ public class ToTargetCommand extends CommandBase {
 
         if (conveyor.getGamePiece() == 1)
         {
+        if (conveyor.getGamePiece() == 1) {
+
             limelight.setMode("Reflective Tape");
         } else if (conveyor.getGamePiece() == 2) {
             limelight.setMode("AprilTag");
-        }else{
+        } else {
             limelight.setMode("Reflective Tape");
         }
     }
@@ -54,43 +54,41 @@ public class ToTargetCommand extends CommandBase {
     @Override
     public void execute() {
 
+
         if (limelight.hasTarget())
         {
 
             double xSpeed = Xcontroller.calculate(limelight.getBestTarget().getYaw(),X_OFFSET);
-
+            
             xSpeed = Math.min(xSpeed, .75);
             xSpeed = Math.max(xSpeed, -.75);
 
-            ChassisSpeeds speeds = new ChassisSpeeds(0,-1 * xSpeed,0);
+            ChassisSpeeds speeds = new ChassisSpeeds(0, -1 * xSpeed, 0);
 
-            if (RobotState.isAutonomous())
-            {
+            if (RobotState.isAutonomous()) {
                 SwerveModuleState[] states = Constants.DrivetrainConstants.KINEMATICS.toSwerveModuleStates(speeds);
-                SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+                SwerveDriveKinematics.desaturateWheelSpeeds(states,
+                        Constants.DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
                 drivetrain.setStates(states);
             }
-            if (RobotState.isTeleop())
-            {
+            if (RobotState.isTeleop()) {
                 drivetrain.drive(speeds);
             }
 
         }
 
-        if (isFinished())
-        {
-            ChassisSpeeds speeds = new ChassisSpeeds(0,0,0);
+        if (isFinished()) {
+            ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
 
-            if (RobotState.isAutonomous())
-            {
+            if (RobotState.isAutonomous()) {
                 SwerveModuleState[] states = Constants.DrivetrainConstants.KINEMATICS.toSwerveModuleStates(speeds);
-                SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+                SwerveDriveKinematics.desaturateWheelSpeeds(states,
+                        Constants.DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
                 drivetrain.setStates(states);
             }
-            if (RobotState.isTeleop())
-            {
+            if (RobotState.isTeleop()) {
                 drivetrain.drive(speeds);
             }
         }

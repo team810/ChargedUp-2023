@@ -1,15 +1,21 @@
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ChargeStationCommand;
 import frc.robot.commands.ScoreCommand;
-import frc.robot.subsystems.*;
-
-import java.util.HashMap;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 
 public class Autos {
     private final Drivetrain m_drivetrain;
@@ -21,10 +27,9 @@ public class Autos {
     private final ScoreCommand score;
     private final SwerveAutoBuilder m_AUTO_BUILDER;
 
-
-
-    public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper, Limelight limelight) {
-//        PathPlannerServer.startServer(5811);
+    public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper,
+            Limelight limelight) {
+        // PathPlannerServer.startServer(5811);
         m_drivetrain = drivetrain;
         m_intake = intake;
         m_conveyor = conveyor;
@@ -34,20 +39,20 @@ public class Autos {
 
         score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,intake,2, 1);
 
-        addMethods();
 
+        addMethods();
 
         // Auto Variables
         m_AUTO_BUILDER = new SwerveAutoBuilder(
-            m_drivetrain::getPose,
-            m_drivetrain::resetPose,
-            DrivetrainConstants.KINEMATICS,
-            DrivetrainConstants.Auto.XY_CONSTANTS,
-            DrivetrainConstants.Auto.THETA_CONSTANTS,
-            m_drivetrain::setStates,
-            this.eventMap,
-            false,
-        m_drivetrain);
+                m_drivetrain::getPose,
+                m_drivetrain::resetPose,
+                DrivetrainConstants.KINEMATICS,
+                DrivetrainConstants.Auto.XY_CONSTANTS,
+                DrivetrainConstants.Auto.THETA_CONSTANTS,
+                m_drivetrain::setStates,
+                this.eventMap,
+                false,
+                m_drivetrain);
     }
 
     // Auto Variables
@@ -60,13 +65,13 @@ public class Autos {
         eventMap.put("Intake Out", new InstantCommand(m_intake::out));
         eventMap.put("Stop Intake", new InstantCommand(m_intake::stopIntake));
 
-        eventMap.put("Charge Station", new ChargeStationCommand(m_drivetrain));
+        eventMap.put("Balance", new ChargeStationCommand(m_drivetrain));
 
         eventMap.put("Score", score);
     }
 
-    public Command genPath(String path)
-    {
-        return m_AUTO_BUILDER.fullAuto(PathPlanner.loadPathGroup(path, Constants.DrivetrainConstants.Auto.PATH_CONSTRAINTS));
+    public Command genPath(String path) {
+        return m_AUTO_BUILDER
+                .fullAuto(PathPlanner.loadPathGroup(path, Constants.DrivetrainConstants.Auto.PATH_CONSTRAINTS));
     }
 }

@@ -73,7 +73,6 @@ public class Arm extends SubsystemBase {
     public void restExtender() {
         extenderSetpoint = -2;
     }
-
     public void runExtender(double speed)
     {
         extendingMotor.set(speed);
@@ -83,9 +82,10 @@ public class Arm extends SubsystemBase {
         pivotMotor.set(speed);
     }
 
+
     private double getExtenderLength() {
         // 595 is the length pulled out by default, 78 ohms per inch
-        return (((double) potReading.getAverageValue() - 584.0) / 78.0);
+        return (((double) potReading.getAverageValue() - 1543) / 78);
     }
 
     public void shuffleboardInit() {
@@ -98,7 +98,6 @@ public class Arm extends SubsystemBase {
         EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
         EXTENDER.addDouble("Temp", () -> extendingMotor.getMotorTemperature());
 
-
         PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
         PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
     }
@@ -107,10 +106,12 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // limitSetpoint();
 
-//        extendingMotor.set(
-//                Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
+        extendingMotor.set(
+                Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
-//        pivotMotor.set(
-//                Math.min(Math.max(pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint), -.45), .45));
+        pivotMotor.set(
+                Math.min(Math.max(
+                        pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint),
+                        -.45), .45));
     }
 }

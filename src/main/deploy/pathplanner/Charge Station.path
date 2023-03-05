@@ -2,38 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.13258644764159,
-        "y": 4.273424503915198
+        "x": 2.861284923711074,
+        "y": 4.860069634547257
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1464423384061524,
-        "y": 4.273424503915198
-      },
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 7.094347784402188,
-        "y": 4.58891221896934
-      },
-      "prevControl": {
-        "x": 4.06853379001928,
-        "y": 5.979926235344421
-      },
-      "nextControl": {
-        "x": 10.120161778785093,
-        "y": 3.197898202594259
+        "x": 3.861284923711075,
+        "y": 4.860069634547257
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -49,12 +24,37 @@
     },
     {
       "anchorPoint": {
-        "x": 11.711940704740085,
-        "y": 4.560231517600782
+        "x": 6.246180480948694,
+        "y": 3.544991968728587
       },
       "prevControl": {
-        "x": 14.013566989566886,
-        "y": 3.6639595998333325
+        "x": 6.606715541533793,
+        "y": 3.3238082538932545
+      },
+      "nextControl": {
+        "x": 6.606715541533793,
+        "y": 3.3238082538932545
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.0,
+        "y": 3.5
+      },
+      "prevControl": {
+        "x": 3.0,
+        "y": 3.5
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -63,32 +63,14 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "Balance"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": [
-    {
-      "position": 1.0,
-      "names": [
-        "Intake Out"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "event",
-        "Intake Out"
-      ]
-    },
-    {
-      "position": 1.163636363636363,
-      "names": [
-        "Intake In"
-      ]
-    }
-  ]
+  "markers": []
 }
