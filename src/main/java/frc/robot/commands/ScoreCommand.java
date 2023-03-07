@@ -34,8 +34,6 @@ public class ScoreCommand extends SequentialCommandGroup {
 
         this.target = target;
         addCommands(
-                new InstantCommand(() -> intake.in()),
-                new InstantCommand(() -> intake.setScoring(true)),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
                 // toTarget,
                 new InstantCommand(gripper::openGripper),
@@ -55,7 +53,6 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new WaitCommand(.8),
                 new InstantCommand(arm::restPivot),
                 new WaitCommand(2),
-                new InstantCommand(() -> intake.setScoring(false)),
                 new InstantCommand(gripper::openGripper));
 
         addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
