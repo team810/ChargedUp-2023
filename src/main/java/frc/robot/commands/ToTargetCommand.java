@@ -72,7 +72,6 @@ public class ToTargetCommand extends CommandBase {
             if (RobotState.isTeleop()) {
                 drivetrain.drive(speeds);
             }
-
         }
 
         if (isFinished()) {

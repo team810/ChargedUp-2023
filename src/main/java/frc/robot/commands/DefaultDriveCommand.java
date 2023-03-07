@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+
+import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
@@ -31,18 +31,6 @@ public class DefaultDriveCommand extends CommandBase {
         // field-oriented movement
 
         // this is for driving controls and setting the angle easily.
-        // double rot;
-        // if (mDpad.getAsDouble() == -1 || !dpadTurning) {
-        //     rot = m_rotationSupplier.getAsDouble();
-        // } else {
-        //     setPoint = mDpad.getAsDouble();
-        //     rot = rotController.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setPoint);
-
-        //     rot = Math.min(rot, 5);
-        //     rot = Math.max(rot, -5);
-
-        //     System.out.println(rot);
-        // }
 
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(

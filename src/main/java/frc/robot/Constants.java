@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -18,6 +19,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public final class Constants {
+
+        public final static PneumaticHub PNEUMATIC_HUB = new PneumaticHub(18);
+
         public static final class OIConstants {
                 public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
                 // public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
@@ -173,6 +177,10 @@ public final class Constants {
 
                 // Ports
                 public static final int GRIPPER_MOTOR = 14;
+
+                public static final int GRIPPER_SOL = 8;
+
+                public static final int LIMIT_SWITCH = 2;
 
                 public static final PIDController GRIPPER_CONTROLLER = new PIDController(.15, 0, 0);
         }

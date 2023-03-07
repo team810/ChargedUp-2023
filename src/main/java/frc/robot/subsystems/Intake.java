@@ -5,16 +5,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
     private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
     private final DoubleSolenoid piston;
     private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
-    private final PneumaticHub pneumaticHub;
 
     private Boolean scoring;
 
@@ -26,14 +25,7 @@ public class Intake extends SubsystemBase {
         leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
         rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-        pneumaticHub = new PneumaticHub(18);
-
-        pneumaticHub.clearStickyFaults();
-
-
-        pneumaticHub.enableCompressorDigital();
-
-        piston = pneumaticHub.makeDoubleSolenoid(0, 7);
+        piston = Constants.PNEUMATIC_HUB.makeDoubleSolenoid(0, 7);
         scoring = false;
         shuffleboardInit();
     }

@@ -32,6 +32,11 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
+
+        Constants.PNEUMATIC_HUB.enableCompressorDigital();
+
+        Constants.PNEUMATIC_HUB.clearStickyFaults();
+
         m_robotContainer = new RobotContainer();
     }
 
