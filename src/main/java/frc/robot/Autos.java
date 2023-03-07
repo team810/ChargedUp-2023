@@ -1,21 +1,15 @@
 package frc.robot;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ChargeStationCommand;
 import frc.robot.commands.ScoreCommand;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.*;
+
+import java.util.HashMap;
 
 public class Autos {
     private final Drivetrain m_drivetrain;
@@ -56,8 +50,7 @@ public class Autos {
 
     public void addMethods() {
         // intake methods
-        eventMap.put("Intake In", new InstantCommand(m_intake::in));
-        eventMap.put("Intake Out", new InstantCommand(m_intake::out));
+
         eventMap.put("Stop Intake", new InstantCommand(m_intake::stopIntake));
 
         eventMap.put("Balance", new ChargeStationCommand(m_drivetrain));

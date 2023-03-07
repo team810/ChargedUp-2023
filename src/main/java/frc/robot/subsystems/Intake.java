@@ -3,17 +3,15 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
     private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
-    private final DoubleSolenoid piston;
     private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
+
+
 
     private Boolean scoring;
 
@@ -25,23 +23,10 @@ public class Intake extends SubsystemBase {
         leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
         rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-        piston = Constants.PNEUMATIC_HUB.makeDoubleSolenoid(0, 7);
         scoring = false;
         shuffleboardInit();
     }
 
-    public void out() {
-        if (!scoring)
-        {
-            piston.set(Value.kForward);
-        }else{
-            piston.set(Value.kReverse);
-        }
-    }
-
-    public void in() {
-        piston.set(Value.kReverse);
-    }
 
     public void runIntake() {
         leftIntakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
@@ -57,25 +42,8 @@ public class Intake extends SubsystemBase {
         leftIntakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED);
         rightIntakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED);
     }
-
-
-    public void toggleIntake() {
-        this.piston.toggle();
-    }
-
     public void shuffleboardInit() {
         INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
     }
 
-    public Value getSolenoidValue() {
-        return piston.get();
-    }
-
-    public Boolean getScoring() {
-        return scoring;
-    }
-
-    public void setScoring(Boolean mScoring) {
-        scoring = mScoring;
-    }
 }

@@ -42,40 +42,21 @@ public class RobotContainer {
                                 () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX() *
                                                 DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
                                 () -> -modifyAxis(
-                                                OIConstants.DRIVE_GAMEPAD.getRightX() *
+                                                OIConstants.DRIVE_GAMEPAD.getRightY() *
                                                                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
                 m_gripper.setDefaultCommand(
-                                new GripperSetpoint(m_gripper, () -> Math.pow(-OIConstants.SECONDARY_GAMEPAD.getLeftY(), 3)));
-                // m_arm.setDefaultCommand(
-                //         new ManualPivot(m_arm, m_intake, ()-> -OIConstants.SECONDARY_GAMEPAD.getRawAxis(4))
-                // );
+                        new GripperSetpoint(m_gripper, ()-> OIConstants.SECONDARY_GAMEPAD.getRightY())
+                );
 
                 configureButtonBindings();
         }
 
         private void configureButtonBindings() {
                 // Primary
-                //Zero gyro
-                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).onTrue(
+                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(12)).onTrue(
                                 new InstantCommand(m_drive::zeroGyroscope));
-                //Speed limit
-                new Trigger(()-> OIConstants.DRIVE_GAMEPAD.getRightBumper()).toggleOnTrue(
-                        new StartEndCommand(()-> m_drive.slow(), ()-> m_drive.normal(), m_drive)
-                );
 
-                //Secondary
-                //Extender
-                // new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getRawButton(9)).onTrue(
-                //         new StartEndCommand(()-> m_arm.runExtender(.5),()-> m_arm.runExtender(0), m_arm).andThen(
-                //                 new InstantCommand(m_arm::usePID)
-                //         )
-                // );
-                // new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getRawButton(14)).onTrue(
-                //         new StartEndCommand(()-> m_arm.runExtender(-.5),()-> m_arm.runExtender(0), m_arm).andThen(
-                //                 new InstantCommand(m_arm::usePID))
-                // );
-                
                 // Intake Reverse
                 new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getAButton()).whileTrue(
                                 new ParallelCommandGroup(
@@ -110,27 +91,14 @@ public class RobotContainer {
                                                                                         m_conveyor.setEnabled(false);
                                                                                 },
                                                                                 m_conveyor)));
-                // Intake toggle
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getXButton()).onTrue(
-                                new InstantCommand(m_intake::in));
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getBButton()).onTrue(
-                        new InstantCommand(m_intake::out));        
 
                 // Medium score
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6)).toggleOnTrue(
-                                new SequentialCommandGroup(
-                                                new InstantCommand(() -> m_intake.in()),
-                                                new RaiseArmCommand(m_arm, 2, 2)));
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6)).toggleOnTrue(new RaiseArmCommand(m_arm, 2, 1));
                 // High score
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12)).toggleOnTrue(
-                                new SequentialCommandGroup(
-                                                new InstantCommand(() -> m_intake.in()),
-                                                new RaiseArmCommand(m_arm, 3, 2))
-
-                );
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12)).toggleOnTrue(new RaiseArmCommand(m_arm, 3, 1));
 
                 // Run after scoring
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5)).whileTrue(
+                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).whileTrue(
                                 new ParallelCommandGroup(
                                                 new SequentialCommandGroup(
                                                                 new InstantCommand(() -> m_arm.restExtender()),
@@ -138,44 +106,14 @@ public class RobotContainer {
                                                                 new InstantCommand(() -> m_arm.restPivot())),
                                                 new StartupCommands(m_gripper)));
 
-
-                // //Conveyor 9 = hamburger
-                // new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getRawButton(14)).whileTrue(
-                //         new StartEndCommand(
-                //                 () -> {
-                //                         m_conveyor.setEnabled(true);
-                //                         m_conveyor.setReversed(false);
-                //                         m_conveyor.setOvorride(true);
-                //                 }, 
-                //                 () -> 
-                //                 {
-                //                         m_conveyor.setEnabled(true);
-                //                         m_conveyor.setReversed(false);
-                //                         m_conveyor.setOvorride(true);
-                //                 }, m_conveyor)
-                // );
-                // //14 = cube
-                // new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getRawButton(14)).whileTrue(
-                //         new StartEndCommand(
-                //                 () -> {
-                //                         m_conveyor.setEnabled(true);
-                //                         m_conveyor.setReversed(true);
-                //                         m_conveyor.setOvorride(true);
-                //                 }, 
-                //                 () -> 
-                //                 {
-                //                         m_conveyor.setEnabled(true);
-                //                         m_conveyor.setReversed(true);
-                //                         m_conveyor.setOvorride(true);
-                //                 }, m_conveyor)
-                // );
-
-                // Close Gripper
-                // new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 0).whileTrue(
-                //                 new InstantCommand(m_gripper::gripCone));
-                // Open Gripper
-                // new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getPOV() == 180).whileTrue(
-                //                 new InstantCommand(m_gripper::openGripper));
+                //Close Gripper
+                new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getPOV() == 0).whileTrue(
+                        new InstantCommand(m_gripper::gripCone)
+                );
+                //Open Gripper
+                new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getPOV() == 180).whileTrue(
+                        new InstantCommand(m_gripper::openGripper)
+                );
         }
 
         public void teleopInit() {
@@ -184,8 +122,7 @@ public class RobotContainer {
 
         public Command getAutonomousCommand() {
 
-                // return autos.genPath("Red 1");
-                return null;
+                return autos.genPath("Rot Tunning");
         }
 
         private static double deadband(double value, double deadband) {
