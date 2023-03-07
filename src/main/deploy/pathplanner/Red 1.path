@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8908688649785739,
-        "y": 2.750608431294554
+        "x": 14.696983916079102,
+        "y": 4.3797804000743525
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.909226815123997,
-        "y": 4.05402289161959
+        "x": 14.10234010196979,
+        "y": 4.974424214183664
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,27 +17,24 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "Grip Cube",
-          "Set Arm to High Goal",
-          "Rest Grip",
-          "Rest Arm"
+          "Score"
         ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 0
+        "executionBehavior": "parallel",
+        "waitBehavior": "before",
+        "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 4.736351137519145,
-        "y": 4.825056797727358
+        "x": 12.20405408000545,
+        "y": 4.7571505128744915
       },
       "prevControl": {
-        "x": 2.2029540174507654,
-        "y": 4.779161922363801
+        "x": 13.439083540078636,
+        "y": 4.665666849165367
       },
       "nextControl": null,
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,

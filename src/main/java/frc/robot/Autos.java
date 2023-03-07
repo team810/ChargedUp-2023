@@ -20,10 +20,6 @@ import frc.robot.subsystems.Limelight;
 public class Autos {
     private final Drivetrain m_drivetrain;
     private final Intake m_intake;
-    private final Conveyor m_conveyor;
-    private final Arm m_arm;
-    private final Gripper m_gripper;
-    private final Limelight limelight;
     private final ScoreCommand score;
     private final SwerveAutoBuilder m_AUTO_BUILDER;
 
@@ -31,12 +27,12 @@ public class Autos {
             Limelight limelight) {
         m_drivetrain = drivetrain;
         m_intake = intake;
-        m_conveyor = conveyor;
-        m_arm = arm;
-        m_gripper = gripper;
-        this.limelight = limelight;
+        // this.m_conveyor = conveyor;
+        // this.m_arm = arm;
+        // this.m_gripper = gripper;
+        // this.limelight = limelight;
 
-        score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,intake,2, 1);
+        score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor,intake,3, 2);
 
 
         addMethods();

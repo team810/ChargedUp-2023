@@ -228,6 +228,19 @@ public class Drivetrain extends SubsystemBase {
         // );
     }
 
+    public void fast()
+    {
+        DrivetrainConstants.SPEED_LIMIT = .8;
+    }
+    public void normal()
+    {
+        DrivetrainConstants.SPEED_LIMIT = .5;
+    }
+    public void slow()
+    {
+        DrivetrainConstants.SPEED_LIMIT = .3;
+    }
+
     public void setStatesNoSpeedMod(SwerveModuleState[] state) {
         m_frontLeftModule.set(
                 state[0].speedMetersPerSecond,

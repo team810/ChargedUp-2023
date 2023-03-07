@@ -37,7 +37,7 @@ public class ScoreCommand extends SequentialCommandGroup {
                 new InstantCommand(() -> intake.in()),
                 new InstantCommand(() -> intake.setScoring(true)),
                 new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
-                toTarget,
+                // toTarget,
                 new InstantCommand(gripper::openGripper),
                 new ConveyorCommand(conveyor), // This is the command so the conveyor positions the game piece.
                 new InstantCommand(() -> {
@@ -77,7 +77,7 @@ public class ScoreCommand extends SequentialCommandGroup {
     private Command gripGamePiece() {
         return new InstantCommand(() -> {
             if (conveyor.getGamePiece() == 1) {
-                gripper.gripCone();
+                gripper.gripCube(); // FIXME this is going to ne stupf 
             } else if (conveyor.getGamePiece() == 2) {
                 gripper.gripCube();
             } else {

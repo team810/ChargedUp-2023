@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -18,13 +19,15 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public final class Constants {
+
+        public final static PneumaticHub PNEUMATIC_HUB = new PneumaticHub(18);
+
         public static final class OIConstants {
                 public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
                 // public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
 
                 // public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
-                public static final StadiaController SECONDARY_GAMEPAD = new
-                StadiaController(1);
+                public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
         }
 
         public static final class DrivetrainConstants {
@@ -84,7 +87,7 @@ public final class Constants {
                                                 DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
                 // Max speed is scary
-                public static final double SPEED_LIMIT = .8;
+                public static double SPEED_LIMIT = .8;
 
                 public static final class Auto {
                         // TeleOP
@@ -160,7 +163,7 @@ public final class Constants {
                 // Motors
                 public static final int CONVEYOR_MOTOR = 10;
 
-                public static final double MOTOR_SPEED = .65;
+                public static final double MOTOR_SPEED = .40;
         }
 
         public static final class GripperConstants {
@@ -172,11 +175,12 @@ public final class Constants {
                                 .getLayout("PID Values", BuiltInLayouts.kList)
                                 .withPosition(2, 0).withSize(2, 4);
 
+                // Ports
+                public static final int GRIPPER_MOTOR = 14;
 
-        // Ports
-        public static final int GRIPPER_MOTOR = 14;
+                public static final int GRIPPER_SOL = 8;
 
-             
+                public static final int LIMIT_SWITCH = 2;
 
                 public static final PIDController GRIPPER_CONTROLLER = new PIDController(.15, 0, 0);
         }

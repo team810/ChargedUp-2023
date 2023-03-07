@@ -10,6 +10,11 @@
         "header": {
           "open": true
         }
+      },
+      "Ultrasonic[1]": {
+        "header": {
+          "open": true
+        }
       }
     }
   },
