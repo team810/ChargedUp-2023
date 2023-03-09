@@ -11,7 +11,7 @@ public class Intake extends SubsystemBase {
 	private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
 
 
-	private final Boolean scoring;
+	// private final Boolean scoring;
 
 
 	/**
@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
 		leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
 		rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-		scoring = false;
+		// this.scoring = false;
 		shuffleboardInit();
 	}
 

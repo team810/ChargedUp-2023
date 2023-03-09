@@ -1,35 +1,27 @@
 package frc.robot.subsystems;
 
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 
 public class HardStopSubsystem implements Subsystem {
-    private final Solenoid leftSol;
-    private final Solenoid rightSol;
+    private final DoubleSolenoid solenoid;
 
     public HardStopSubsystem()
     {
-        leftSol = Constants.PNEUMATIC_HUB.makeSolenoid(Constants.HardStop.LEFT_SOL);
-        rightSol = Constants.PNEUMATIC_HUB.makeSolenoid(Constants.HardStop.RIGHT_SOL);
+        solenoid = Constants.PNEUMATIC_HUB.makeDoubleSolenoid(Constants.HardStop.LEFT_SOL, Constants.HardStop.RIGHT_SOL);
     }
 
     public void out()
     {
-        leftSol.set(true);
-        rightSol.set(true);
+        solenoid.set(Value.kForward);
     }
 
     public void in()
     {
-        leftSol.set(false);
-        rightSol.set(false);
-    }
-    public void toggle()
-    {
-        leftSol.toggle();
-        rightSol.toggle();
+        solenoid.set(Value.kReverse);
     }
 }
 

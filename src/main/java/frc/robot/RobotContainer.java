@@ -1,21 +1,38 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.commands.ConveyorCommand;
+import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.GripperSetpoint;
+import frc.robot.commands.RaiseArmCommand;
+import frc.robot.commands.StartupCommands;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.HardStopSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 
 public class RobotContainer {
 	private final Drivetrain m_drive = new Drivetrain();
 	private final Arm m_arm = new Arm();
 	private final Intake m_intake = new Intake();
-	private final Gripper m_gripper = new Gripper();
 	private final Conveyor m_conveyor = new Conveyor();
+        private final Gripper m_gripper = new Gripper(m_conveyor);
 	private final Limelight m_lime = new Limelight();
 	private final HardStopSubsystem m_hardStop = new HardStopSubsystem();
-	private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime);
+	// private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime);
 
 	// private final boolean ScoringCommandActive = false;
 
