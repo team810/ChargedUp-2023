@@ -4,45 +4,45 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Gripper;
 
+import java.util.function.DoubleSupplier;
+
 public class GripperSetpoint extends CommandBase {
-  Gripper m_gripper;
-  private DoubleSupplier speed;
-  /** Creates a new GripperSetpoint. */
-  public GripperSetpoint(Gripper m_gripper, DoubleSupplier speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.m_gripper = m_gripper;
-    this.speed = speed;
+	Gripper m_gripper;
+	private final DoubleSupplier speed;
 
-    addRequirements(m_gripper);
-  }
+	/**
+	 * Creates a new GripperSetpoint.
+	 */
+	public GripperSetpoint(Gripper m_gripper, DoubleSupplier speed) {
+		// Use addRequirements() here to declare subsystem dependencies.
+		this.m_gripper = m_gripper;
+		this.speed = speed;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+		addRequirements(m_gripper);
+	}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if(RobotState.isTeleop())
-    {
-      m_gripper.setPoint(m_gripper.getSetpoint() + speed.getAsDouble());
-    }
-  }
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
+	}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
+		m_gripper.setMotor(speed.getAsDouble());
+	}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+	}
+
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		return false;
+	}
 }
