@@ -205,4 +205,9 @@ public final class Constants {
 				.withSize(2, 4)
 				.withPosition(0, 0);
 	}
+
+	public static final class HardStop {
+		public static final int LEFT_SOL = 8; // FIXME sol constants
+		public static final int RIGHT_SOL = 4; // FIXME sol constants
+	}
 }

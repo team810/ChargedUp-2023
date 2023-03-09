@@ -18,7 +18,7 @@ public class Gripper extends SubsystemBase {
 
 	public Gripper() {
 		gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushed);
-		
+
 		gripperMotor.setSmartCurrentLimit(40);
 
 //		gripperPIDController.reset();
