@@ -16,7 +16,8 @@ public class StartupCommands extends ParallelCommandGroup {
 
 	public Command gripperCommand() {
 		return new SequentialCommandGroup( // This is so the gripper does not get caught on the conveyor belt.
-			new WaitCommand(.5),
+			//FIXME: Put the actual time to wait
+			new WaitCommand(1),
 			new InstantCommand(()-> gripper.openGripper(true)));
 	}
 

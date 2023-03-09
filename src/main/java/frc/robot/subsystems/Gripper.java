@@ -25,6 +25,9 @@ public class Gripper extends SubsystemBase {
 
 		this.m_conveyor = conveyor;
 
+		this.openGripper = false;
+		this.scoring = false;
+
 		shuffleboardInit();
 	}
 
