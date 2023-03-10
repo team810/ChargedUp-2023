@@ -50,7 +50,7 @@ public class RobotContainer {
                                                                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
                 m_gripper.setDefaultCommand(
-                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .75));
+                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1)));
                 m_conveyor.setDefaultCommand(
                                 new ConveyorCommand(m_conveyor, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(4)));
 

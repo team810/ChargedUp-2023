@@ -11,6 +11,8 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 	private final Arm arm;
 	private final int target;
 
+	private final double reading_that_they_like = -3.3;
+
 	public RaiseArmCommand(Arm arm, int target, int targetGrid) {
 
 		this.arm = arm;
@@ -19,12 +21,16 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 		if (targetGrid == 1) // target grid is for the cone
 		{
 			addCommands(
+					new InstantCommand(() -> arm.setExtenderSetpoint(reading_that_they_like)),
+					new WaitCommand(1),
 					armToConeGoal(),
 					new WaitCommand(1.5),
 					extenderToConeGoal()
 			);
 		} else if (targetGrid == 2) { // target grid is for the cube
 			addCommands(
+					new InstantCommand(() -> arm.setExtenderSetpoint(reading_that_they_like)),
+					new WaitCommand(1),
 					armToCubeGoal(),
 					new WaitCommand(1.5),
 					extenderToCubeGoal()

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
@@ -17,9 +18,11 @@ public class Gripper extends SubsystemBase {
 	private final Conveyor m_conveyor;
 
 	public Gripper(Conveyor conveyor) {
-		gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushed);
+		gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
 
-		gripperMotor.setSmartCurrentLimit(30);
+		gripperMotor.setSmartCurrentLimit(40);
+
+		gripperMotor.setIdleMode(IdleMode.kBrake);
 
 		limitSwitch = new DigitalOutput(GripperConstants.LIMIT_SWITCH);
 
