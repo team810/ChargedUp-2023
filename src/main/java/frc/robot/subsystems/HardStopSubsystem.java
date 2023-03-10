@@ -11,7 +11,7 @@ public class HardStopSubsystem implements Subsystem {
 
     public HardStopSubsystem()
     {
-        solenoid = Constants.PNEUMATIC_HUB.makeDoubleSolenoid(Constants.HardStop.LEFT_SOL, Constants.HardStop.RIGHT_SOL);
+        solenoid = Constants.PNEUMATIC_HUB.makeDoubleSolenoid(0,7);
     }
 
     public void out()

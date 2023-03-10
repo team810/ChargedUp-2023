@@ -50,7 +50,7 @@ public class RobotContainer {
                                                                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
                 m_gripper.setDefaultCommand(
-                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1)));
+                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .75));
                 m_conveyor.setDefaultCommand(
                                 new ConveyorCommand(m_conveyor, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(4)));
 
@@ -79,6 +79,14 @@ public class RobotContainer {
         }
 
         private void configureButtonBindings() {
+                //Testing gripper
+                new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getAButton()).onTrue(
+                        new SequentialCommandGroup(
+                                new InstantCommand(()-> m_gripper.gripPiece(true)),
+                                new WaitCommand(1),
+                                new InstantCommand(()-> m_gripper.openGripper(true))
+                ));
+                
                 // Primary
                 //Zero gyro
                 new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(12)).onTrue(
