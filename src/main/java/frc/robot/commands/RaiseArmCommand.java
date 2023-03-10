@@ -11,6 +11,8 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 	private final Arm arm;
 	private final int target;
 
+	private final double reading_that_they_like = -3.3;
+
 	public RaiseArmCommand(Arm arm, int target, int targetGrid) {
 
 		this.arm = arm;
@@ -19,20 +21,24 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 		if (targetGrid == 1) // target grid is for the cone
 		{
 			addCommands(
+					new InstantCommand(() -> arm.setExtenderSetpoint(reading_that_they_like)),
+					new WaitCommand(1),
 					armToConeGoal(),
 					new WaitCommand(1.5),
 					extenderToConeGoal()
 			);
 		} else if (targetGrid == 2) { // target grid is for the cube
 			addCommands(
+					new InstantCommand(() -> arm.setExtenderSetpoint(reading_that_they_like)),
+					new WaitCommand(1),
 					armToCubeGoal(),
 					new WaitCommand(1.5),
 					extenderToCubeGoal()
 			);
 		}
 	}
-	private Command armToConeGoal()
-	{
+
+	private Command armToConeGoal() {
 		return new InstantCommand(() -> {
 			switch (target) {
 				case 1:
@@ -51,8 +57,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 		});
 	}
 
-	private Command armToCubeGoal()
-	{
+	private Command armToCubeGoal() {
 		// FIXME cube constants
 		return new InstantCommand(() -> {
 			switch (target) {
@@ -72,12 +77,10 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 		});
 	}
 
-	private Command extenderToConeGoal()
-	{
+	private Command extenderToConeGoal() {
 		return new InstantCommand(() ->
 		{
-			switch (target)
-			{
+			switch (target) {
 				case 1:
 					arm.setExtenderSetpoint(-2.5);
 					break;
@@ -85,7 +88,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 					arm.setExtenderSetpoint(5);
 					break;
 				case 3:
-					arm.setExtenderSetpoint(20.5);
+					arm.setExtenderSetpoint(22);
 					break;
 				default:
 					System.out.println("how did you get here");
@@ -94,13 +97,11 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 		});
 	}
 
-	public Command extenderToCubeGoal()
-	{
+	public Command extenderToCubeGoal() {
 		// FIXME cube extender constants
 		return new InstantCommand(() ->
 		{
-			switch (target)
-			{
+			switch (target) {
 				case 1:
 					arm.setExtenderSetpoint(-2.5);
 					break;
@@ -108,7 +109,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 					arm.setExtenderSetpoint(5);
 					break;
 				case 3:
-					arm.setExtenderSetpoint(20.5);
+					arm.setExtenderSetpoint(22);
 					break;
 				default:
 					System.out.println("how did you get here");

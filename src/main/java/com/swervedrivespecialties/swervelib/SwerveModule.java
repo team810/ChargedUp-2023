@@ -4,12 +4,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 public interface SwerveModule {
-    double getDriveVelocity();
+	double getDriveVelocity();
 
-    void setDriveMotorIdleState(CANSparkMax.IdleMode idleState);
-    double getSteerAngle();
+	void setDriveMotorIdleState(CANSparkMax.IdleMode idleState);
 
-    void set(double driveVoltage, double steerAngle);
+	double getSteerAngle();
 
-    RelativeEncoder getDriveEncoder();
+	void set(double driveVoltage, double steerAngle);
+
+	RelativeEncoder getDriveEncoder();
 }
