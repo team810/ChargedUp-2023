@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ConveyorCommand;
@@ -15,6 +16,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.GripperSetpoint;
 import frc.robot.commands.RaiseArmCommand;
 import frc.robot.commands.StartupCommands;
+
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
@@ -50,7 +52,7 @@ public class RobotContainer {
                                                                 DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
 
                 m_gripper.setDefaultCommand(
-                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1)));
+                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .75));
                 m_conveyor.setDefaultCommand(
                                 new ConveyorCommand(m_conveyor, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(4)));
 
@@ -173,14 +175,14 @@ public class RobotContainer {
                 //                                 () -> m_arm.setExtenderSetpoint(m_arm.getExtenderSetpoint() + .5))));
 
                 // Medium score
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6))
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12))
                                 .toggleOnTrue(new RaiseArmCommand(m_arm, 2, 1));
                 // High score
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12))
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(13))
                                 .toggleOnTrue(new RaiseArmCommand(m_arm, 3, 1));
 
                 // Run after scoring
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5)).whileTrue(
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5)).toggleOnTrue(
                                 new ParallelCommandGroup(
                                                 new SequentialCommandGroup(
                                                                 new InstantCommand(() -> m_arm.restExtender()),

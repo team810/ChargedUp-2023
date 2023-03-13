@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class Autos {
 	private final Drivetrain m_drivetrain;
 	private final Intake m_intake;
+	private final HardStopSubsystem m_hardStop;
 	private final ScoreCommand score;
 	private final SwerveAutoBuilder m_AUTO_BUILDER;
 	// Auto Variables
@@ -21,9 +22,10 @@ public class Autos {
 	private final HashMap<String, Command> eventMap = new HashMap<>();
 
 	public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper,
-	             Limelight limelight) {
+	             Limelight limelight, HardStopSubsystem hardStop) {
 		m_drivetrain = drivetrain;
 		m_intake = intake;
+		m_hardStop = hardStop;
 		// this.m_conveyor = conveyor;
 		// this.m_arm = arm;
 		// this.m_gripper = gripper;
@@ -49,8 +51,9 @@ public class Autos {
 
 	public void addMethods() {
 		// intake methods
+		eventMap.put("Run Intake", new InstantCommand(() -> {m_intake.runIntake(); m_hardStop.out();}));
+		eventMap.put("Stop Intake", new InstantCommand(() -> {m_intake.stopIntake(); m_hardStop.in();}));
 
-		eventMap.put("Stop Intake", new InstantCommand(m_intake::stopIntake));
 
 		eventMap.put("Balance", new ChargeStationCommand(m_drivetrain));
 
