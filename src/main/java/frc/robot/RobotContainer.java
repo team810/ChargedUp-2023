@@ -29,8 +29,7 @@ public class RobotContainer {
         private final Gripper m_gripper = new Gripper(m_conveyor);
         private final Limelight m_lime = new Limelight();
         private final HardStopSubsystem m_hardStop = new HardStopSubsystem();
-        // private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm,
-        // m_gripper, m_lime);
+         private final Autos autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime, m_hardStop);
 
         // private final boolean ScoringCommandActive = false;
 

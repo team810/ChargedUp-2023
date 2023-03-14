@@ -73,7 +73,7 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void restExtender() {
-		extenderSetpoint = 1.6;
+		extenderSetpoint = -1.6;
 	}
 
 	public void runExtender(double speed) {
