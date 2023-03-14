@@ -33,28 +33,28 @@ public class ScoreCommand extends SequentialCommandGroup {
 
 		this.target = target;
 		addCommands(
-				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
+				new InstantCommand(() -> arm.restExtender()),
 				// toTarget,
-				new InstantCommand(() -> {
-					gamePiece = conveyor.getGamePiece();
-				}), // this sets the game piece after the conveyor runs
-				new InstantCommand(() -> {
-					gripper.openGripper(false);
-					gripper.gripPiece(true);
-				}),
+//				new InstantCommand(() -> {
+//					gamePiece = conveyor.getGamePiece();
+//				}), // this sets the game piece after the conveyor runs
+//				new InstantCommand(() -> {
+//					gripper.openGripper(false);
+//					gripper.gripPiece(true);
+//				}),
+				new InstantCommand(() -> gripper.setMotor(-.3)),
 				new WaitCommand(.25),
 				new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
 				new RaiseArmCommand(arm, target, targetGrid),
 				new WaitCommand(1.1),
-				new InstantCommand(() -> {
-					gripper.openGripper(true);
-					gripper.gripPiece(false);
-				}),
+				new InstantCommand(() -> gripper.setMotor(.12)),
+				new WaitCommand(.15),
+				new InstantCommand(() -> gripper.setMotor(0)),
 				new WaitCommand(.5),
-				new InstantCommand(arm::restExtender),
 				new WaitCommand(.8),
 				new InstantCommand(arm::restPivot),
-				new WaitCommand(2));
+				new WaitCommand(2),
+				new InstantCommand(arm::restExtender));
 
 		addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
 	}

@@ -161,7 +161,7 @@ public final class Constants {
 		// Motors
 		public static final int CONVEYOR_MOTOR = 10;
 
-		public static final double MOTOR_SPEED = .40;
+		public static final double MOTOR_SPEED = .25;
 	}
 
 	public static final class GripperConstants {
