@@ -139,7 +139,7 @@ public final class Constants {
 				.withPosition(0, 0).withSize(2,
 						4);
 		public static final int EXTENDING_MOTOR = 11;
-		public static final PIDController EXTENDER_CONTROLLER = new PIDController(0.15, 0, 0);
+		public static final PIDController EXTENDER_CONTROLLER = new PIDController(.15, .01, 0);
 
 		// PIVOT
 		public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)

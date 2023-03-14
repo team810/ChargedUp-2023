@@ -33,7 +33,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 
 		this.target = target;
 		addCommands(
-				new InstantCommand(() -> arm.setExtenderSetpoint(-1)),
+				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
 				// toTarget,
 				new InstantCommand(() -> {
 					gamePiece = conveyor.getGamePiece();

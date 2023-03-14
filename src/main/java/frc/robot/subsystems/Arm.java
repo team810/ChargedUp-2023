@@ -1,13 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -36,7 +31,7 @@ public class Arm extends SubsystemBase {
 		extenderController = ArmConstants.EXTENDER_CONTROLLER;
 		pivotController = ArmConstants.PIVOT_CONTROLLER;
 
-		extenderController.setTolerance(.5);
+		extenderController.setTolerance(.1);
 
 		extendingMotor.setIdleMode(IdleMode.kBrake);
 
@@ -52,6 +47,7 @@ public class Arm extends SubsystemBase {
 
 		restPivot();
 		restExtender();
+
 
 		shuffleboardInit();
 	}
@@ -77,7 +73,7 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void restExtender() {
-		extenderSetpoint = -1.6;
+		extenderSetpoint = 1.6;
 	}
 
 	public void runExtender(double speed) {
@@ -93,6 +89,7 @@ public class Arm extends SubsystemBase {
 	private double getExtenderLength() {
 		// 1543 is the length pulled out by default, 78 ohms per inch
 		return (((double) potReading.getAverageValue() - 1543) / 78);
+//		return potReading.getAverageValue(); // DO NOT USE THIS
 	}
 
 	public void shuffleboardInit() {
@@ -107,6 +104,8 @@ public class Arm extends SubsystemBase {
 
 		PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
 		PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
+		EXTENDER.addDouble("Applied Output", () -> extendingMotor.getAppliedOutput());
+		EXTENDER.addDouble("Setpoint bc i do not care", () -> extenderController.getSetpoint());
 	}
 
 	@Override
@@ -125,6 +124,7 @@ public class Arm extends SubsystemBase {
 		// this.pivotSetpoint),
 		// -.45), .45));
 		// }
+
 		extendingMotor.set(
 				Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 
