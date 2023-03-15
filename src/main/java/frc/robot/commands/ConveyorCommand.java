@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Conveyor;
 
 import java.util.function.DoubleSupplier;
@@ -23,7 +23,7 @@ public class ConveyorCommand extends CommandBase {
 
 	@Override
 	public void execute() {
-		conveyor.setSpeed(m_speed.getAsDouble() * .45);
+		conveyor.setSpeed(m_speed.getAsDouble() * .6);
 	}
 
 	@Override

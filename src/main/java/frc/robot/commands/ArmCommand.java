@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 
 public class ArmCommand extends CommandBase {
 	private final Arm arm;
-    private final Supplier<Integer> m_angle;
+	private final Supplier<Integer> m_angle;
 
-    public ArmCommand(Arm arm, Supplier<Integer> angle) {
+	public ArmCommand(Arm arm, Supplier<Integer> angle) {
 		this.arm = arm;
-        m_angle = angle;
+		m_angle = angle;
 
 
-        addRequirements(this.arm);
+		addRequirements(this.arm);
 	}
 
 	@Override
@@ -25,16 +25,16 @@ public class ArmCommand extends CommandBase {
 
 	@Override
 	public void execute() {
-//        int aDouble = m_angle.get();
-//        if (aDouble == 0) {
-//            arm.setExtenderSetpoint(arm.getExtenderSetpoint() - .2);
-//        } else if (aDouble == 90) {
-//            arm.setPivotSetpoint(arm.getPivotSetpoint() + .2);
-//        } else if (aDouble == 180) {
-//            arm.setExtenderSetpoint(arm.getExtenderSetpoint() + .2);
-//        } else if (aDouble == 270) {
-//            arm.setPivotSetpoint(arm.getPivotSetpoint() - .2);
-//        }
+		int aDouble = m_angle.get();
+		if (aDouble == 0) {
+			arm.setExtenderSetpoint(arm.getExtenderSetpoint() - .2);
+		} else if (aDouble == 90) {
+			arm.setPivotSetpoint(arm.getPivotSetpoint() + .2);
+		} else if (aDouble == 180) {
+			arm.setExtenderSetpoint(arm.getExtenderSetpoint() + .5);
+		} else if (aDouble == 270) {
+			arm.setPivotSetpoint(arm.getPivotSetpoint() - .5);
+		}
 	}
 
 	@Override

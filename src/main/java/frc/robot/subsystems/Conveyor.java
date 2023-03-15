@@ -28,6 +28,7 @@ public class Conveyor extends SubsystemBase {
 	private boolean override;
 
 	private boolean manual;
+
 	public Conveyor() {
 
 		conveyorMotor = new CANSparkMax(ConveyorConstants.CONVEYOR_MOTOR, MotorType.kBrushless);
@@ -86,7 +87,7 @@ public class Conveyor extends SubsystemBase {
 				conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
 			}
 
-		}else {
+		} else {
 			if (!scoring) {
 				conveyorMotor.set(0);
 			}
@@ -134,6 +135,7 @@ public class Conveyor extends SubsystemBase {
 	public void setScoring(boolean scoring) {
 		this.scoring = scoring;
 	}
+
 	public double getSpeed() {
 		return speed;
 	}

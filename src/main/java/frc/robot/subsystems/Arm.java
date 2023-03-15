@@ -5,33 +5,29 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-	private final CANSparkMax extendingMotor, pivotMotor;
+	public final CANSparkMax extendingMotor, pivotMotor;
 	private final PIDController extenderController, pivotController;
 	private final AnalogInput potReading;
 	private final ShuffleboardLayout PIVOT, EXTENDER;
 	private boolean isManual;
-
-	public double getExtenderSetpoint() {
-		return extenderSetpoint;
-	}
-
 	private double extenderSetpoint;
 	private double pivotSetpoint;
-
 	public Arm() {
+
 		extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
 		pivotMotor = new CANSparkMax(ArmConstants.PIVOT_MOTOR, MotorType.kBrushless);
-
 		extenderController = ArmConstants.EXTENDER_CONTROLLER;
 		pivotController = ArmConstants.PIVOT_CONTROLLER;
 
-		extenderController.setTolerance(.1);
+		extenderController.setTolerance(.15);
 
 		extendingMotor.setIdleMode(IdleMode.kBrake);
 
@@ -43,6 +39,7 @@ public class Arm extends SubsystemBase {
 		PIVOT = ArmConstants.PIVOT;
 		EXTENDER = ArmConstants.EXTENDER;
 
+
 		this.isManual = false;
 
 		restPivot();
@@ -50,6 +47,14 @@ public class Arm extends SubsystemBase {
 
 
 		shuffleboardInit();
+	}
+
+	public double getExtenderSetpoint() {
+		return extenderSetpoint;
+	}
+
+	public void setExtenderSetpoint(double change) {
+		extenderSetpoint = change;
 	}
 
 	public PIDController getExtenderController() {
@@ -64,16 +69,12 @@ public class Arm extends SubsystemBase {
 		pivotSetpoint = change;
 	}
 
-	public void setExtenderSetpoint(double change) {
-		extenderSetpoint = change;
-	}
-
 	public void restPivot() {
 		pivotSetpoint = 0;
 	}
 
 	public void restExtender() {
-		extenderSetpoint = 1.6;
+		extenderSetpoint = -1.6;
 	}
 
 	public void runExtender(double speed) {
@@ -125,18 +126,23 @@ public class Arm extends SubsystemBase {
 		// -.45), .45));
 		// }
 
-		extenderSetpoint = Math.max(extenderSetpoint, -3.5);
-		extenderSetpoint = Math.min(extenderSetpoint, 21.5);
+		if (RobotState.isEnabled()) {
+			extenderSetpoint = Math.max(extenderSetpoint, -3.5);
+			extenderSetpoint = Math.min(extenderSetpoint, 21.5);
 
-//		pivotSetpoint = Math.max(pivotSetpoint, 0);
-//		pivotSetpoint = Math.min(pivotSetpoint, 40);
-		extendingMotor.set(
-				Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
+			pivotSetpoint = Math.min(pivotSetpoint, 0);
+			pivotSetpoint = Math.max(pivotSetpoint, 40);
 
-		pivotMotor.set(
-				Math.min(Math.max(
-						pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint),
-						-.45), .45));
+			extendingMotor.set(
+					Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.55), .55));
+			SmartDashboard.putNumber("Life", Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.55), .55));
+
+			pivotMotor.set(
+					Math.min(Math.max(
+							pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint),
+							-.45), .45));
+		}
+
 	}
 
 	public void usePID() {

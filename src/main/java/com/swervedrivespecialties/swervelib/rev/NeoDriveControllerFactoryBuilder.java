@@ -10,90 +10,90 @@ import com.swervedrivespecialties.swervelib.ModuleConfiguration;
 import static com.swervedrivespecialties.swervelib.rev.RevUtils.checkNeoError;
 
 public final class NeoDriveControllerFactoryBuilder {
-    private double nominalVoltage = Double.NaN;
-    private double currentLimit = Double.NaN;
+	private double nominalVoltage = Double.NaN;
+	private double currentLimit = Double.NaN;
 
-    public NeoDriveControllerFactoryBuilder withVoltageCompensation(double nominalVoltage) {
-        this.nominalVoltage = nominalVoltage;
-        return this;
-    }
+	public NeoDriveControllerFactoryBuilder withVoltageCompensation(double nominalVoltage) {
+		this.nominalVoltage = nominalVoltage;
+		return this;
+	}
 
-    public boolean hasVoltageCompensation() {
-        return Double.isFinite(nominalVoltage);
-    }
+	public boolean hasVoltageCompensation() {
+		return Double.isFinite(nominalVoltage);
+	}
 
-    public NeoDriveControllerFactoryBuilder withCurrentLimit(double currentLimit) {
-        this.currentLimit = currentLimit;
-        return this;
-    }
+	public NeoDriveControllerFactoryBuilder withCurrentLimit(double currentLimit) {
+		this.currentLimit = currentLimit;
+		return this;
+	}
 
-    public boolean hasCurrentLimit() {
-        return Double.isFinite(currentLimit);
-    }
+	public boolean hasCurrentLimit() {
+		return Double.isFinite(currentLimit);
+	}
 
-    public DriveControllerFactory<ControllerImplementation, Integer> build() {
-        return new FactoryImplementation();
-    }
+	public DriveControllerFactory<ControllerImplementation, Integer> build() {
+		return new FactoryImplementation();
+	}
 
-    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
-        @Override
-        public ControllerImplementation create(Integer id, ModuleConfiguration moduleConfiguration) {
-            CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
-            motor.setInverted(moduleConfiguration.isDriveInverted());
+	private static class ControllerImplementation implements DriveController {
+		private final CANSparkMax motor;
+		private final RelativeEncoder encoder;
 
-            // Setup voltage compensation
-            if (hasVoltageCompensation()) {
-                checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
-            }
+		private ControllerImplementation(CANSparkMax motor, RelativeEncoder encoder) {
+			this.motor = motor;
+			this.encoder = encoder;
+		}
 
-            if (hasCurrentLimit()) {
-                checkNeoError(motor.setSmartCurrentLimit((int) currentLimit), "Failed to set current limit for NEO");
-            }
+		@Override
+		public void setReferenceVoltage(double voltage) {
+			motor.setVoltage(voltage);
+		}
 
-            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
-            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
-            checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
-            // Set neutral mode to brake
-            motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		@Override
+		public double getStateVelocity() {
+			return encoder.getVelocity();
+		}
 
-            // Setup encoder
-            RelativeEncoder encoder = motor.getEncoder();
-            double positionConversionFactor = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction();
-            encoder.setPositionConversionFactor(positionConversionFactor);
-            encoder.setVelocityConversionFactor(positionConversionFactor / 60.0);
+		@Override
+		public void setIdleMode(CANSparkMax.IdleMode idleMode) {
+			motor.setIdleMode(idleMode);
+		}
 
-            return new ControllerImplementation(motor, encoder);
-        }
-    }
+		@Override
+		public RelativeEncoder getDriveEncoder() {
+			return motor.getEncoder();
+		}
 
-    private static class ControllerImplementation implements DriveController {
-        private final CANSparkMax motor;
-        private final RelativeEncoder encoder;
+	}
 
-        private ControllerImplementation(CANSparkMax motor, RelativeEncoder encoder) {
-            this.motor = motor;
-            this.encoder = encoder;
-        }
+	private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
+		@Override
+		public ControllerImplementation create(Integer id, ModuleConfiguration moduleConfiguration) {
+			CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
+			motor.setInverted(moduleConfiguration.isDriveInverted());
 
-        @Override
-        public void setReferenceVoltage(double voltage) {
-            motor.setVoltage(voltage);
-        }
+			// Setup voltage compensation
+			if (hasVoltageCompensation()) {
+				checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
+			}
 
-        @Override
-        public double getStateVelocity() {
-            return encoder.getVelocity();
-        }
+			if (hasCurrentLimit()) {
+				checkNeoError(motor.setSmartCurrentLimit((int) currentLimit), "Failed to set current limit for NEO");
+			}
 
-        @Override
-        public void setIdleMode(CANSparkMax.IdleMode idleMode) {
-            motor.setIdleMode(idleMode);
-        }
+			checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
+			checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
+			checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
+			// Set neutral mode to brake
+			motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        @Override
-        public RelativeEncoder getDriveEncoder() {
-            return motor.getEncoder();
-        }
+			// Setup encoder
+			RelativeEncoder encoder = motor.getEncoder();
+			double positionConversionFactor = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction();
+			encoder.setPositionConversionFactor(positionConversionFactor);
+			encoder.setVelocityConversionFactor(positionConversionFactor / 60.0);
 
-    }
+			return new ControllerImplementation(motor, encoder);
+		}
+	}
 }

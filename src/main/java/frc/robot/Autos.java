@@ -51,8 +51,14 @@ public class Autos {
 
 	public void addMethods() {
 		// intake methods
-		eventMap.put("Run Intake", new InstantCommand(() -> {m_intake.runIntake(); m_hardStop.out();}));
-		eventMap.put("Stop Intake", new InstantCommand(() -> {m_intake.stopIntake(); m_hardStop.in();}));
+		eventMap.put("Run Intake", new InstantCommand(() -> {
+			m_intake.runIntake();
+			m_hardStop.out();
+		}));
+		eventMap.put("Stop Intake", new InstantCommand(() -> {
+			m_intake.stopIntake();
+			m_hardStop.in();
+		}));
 
 
 		eventMap.put("Balance", new ChargeStationCommand(m_drivetrain));

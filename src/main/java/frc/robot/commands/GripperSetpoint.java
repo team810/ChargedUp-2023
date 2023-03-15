@@ -4,14 +4,15 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Gripper;
 
 import java.util.function.DoubleSupplier;
 
 public class GripperSetpoint extends CommandBase {
-	Gripper m_gripper;
 	private final DoubleSupplier speed;
+	Gripper m_gripper;
 
 	/**
 	 * Creates a new GripperSetpoint.
@@ -32,7 +33,9 @@ public class GripperSetpoint extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		m_gripper.setMotor(speed.getAsDouble());
+		if (RobotState.isTeleop()) {
+			m_gripper.setMotor(speed.getAsDouble());
+		}
 	}
 
 	// Called once the command ends or is interrupted.

@@ -3,12 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.*;
 
 public class ScoreCommand extends SequentialCommandGroup {
 	private final Arm arm;
@@ -21,7 +16,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 	private int gamePiece;
 
 	public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
-			Conveyor conveyor, Intake intake, int target, int targetGrid) {
+	                    Conveyor conveyor, Intake intake, int target, int targetGrid) {
 		this.arm = arm;
 		this.drivetrain = drivetrain;
 		this.gripper = gripper;
@@ -34,22 +29,23 @@ public class ScoreCommand extends SequentialCommandGroup {
 		this.target = target;
 		addCommands(
 				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
-				// toTarget,
-				new InstantCommand(() -> {
-					gamePiece = conveyor.getGamePiece();
-				}), // this sets the game piece after the conveyor runs
-				new InstantCommand(() -> {
-					gripper.openGripper(false);
-					gripper.gripPiece(true);
-				}),
+//				// toTarget,
+//				new InstantCommand(() -> {
+//					gamePiece = conveyor.getGamePiece();
+//				}), // this sets the game piece after the conveyor runs
+//				new InstantCommand(() -> {
+//					gripper.openGripper(false);
+//					gripper.gripPiece(true);
+//				}),
+
+				new InstantCommand(() -> gripper.setMotor(.4)),
 				new WaitCommand(.25),
 				new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
 				new RaiseArmCommand(arm, target, targetGrid),
 				new WaitCommand(1.1),
-				new InstantCommand(() -> {
-					gripper.openGripper(true);
-					gripper.gripPiece(false);
-				}),
+				new InstantCommand(() -> gripper.setMotor(-.1)),
+				new WaitCommand(.2),
+				new InstantCommand(() -> gripper.setMotor(0)),
 				new WaitCommand(.5),
 				new InstantCommand(arm::restExtender),
 				new WaitCommand(.8),
