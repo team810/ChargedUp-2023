@@ -88,7 +88,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 					arm.setExtenderSetpoint(5);
 					break;
 				case 3:
-					arm.setExtenderSetpoint(22);
+					arm.setExtenderSetpoint(21);
 					break;
 				default:
 					System.out.println("how did you get here");
@@ -109,7 +109,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 					arm.setExtenderSetpoint(5);
 					break;
 				case 3:
-					arm.setExtenderSetpoint(22);
+					arm.setExtenderSetpoint(21);
 					break;
 				default:
 					System.out.println("how did you get here");

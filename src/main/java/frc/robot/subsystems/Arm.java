@@ -73,7 +73,7 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void restExtender() {
-		extenderSetpoint = 1.6;
+		extenderSetpoint = -1.6;
 	}
 
 	public void runExtender(double speed) {
@@ -125,6 +125,11 @@ public class Arm extends SubsystemBase {
 		// -.45), .45));
 		// }
 
+		extenderSetpoint = Math.max(extenderSetpoint, -3.5);
+		extenderSetpoint = Math.min(extenderSetpoint, 21.5);
+
+//		pivotSetpoint = Math.max(pivotSetpoint, 0);
+//		pivotSetpoint = Math.min(pivotSetpoint, 40);
 		extendingMotor.set(
 				Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.5), .5));
 

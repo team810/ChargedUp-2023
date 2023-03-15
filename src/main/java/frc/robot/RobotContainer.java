@@ -11,11 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ConveyorCommand;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.GripperSetpoint;
-import frc.robot.commands.RaiseArmCommand;
-import frc.robot.commands.StartupCommands;
+import frc.robot.commands.*;
 
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Conveyor;
@@ -44,18 +40,24 @@ public class RobotContainer {
                 m_drive.setDefaultCommand(new DefaultDriveCommand(
                                 m_drive,
                                 () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftY() *
-                                                DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+                                                DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * .60),
                                 () -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX() *
-                                                DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND),
+                                                DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * .60),
                                 () -> -modifyAxis(
                                                 OIConstants.DRIVE_GAMEPAD.getRightX() *
-                                                                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)));
+                                                                DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * .60));
 
                 m_gripper.setDefaultCommand(
-                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .75));
+                                new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .45));
                 m_conveyor.setDefaultCommand(
                                 new ConveyorCommand(m_conveyor, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(4)));
 
+                m_arm.setDefaultCommand(
+                        new ArmCommand(
+                                m_arm,
+                                OIConstants.SECONDARY_GAMEPAD::getPOV
+                        )
+                );
                 configureButtonBindings();
         }
 
@@ -81,6 +83,14 @@ public class RobotContainer {
         }
 
         private void configureButtonBindings() {
+
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(6)).whileTrue(
+                        new StartEndCommand(
+                                () -> m_hardStop.in(),
+                                () -> m_hardStop.out(),
+                                m_hardStop
+                        )
+                );
                 //Testing gripper
                 new Trigger(()-> OIConstants.SECONDARY_GAMEPAD.getAButton()).onTrue(
                         new SequentialCommandGroup(
@@ -88,30 +98,13 @@ public class RobotContainer {
                                 new WaitCommand(1),
                                 new InstantCommand(()-> m_gripper.openGripper(true))
                 ));
-                
+
                 // Primary
                 //Zero gyro
-                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(12)).onTrue(
+                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).onTrue(
                                 new InstantCommand(m_drive::zeroGyroscope));
-                //Intake back
-                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getAButton()).whileTrue(
-                                new ParallelCommandGroup(
-                                                new StartEndCommand(
-                                                                m_intake::runIntakeReversed,
-                                                                m_intake::stopIntake,
-                                                                m_intake),
-                                                new StartEndCommand(
-                                                                () -> {
-                                                                        m_conveyor.setReversed(true);
-                                                                        m_conveyor.setEnabled(true);
-                                                                },
-                                                                () -> {
-                                                                        m_conveyor.setReversed(false);
-                                                                        m_conveyor.setEnabled(false);
-                                                                },
-                                                                m_conveyor)));
                 // Intake forward
-                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getYButton()).whileTrue(
+                new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).whileTrue(
                         new StartEndCommand(
                                         m_intake::runIntake,
                                         m_intake::stopIntake,
@@ -129,7 +122,7 @@ public class RobotContainer {
 
                 //Secondary
                 // Intake Reverse
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getAButton()).whileTrue(
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getYButton()).whileTrue(
                                 new ParallelCommandGroup(
                                                 new StartEndCommand(
                                                                 m_intake::runIntakeReversed,
@@ -147,7 +140,7 @@ public class RobotContainer {
                                                                 m_conveyor)));
 
                 // Intake forward
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getYButton()).whileTrue(
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getAButton()).whileTrue(
                                 new StartEndCommand(
                                                 m_intake::runIntake,
                                                 m_intake::stopIntake,
@@ -175,23 +168,26 @@ public class RobotContainer {
                 //                                 () -> m_arm.setExtenderSetpoint(m_arm.getExtenderSetpoint() + .5))));
 
                 // Medium score
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12))
-                                .toggleOnTrue(new RaiseArmCommand(m_arm, 2, 1));
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5))
+                                .toggleOnTrue(new ParallelCommandGroup(new RaiseArmCommand(m_arm, 2, 1), new InstantCommand(() -> m_hardStop.out())));
                 // High score
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(13))
-                                .toggleOnTrue(new RaiseArmCommand(m_arm, 3, 1));
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12))
+                        .toggleOnTrue(new ParallelCommandGroup(new RaiseArmCommand(m_arm, 3, 1), new InstantCommand(() -> m_hardStop.out())));
 
                 // Run after scoring
-                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5)).toggleOnTrue(
+                new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(13)).toggleOnTrue(
                                 new ParallelCommandGroup(
                                                 new SequentialCommandGroup(
-                                                                new InstantCommand(() -> m_arm.restExtender()),
+                                                                new InstantCommand(() -> {m_arm.restExtender(); m_hardStop.out();}),
                                                                 new WaitCommand(.75),
                                                                 new InstantCommand(() -> m_arm.restPivot())),
                                                 new StartupCommands(m_gripper)));
+
         }
 
         public void teleopInit() {
+                m_arm.restExtender();
+                m_arm.restPivot();
                 CommandScheduler.getInstance().schedule(new StartupCommands(m_gripper));
         }
 

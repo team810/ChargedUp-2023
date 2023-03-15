@@ -23,7 +23,7 @@ public class ConveyorCommand extends CommandBase {
 
 	@Override
 	public void execute() {
-		conveyor.setSpeed(m_speed.getAsDouble() * .25);
+		conveyor.setSpeed(m_speed.getAsDouble() * .45);
 	}
 
 	@Override
