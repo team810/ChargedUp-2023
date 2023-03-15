@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Gripper;
 
@@ -33,10 +32,7 @@ public class GripperSetpoint extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		if (RobotState.isTeleop())
-		{
-			m_gripper.setMotor(speed.getAsDouble());
-		}
+		m_gripper.setMotor(speed.getAsDouble());
 	}
 
 	// Called once the command ends or is interrupted.
