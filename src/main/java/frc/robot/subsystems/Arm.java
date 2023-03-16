@@ -16,9 +16,11 @@ public class Arm extends SubsystemBase {
 	private final PIDController extenderController, pivotController;
 	private final AnalogInput potReading;
 	private final ShuffleboardLayout PIVOT, EXTENDER;
-	private boolean isManual;
 	private double extenderSetpoint;
 	private double pivotSetpoint;
+
+	private boolean isManual;
+
 	public Arm() {
 
 		extendingMotor = new CANSparkMax(ArmConstants.EXTENDING_MOTOR, MotorType.kBrushless);
@@ -53,6 +55,7 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void setExtenderSetpoint(double change) {
+		extenderController.reset();
 		extenderSetpoint = change;
 	}
 
@@ -69,21 +72,13 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void restPivot() {
+
 		pivotSetpoint = 0;
 	}
 
 	public void restExtender() {
+		extenderController.reset();
 		extenderSetpoint = -1.6;
-	}
-
-	public void runExtender(double speed) {
-		this.isManual = true;
-		extendingMotor.set(speed);
-	}
-
-	public void runPivot(double speed) {
-		this.isManual = true;
-		pivotMotor.set(speed);
 	}
 
 	private double getExtenderLength() {
@@ -125,11 +120,11 @@ public class Arm extends SubsystemBase {
 		// }
 
 		if (RobotState.isEnabled()) {
-			extenderSetpoint = Math.max(extenderSetpoint, -3.5);
-			extenderSetpoint = Math.min(extenderSetpoint, 21.5);
+//			extenderSetpoint = Math.max(extenderSetpoint, -3.5);
+//			extenderSetpoint = Math.min(extenderSetpoint, 21.5);
 
-			pivotSetpoint = Math.min(pivotSetpoint, 0);
-			pivotSetpoint = Math.max(pivotSetpoint, 40);
+//			pivotSetpoint = Math.min(pivotSetpoint, 40);
+//			pivotSetpoint = Math.max(pivotSetpoint, 0);
 
 			extendingMotor.set(
 					Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.55), .55));
@@ -144,5 +139,15 @@ public class Arm extends SubsystemBase {
 
 	public void usePID() {
 		this.isManual = false;
+	}
+
+	public void runExtender(double speed) {
+		this.isManual = true;
+		extendingMotor.set(speed);
+	}
+
+	public void runPivot(double speed) {
+		this.isManual = true;
+		pivotMotor.set(speed);
 	}
 }
