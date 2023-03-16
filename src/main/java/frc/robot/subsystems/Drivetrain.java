@@ -45,6 +45,7 @@ public class Drivetrain extends SubsystemBase {
 		m_navx.reset();
 		ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 		// The module has two NEOs on it. One for steering and one for driving.
+
 		m_frontLeftModule = Mk3SwerveModuleHelper.createNeo(
 				tab.getLayout("Front Left Module", BuiltInLayouts.kList)
 						.withSize(2, 4)
@@ -92,7 +93,6 @@ public class Drivetrain extends SubsystemBase {
 //                m_frontRightModule.getDriveEncoder().setMeasurementPeriod(100);
 //                m_backLeftModule.getDriveEncoder().setMeasurementPeriod(100);
 //                m_backRightModule.getDriveEncoder().setMeasurementPeriod(100);
-
 		m_navx.zeroYaw();
 		shuffleboardInit();
 

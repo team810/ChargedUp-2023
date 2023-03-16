@@ -10,18 +10,20 @@ public class Intake extends SubsystemBase {
 	private final CANSparkMax leftIntakeMotor, rightIntakeMotor;
 	private final ShuffleboardLayout INTAKE_VALUES = IntakeConstants.INTAKE_VALUES;
 
-
-	// private final Boolean scoring;
-
-
-	/**
-	 * Creates a new Intake.
-	 */
 	public Intake() {
 		leftIntakeMotor = new CANSparkMax(IntakeConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
 		rightIntakeMotor = new CANSparkMax(IntakeConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
 
-		// this.scoring = false;
+		leftIntakeMotor.restoreFactoryDefaults();
+		rightIntakeMotor.restoreFactoryDefaults();
+
+		leftIntakeMotor.setSmartCurrentLimit(20);
+		rightIntakeMotor.setSmartCurrentLimit(20);
+
+		leftIntakeMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		rightIntakeMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+
+
 		shuffleboardInit();
 	}
 
@@ -43,6 +45,8 @@ public class Intake extends SubsystemBase {
 
 	public void shuffleboardInit() {
 		INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+		INTAKE_VALUES.addDouble("Left Motor Temperature", () -> leftIntakeMotor.getMotorTemperature());
+		INTAKE_VALUES.addDouble("Right Motor Temperature", () -> rightIntakeMotor.getMotorTemperature());
 	}
 
 }
