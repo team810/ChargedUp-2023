@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -94,19 +93,18 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void shuffleboardInit() {
-		EXTENDER.addDouble("String Pot Reading UNmodified", () -> potReading.getAverageValue());
+		EXTENDER.addDouble("String Pot Reading Unmodified", () -> potReading.getAverageValue());
 		EXTENDER.addDouble("String Pot Reading modified", () -> getExtenderLength());
 
 		EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
-
-		EXTENDER.addBoolean("At setPoint", () -> extenderController.atSetpoint());
-		EXTENDER.addDouble("Setpoint Acording to the PID controller", () -> extenderController.getSetpoint());
-		EXTENDER.addDouble("Temp", () -> extendingMotor.getMotorTemperature());
+		EXTENDER.addBoolean("At setpoint", () -> extenderController.atSetpoint());
+		EXTENDER.addDouble("Temperature", () -> extendingMotor.getMotorTemperature());
+		EXTENDER.addDouble("Applied Output", () -> extendingMotor.getAppliedOutput());
 
 		PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
 		PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
-		EXTENDER.addDouble("Applied Output", () -> extendingMotor.getAppliedOutput());
-		EXTENDER.addDouble("Setpoint bc i do not care", () -> extenderController.getSetpoint());
+		PIVOT.addDouble("Applied Output", () -> pivotMotor.getAppliedOutput());
+		PIVOT.addDouble("Temperature", () -> pivotMotor.getMotorTemperature());
 	}
 
 	@Override
@@ -135,7 +133,6 @@ public class Arm extends SubsystemBase {
 
 			extendingMotor.set(
 					Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.55), .55));
-			SmartDashboard.putNumber("Life", Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.55), .55));
 
 			pivotMotor.set(
 					Math.min(Math.max(
