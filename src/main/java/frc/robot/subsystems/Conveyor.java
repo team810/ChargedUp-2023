@@ -99,6 +99,7 @@ public class Conveyor extends SubsystemBase {
 		CONVEYOR_TAB.addDouble("Ultrasonic distance", mUltrasonic::getRangeInches);
 		CONVEYOR_TAB.addDouble("Velocity",
 				() -> conveyorMotor.getEncoder().getVelocity());
+		CONVEYOR_TAB.addDouble("Temp", () -> conveyorMotor.getMotorTemperature());
 
 	}
 

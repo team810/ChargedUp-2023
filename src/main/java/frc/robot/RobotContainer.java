@@ -151,10 +151,22 @@ public class RobotContainer {
 				new InstantCommand(() -> m_hardStop.out()));
 		// Medium score
 		new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(5))
-				.toggleOnTrue(new ParallelCommandGroup(new RaiseArmCommand(m_arm, 2, 1), new InstantCommand(() -> m_hardStop.out())));
+				.toggleOnTrue(
+						new SequentialCommandGroup(
+								new InstantCommand(m_hardStop::out),
+//								new ToTargetCommand(m_conveyor,m_drive,m_lime),
+								new RaiseArmCommand(m_arm, 2, 1)
+						)
+				);
 		// High score
 		new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12))
-				.toggleOnTrue(new ParallelCommandGroup(new RaiseArmCommand(m_arm, 3, 1), new InstantCommand(() -> m_hardStop.out())));
+				.toggleOnTrue(
+						new SequentialCommandGroup(
+							new InstantCommand(m_hardStop::out),
+//							new ToTargetCommand(m_conveyor,m_drive,m_lime),
+							new RaiseArmCommand(m_arm, 3, 1)
+							)
+						);
 
 		// Run after scoring
 		new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(13)).toggleOnTrue(
@@ -174,7 +186,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-//                return m_autos.genPath("");
-		return null;
+        return m_autos.genPath("Life");
+//		return null;
 	}
 }

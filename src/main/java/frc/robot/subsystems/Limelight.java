@@ -25,7 +25,11 @@ public class Limelight extends SubsystemBase {
 	// private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
 
 	public Limelight() {
+		CameraServer.startAutomaticCapture();
+
 		feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
+
+
 		CameraServer.startAutomaticCapture(feed);
 
 		m_camera = new PhotonCamera("photonvision");

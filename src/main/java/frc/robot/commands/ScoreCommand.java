@@ -11,7 +11,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 	private final Gripper gripper;
 	private final Limelight limelight;
 	private final Conveyor conveyor;
-	// private final ToTargetCommand toTarget;
+	 private final ToTargetCommand toTarget;
 	private final int target;
 	private int gamePiece;
 
@@ -24,12 +24,12 @@ public class ScoreCommand extends SequentialCommandGroup {
 		this.conveyor = conveyor;
 
 		//TODO: Uncomment for squaring to target on ScoreCommand
-		// this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
+		 this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
 
 		this.target = target;
 		addCommands(
 				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
-//				// toTarget,
+				 toTarget,
 //				new InstantCommand(() -> {
 //					gamePiece = conveyor.getGamePiece();
 //				}), // this sets the game piece after the conveyor runs
