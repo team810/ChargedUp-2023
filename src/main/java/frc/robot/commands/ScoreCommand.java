@@ -11,7 +11,7 @@ public class ScoreCommand extends SequentialCommandGroup {
 	private final Gripper gripper;
 	private final Limelight limelight;
 	private final Conveyor conveyor;
-	 private final ToTargetCommand toTarget;
+	private final ToTargetCommand toTarget;
 	private final int target;
 	private int gamePiece;
 
@@ -30,14 +30,6 @@ public class ScoreCommand extends SequentialCommandGroup {
 		addCommands(
 				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
 				 toTarget,
-//				new InstantCommand(() -> {
-//					gamePiece = conveyor.getGamePiece();
-//				}), // this sets the game piece after the conveyor runs
-//				new InstantCommand(() -> {
-//					gripper.openGripper(false);
-//					gripper.gripPiece(true);
-//				}),
-
 				new InstantCommand(() -> gripper.setMotor(.4)),
 				new WaitCommand(.25),
 				new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),

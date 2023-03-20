@@ -62,9 +62,9 @@ public class Conveyor extends SubsystemBase {
 
 	private void updateGamePiece() {
 		if (colorSensor.getColor().equals("Yellow")) {
-			setGamePiece(0);
+			setGamePiece(1);
 		} else if (colorSensor.getColor().equals("Purple")) {
-			setGamePiece(0);
+			setGamePiece(2);
 		} else {
 			setGamePiece(0);
 		}
@@ -104,6 +104,7 @@ public class Conveyor extends SubsystemBase {
 	}
 
 	public int getGamePiece() {
+		updateGamePiece();
 		return gamePiece;
 	}
 

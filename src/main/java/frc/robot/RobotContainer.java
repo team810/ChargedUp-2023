@@ -186,7 +186,16 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-        return m_autos.genPath("Life");
+		String pathsName[] = {
+				"Blue Left",
+				"Blue Middle",
+				"Blue Right",
+
+				"Red Left",
+				"Red Middle",
+
+		};
+        return m_autos.genPath(pathsName[0]);
 //		return null;
 	}
 }

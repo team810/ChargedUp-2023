@@ -266,7 +266,6 @@ public class Drivetrain extends SubsystemBase {
 	public void periodic() {
 
 		if (RobotState.isTeleop()) {
-
 			setSpeeds(this.m_chassisSpeeds);
 			setStates(moduleStates);
 		}
