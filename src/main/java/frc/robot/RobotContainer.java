@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivetrainConstants;
@@ -15,22 +16,26 @@ public class RobotContainer {
 	private final HardStopSubsystem m_hardStop = new HardStopSubsystem();
 	private final Drivetrain m_drive = new Drivetrain();
 	private final Arm m_arm = new Arm();
-	private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime, m_hardStop);
+	// private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime, m_hardStop);
+	private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_hardStop);
 
-
+	private double speed;
+	private final double FAST = .8;
+	private final double SLOW = .3;
 	public RobotContainer() {
-
-		m_lime.setMode("Reflective Tape");
+		CameraServer.startAutomaticCapture();
+		speed = FAST;
+		// m_lime.setMode("Reflective Tape");
 
 		m_drive.setDefaultCommand(new DefaultDriveCommand(
 				m_drive,
 				() -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftY() *
-						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * .60),
+						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * DrivetrainConstants.SPEED_LIMIT),
 				() -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX() *
-						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * .60),
+						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * DrivetrainConstants.SPEED_LIMIT),
 				() -> -modifyAxis(
 						OIConstants.DRIVE_GAMEPAD.getRightX() *
-								DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * .60));
+								DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * .65));
 
 		m_gripper.setDefaultCommand(
 				new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .45));
@@ -64,7 +69,7 @@ public class RobotContainer {
 		// Cubed the axis, smoother driving
 		value = Math.pow(value, 3);
 
-		return value * DrivetrainConstants.SPEED_LIMIT;
+		return value;
 	}
 
 	private void configureButtonBindings() {
@@ -72,12 +77,17 @@ public class RobotContainer {
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).onTrue(
 				new InstantCommand(m_drive::zeroGyroscope));
 
+		// switch between slow and fast mode
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).whileTrue(
-				new StartEndCommand(
-						() -> m_drive.slow(),
-						() -> m_drive.fast(),
-						m_drive
+				new InstantCommand(
+						() -> m_drive.slow()
 				)
+		);
+
+		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getLeftTriggerAxis() > .75).onTrue(
+			new InstantCommand(
+				() -> m_drive.fast()
+			)
 		);
 
 		// Primary
@@ -178,6 +188,12 @@ public class RobotContainer {
 								}),
 								new WaitCommand(.75),
 								new InstantCommand(() -> m_arm.restPivot()))));
+
+
+		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).onTrue(
+			new ToTargetCommand(m_conveyor, m_drive, m_lime)
+		);
+		
 	}
 
 	public void teleopInit() {
@@ -186,16 +202,9 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		String pathsName[] = {
-				"Blue Left",
-				"Blue Middle",
-				"Blue Right",
-
-				"Red Left",
-				"Red Middle",
-
-		};
-        return m_autos.genPath(pathsName[0]);
-//		return null;
+	
+        return m_autos.genPath("RedRight2");
+		// return new ScoreCommand(m_arm, m_drive, m_gripper, m_conveyor, m_intake, 3, 2);
+		// return null;
 	}
 }

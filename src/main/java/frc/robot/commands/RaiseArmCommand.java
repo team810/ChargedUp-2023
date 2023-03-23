@@ -22,17 +22,17 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 		{
 			addCommands(
 					new InstantCommand(() -> arm.setExtenderSetpoint(reading_that_they_like)),
-					new WaitCommand(1),
+					new WaitCommand(0.5),
 					armToConeGoal(),
-					new WaitCommand(1.5),
+					new WaitCommand(0.75),
 					extenderToConeGoal()
 			);
 		} else if (targetGrid == 2) { // target grid is for the cube
 			addCommands(
 					new InstantCommand(() -> arm.setExtenderSetpoint(reading_that_they_like)),
-					new WaitCommand(1),
+					new WaitCommand(0.5),
 					armToCubeGoal(),
-					new WaitCommand(1.5),
+					new WaitCommand(0.75),
 					extenderToCubeGoal()
 			);
 		}
@@ -88,7 +88,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 					arm.setExtenderSetpoint(5);
 					break;
 				case 3:
-					arm.setExtenderSetpoint(20);
+					arm.setExtenderSetpoint(20.5);
 					break;
 				default:
 					System.out.println("how did you get here");

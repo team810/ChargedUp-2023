@@ -22,14 +22,13 @@ public class Autos {
 	// This contains the methods we run during auto
 	private final HashMap<String, Command> eventMap = new HashMap<>();
 
-	public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper,
-	             Limelight limelight, HardStopSubsystem hardStop) {
+	public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper, HardStopSubsystem hardStop) {
 		m_drivetrain = drivetrain;
 		m_intake = intake;
 		m_conveyor = conveyor;
 		m_hardStop = hardStop;
 
-		score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor, intake, 3, 2);
+		score = new ScoreCommand(arm, drivetrain, gripper, conveyor, intake, 3, 2);
 
 
 		addMethods();

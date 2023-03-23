@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drivetrain extends SubsystemBase {
@@ -23,6 +24,8 @@ public class Drivetrain extends SubsystemBase {
 	private final SwerveModule m_backLeftModule;
 	private final SwerveModule m_backRightModule;
 	private final Field2d field2d = new Field2d();
+
+	
 	// Just an array to reference each module
 	private final SwerveModule[] modules = new SwerveModule[4];
 	// Gyroscope
@@ -172,16 +175,19 @@ public class Drivetrain extends SubsystemBase {
 		moduleStates = states;
 
 	}
-
-
+	// int life = 0;
+	
 	// Setting each module to be that speed
 	public void setStates(SwerveModuleState[] state) {
-
+		// life++;
+		// if(life > 50)
+		// {
+			
 		m_frontLeftModule.set(
-				(state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE)
-						* DrivetrainConstants.SPEED_LIMIT,
-				state[0].angle.getRadians());
+			(state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+					* DrivetrainConstants.MAX_VOLTAGE)
+					* DrivetrainConstants.SPEED_LIMIT,
+			state[0].angle.getRadians());
 		m_frontRightModule.set(
 				(state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
 						* DrivetrainConstants.MAX_VOLTAGE)
@@ -202,6 +208,8 @@ public class Drivetrain extends SubsystemBase {
 		modules[1] = m_frontRightModule;
 		modules[2] = m_backLeftModule;
 		modules[3] = m_backRightModule;
+
+		// }
 	}
 
 	public double getPitch() {
@@ -257,8 +265,8 @@ public class Drivetrain extends SubsystemBase {
 
 	public void shuffleboardInit() {
 
-		ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
-		drivetrain.add("Field", field2d);
+		// ShuffleboardTab drivetrain = Shuffleboard.getTab("Drivetrain");
+		// drivetrain.add("Field", field2d);
 
 	}
 
