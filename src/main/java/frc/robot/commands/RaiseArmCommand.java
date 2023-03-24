@@ -11,7 +11,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 	private final Arm arm;
 	private final int target;
 
-	private final double reading_that_they_like = -3.3;
+	private final double reading_that_they_like = -4.3;
 
 	public RaiseArmCommand(Arm arm, int target, int targetGrid) {
 

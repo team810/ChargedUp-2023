@@ -193,6 +193,9 @@ public class RobotContainer {
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).onTrue(
 			new ToTargetCommand(m_conveyor, m_drive, m_lime)
 		);
+		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getAButton()).onTrue(
+				new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+		);
 		
 	}
 
