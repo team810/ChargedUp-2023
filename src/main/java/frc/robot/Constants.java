@@ -85,7 +85,7 @@ public final class Constants {
 						DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
 		// Max speed is scary
-		public static double SPEED_LIMIT = .8;
+		public static double SPEED_LIMIT = .75;
 
 		public static final class Auto {
 			// TeleOP
@@ -139,7 +139,7 @@ public final class Constants {
 				.withPosition(0, 0).withSize(2,
 						4);
 		public static final int EXTENDING_MOTOR = 11;
-		public static final PIDController EXTENDER_CONTROLLER = new PIDController(.15, .02, 0);
+		public static final PIDController EXTENDER_CONTROLLER = new PIDController(.2, .02, 0);
 
 		// PIVOT
 		public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
@@ -161,7 +161,7 @@ public final class Constants {
 		// Motors
 		public static final int CONVEYOR_MOTOR = 10;
 
-		public static final double MOTOR_SPEED = .45;
+		public static final double MOTOR_SPEED = .75;
 	}
 
 	public static final class GripperConstants {

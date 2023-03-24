@@ -25,8 +25,13 @@ public class Limelight extends SubsystemBase {
 	// private final ShuffleboardLayout cameraValues = CameraConstants.CAMERA_VALUES;
 
 	public Limelight() {
+		CameraServer.startAutomaticCapture();
+
 		feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
+		// feed = new HttpCamera("photonvision", "https://172.22.11.1:58");
+
 		CameraServer.startAutomaticCapture(feed);
+
 
 		m_camera = new PhotonCamera("photonvision");
 
@@ -73,6 +78,7 @@ public class Limelight extends SubsystemBase {
 	}
 
 	public void shuffleInit() {
+
 		// this.cameraValues.addBoolean("Is Valid?", () -> m_camera.hasTargets());
 		// this.cameraValues.addCamera("Live View", "photonvision",
 		// "http://10.8.10.11:5800");

@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class Autos {
 	private final Drivetrain m_drivetrain;
 	private final Intake m_intake;
+	private final Conveyor m_conveyor;
 	private final HardStopSubsystem m_hardStop;
 	private final ScoreCommand score;
 	private final SwerveAutoBuilder m_AUTO_BUILDER;
@@ -21,17 +22,13 @@ public class Autos {
 	// This contains the methods we run during auto
 	private final HashMap<String, Command> eventMap = new HashMap<>();
 
-	public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper,
-	             Limelight limelight, HardStopSubsystem hardStop) {
+	public Autos(Drivetrain drivetrain, Intake intake, Conveyor conveyor, Arm arm, Gripper gripper, HardStopSubsystem hardStop) {
 		m_drivetrain = drivetrain;
 		m_intake = intake;
+		m_conveyor = conveyor;
 		m_hardStop = hardStop;
-		// this.m_conveyor = conveyor;
-		// this.m_arm = arm;
-		// this.m_gripper = gripper;
-		// this.limelight = limelight;
 
-		score = new ScoreCommand(arm, drivetrain, gripper, limelight, conveyor, intake, 3, 2);
+		score = new ScoreCommand(arm, drivetrain, gripper, conveyor, intake, 3, 2);
 
 
 		addMethods();
@@ -53,10 +50,12 @@ public class Autos {
 		// intake methods
 		eventMap.put("Run Intake", new InstantCommand(() -> {
 			m_intake.runIntake();
+			m_conveyor.setEnabled(true);
 			m_hardStop.out();
 		}));
 		eventMap.put("Stop Intake", new InstantCommand(() -> {
 			m_intake.stopIntake();
+			m_conveyor.setEnabled(false);
 			m_hardStop.in();
 		}));
 
