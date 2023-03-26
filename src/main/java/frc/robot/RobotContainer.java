@@ -18,10 +18,10 @@ public class RobotContainer {
 	private final Arm m_arm = new Arm();
 	// private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime, m_hardStop);
 	private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_hardStop);
-
-	private double speed;
 	private final double FAST = .8;
 	private final double SLOW = .3;
+	private final double speed;
+
 	public RobotContainer() {
 		CameraServer.startAutomaticCapture();
 		speed = FAST;
@@ -85,9 +85,9 @@ public class RobotContainer {
 		);
 
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getLeftTriggerAxis() > .75).onTrue(
-			new InstantCommand(
-				() -> m_drive.fast()
-			)
+				new InstantCommand(
+						() -> m_drive.fast()
+				)
 		);
 
 		// Primary
@@ -172,11 +172,11 @@ public class RobotContainer {
 		new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(12))
 				.toggleOnTrue(
 						new SequentialCommandGroup(
-							new InstantCommand(m_hardStop::out),
+								new InstantCommand(m_hardStop::out),
 //							new ToTargetCommand(m_conveyor,m_drive,m_lime),
-							new RaiseArmCommand(m_arm, 3, 1)
-							)
-						);
+								new RaiseArmCommand(m_arm, 3, 1)
+						)
+				);
 
 		// Run after scoring
 		new Trigger(() -> OIConstants.SECONDARY_GAMEPAD.getRawButton(13)).toggleOnTrue(
@@ -191,12 +191,12 @@ public class RobotContainer {
 
 
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).onTrue(
-			new ToTargetCommand(m_conveyor, m_drive, m_lime)
+				new ToTargetCommand(m_conveyor, m_drive, m_lime)
 		);
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getAButton()).onTrue(
 				new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
 		);
-		
+
 	}
 
 	public void teleopInit() {
@@ -212,8 +212,8 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-	
-        return m_autos.genPath("RedRight2");
+
+		return m_autos.genPath("RedRight2");
 		// return new ScoreCommand(m_arm, m_drive, m_gripper, m_conveyor, m_intake, 3, 2);
 		// return null;
 	}

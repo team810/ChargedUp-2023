@@ -78,12 +78,10 @@ public class Conveyor extends SubsystemBase {
 			} else {
 				conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
 			}
-			
-		} 
-		else if (manual) {
+
+		} else if (manual) {
 			conveyorMotor.set(speed * .25);
-		}
-		else {
+		} else {
 			if (!scoring) {
 				conveyorMotor.set(0);
 			}
@@ -95,8 +93,8 @@ public class Conveyor extends SubsystemBase {
 	public void shuffleboardInit() {
 		// CONVEYOR_TAB.addDouble("Ultrasonic distance", mUltrasonic::getRangeInches);
 		// CONVEYOR_TAB.addDouble("Velocity",
-				// () -> conveyorMotor.getEncoder().getVelocity());
-		 CONVEYOR_TAB.addDouble("Temp", () -> conveyorMotor.getMotorTemperature());
+		// () -> conveyorMotor.getEncoder().getVelocity());
+		CONVEYOR_TAB.addDouble("Temp", () -> conveyorMotor.getMotorTemperature());
 
 	}
 

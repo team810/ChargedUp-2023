@@ -36,12 +36,7 @@ public class ToTargetCommand extends CommandBase {
 
 	@Override
 	public void initialize() {
-		if (limelight.hasTarget() == false)
-		{
-			finished = true;
-		}else{
-			finished = false;
-		}
+		finished = !limelight.hasTarget();
 	}
 
 	@Override

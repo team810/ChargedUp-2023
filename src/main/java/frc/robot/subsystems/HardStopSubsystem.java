@@ -25,14 +25,12 @@ public class HardStopSubsystem implements Subsystem {
 		solenoid.set(Value.kReverse);
 	}
 
-    public void toggle()
-    {
-        if (solenoid.get() == Value.kForward)
-        {
+	public void toggle() {
+		if (solenoid.get() == Value.kForward) {
 			solenoid.set(Value.kReverse);
-        }else{
+		} else {
 			solenoid.set(Value.kForward);
-        }
-    }
+		}
+	}
 }
 

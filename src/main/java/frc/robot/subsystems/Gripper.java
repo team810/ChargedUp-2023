@@ -10,6 +10,7 @@ import frc.robot.Constants.GripperConstants;
 public class Gripper extends SubsystemBase {
 	private final CANSparkMax gripperMotor;
 	private final ShuffleboardLayout GRIPPER_MOTOR = GripperConstants.GRIPPER_M_VALUES;
+
 	public Gripper() {
 		gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
 
@@ -25,7 +26,7 @@ public class Gripper extends SubsystemBase {
 
 	public void shuffleboardInit() {
 
-		 GRIPPER_MOTOR.addDouble("Temp", gripperMotor::getMotorTemperature);
+		GRIPPER_MOTOR.addDouble("Temp", gripperMotor::getMotorTemperature);
 
 	}
 }

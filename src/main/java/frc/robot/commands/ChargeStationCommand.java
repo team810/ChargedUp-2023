@@ -36,7 +36,7 @@ public class ChargeStationCommand extends CommandBase {
 		double yInput;
 
 		yInput = controller.calculate(drivetrain.getPitch(), 0);
-	
+
 		yInput = Math.min(20, Math.max(-20, yInput));
 
 		ChassisSpeeds speeds = new ChassisSpeeds(yInput, 0, 0);
@@ -54,7 +54,7 @@ public class ChargeStationCommand extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-	
+
 		drivetrain.drive(new ChassisSpeeds(0, 0, 0));
 		drivetrain.unlockWheels();
 	}
