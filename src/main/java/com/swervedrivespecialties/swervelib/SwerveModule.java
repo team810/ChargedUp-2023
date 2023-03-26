@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 public interface SwerveModule {
 	double getDriveVelocity();
 
+
 	void setDriveMotorIdleState(CANSparkMax.IdleMode idleState);
 
 	double getSteerAngle();

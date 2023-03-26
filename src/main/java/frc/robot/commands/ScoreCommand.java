@@ -9,35 +9,25 @@ public class ScoreCommand extends SequentialCommandGroup {
 	private final Arm arm;
 	private final Drivetrain drivetrain;
 	private final Gripper gripper;
-	private final Limelight limelight;
 	private final Conveyor conveyor;
 	// private final ToTargetCommand toTarget;
 	private final int target;
 	private int gamePiece;
 
-	public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper, Limelight limelight,
+	public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper,
 	                    Conveyor conveyor, Intake intake, int target, int targetGrid) {
 		this.arm = arm;
 		this.drivetrain = drivetrain;
 		this.gripper = gripper;
-		this.limelight = limelight;
 		this.conveyor = conveyor;
 
 		//TODO: Uncomment for squaring to target on ScoreCommand
-		// this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
+		//  this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
 
 		this.target = target;
 		addCommands(
 				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
-//				// toTarget,
-//				new InstantCommand(() -> {
-//					gamePiece = conveyor.getGamePiece();
-//				}), // this sets the game piece after the conveyor runs
-//				new InstantCommand(() -> {
-//					gripper.openGripper(false);
-//					gripper.gripPiece(true);
-//				}),
-
+				//  toTarget,
 				new InstantCommand(() -> gripper.setMotor(.4)),
 				new WaitCommand(.25),
 				new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
@@ -52,6 +42,6 @@ public class ScoreCommand extends SequentialCommandGroup {
 				new InstantCommand(arm::restPivot),
 				new WaitCommand(2));
 
-		addRequirements(this.arm, this.drivetrain, this.gripper, this.limelight, this.conveyor);
+		addRequirements(this.arm, this.drivetrain, this.gripper, this.conveyor);
 	}
 }

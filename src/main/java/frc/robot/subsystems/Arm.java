@@ -88,18 +88,19 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void shuffleboardInit() {
-		EXTENDER.addDouble("String Pot Reading Unmodified", () -> potReading.getAverageValue());
-		EXTENDER.addDouble("String Pot Reading modified", () -> getExtenderLength());
 
-		EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
-		EXTENDER.addBoolean("At setpoint", () -> extenderController.atSetpoint());
-		EXTENDER.addDouble("Temperature", () -> extendingMotor.getMotorTemperature());
-		EXTENDER.addDouble("Applied Output", () -> extendingMotor.getAppliedOutput());
+		 EXTENDER.addDouble("String Pot Reading Unmodified", () -> potReading.getAverageValue());
+		 EXTENDER.addDouble("String Pot Reading modified", () -> getExtenderLength());
 
-		PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
-		PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
-		PIVOT.addDouble("Applied Output", () -> pivotMotor.getAppliedOutput());
-		PIVOT.addDouble("Temperature", () -> pivotMotor.getMotorTemperature());
+		 EXTENDER.addDouble("Setpoint", () -> extenderSetpoint);
+		 EXTENDER.addBoolean("At setpoint", () -> extenderController.atSetpoint());
+		 EXTENDER.addDouble("Temperature", () -> extendingMotor.getMotorTemperature());
+		 EXTENDER.addDouble("Applied Output", () -> extendingMotor.getAppliedOutput());
+
+		 PIVOT.addDouble("Position", () -> pivotMotor.getEncoder().getPosition());
+		 PIVOT.addDouble("Setpoint", () -> pivotSetpoint);
+		 PIVOT.addDouble("Applied Output", () -> pivotMotor.getAppliedOutput());
+		 PIVOT.addDouble("Temperature", () -> pivotMotor.getMotorTemperature());
 	}
 
 	@Override
@@ -132,7 +133,7 @@ public class Arm extends SubsystemBase {
 			pivotMotor.set(
 					Math.min(Math.max(
 							pivotController.calculate(this.pivotMotor.getEncoder().getPosition(), this.pivotSetpoint),
-							-.45), .45));
+							-.55), .55));
 		}
 
 	}

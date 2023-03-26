@@ -44,9 +44,9 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void shuffleboardInit() {
-		INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
-		INTAKE_VALUES.addDouble("Left Motor Temperature", () -> leftIntakeMotor.getMotorTemperature());
-		INTAKE_VALUES.addDouble("Right Motor Temperature", () -> rightIntakeMotor.getMotorTemperature());
+		// INTAKE_VALUES.addDouble("Velocity", () -> leftIntakeMotor.getEncoder().getVelocity());
+		 INTAKE_VALUES.addDouble("Left Motor Temperature", () -> leftIntakeMotor.getMotorTemperature());
+		 INTAKE_VALUES.addDouble("Right Motor Temperature", () -> rightIntakeMotor.getMotorTemperature());
 	}
 
 }

@@ -6,15 +6,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
 
 public class Conveyor extends SubsystemBase {
 	public final CANSparkMax conveyorMotor;
-	private final ColorSensor colorSensor;
-	private final Ultrasonic mUltrasonic;
+	// private final ColorSensor colorSensor;
+	// private final Ultrasonic mUltrasonic;
 
 
 	private final ShuffleboardLayout CONVEYOR_TAB;
@@ -32,12 +31,12 @@ public class Conveyor extends SubsystemBase {
 	public Conveyor() {
 
 		conveyorMotor = new CANSparkMax(ConveyorConstants.CONVEYOR_MOTOR, MotorType.kBrushless);
-		colorSensor = new ColorSensor();
+		// colorSensor = new ColorSensor();
 
 		CONVEYOR_TAB = ConveyorConstants.CONVEYOR_LAYOUT;
 
-		mUltrasonic = new Ultrasonic(0, 1);
-		mUltrasonic.setEnabled(true);
+		// mUltrasonic = new Ultrasonic(0, 1);
+		// mUltrasonic.setEnabled(true);
 
 
 		enabled = false;
@@ -61,24 +60,17 @@ public class Conveyor extends SubsystemBase {
 	}
 
 	private void updateGamePiece() {
-		if (colorSensor.getColor().equals("Yellow")) {
-			setGamePiece(0);
-		} else if (colorSensor.getColor().equals("Purple")) {
-			setGamePiece(0);
-		} else {
-			setGamePiece(0);
-		}
+		setGamePiece(0);
 		updateMotor();
 	}
 
 
 	void updateMotor() {
 
-		if (manual) {
-			conveyorMotor.set(speed * .25);
-		} else if (enabled) {
+		if (enabled) {
 			if (!reversed) {
 				if (gamePiece == 0 || override) {
+
 					conveyorMotor.set(ConveyorConstants.MOTOR_SPEED);
 				} else {
 					conveyorMotor.set(0);
@@ -86,23 +78,30 @@ public class Conveyor extends SubsystemBase {
 			} else {
 				conveyorMotor.set(-ConveyorConstants.MOTOR_SPEED);
 			}
-
-		} else {
+			
+		} 
+		else if (manual) {
+			conveyorMotor.set(speed * .25);
+		}
+		else {
 			if (!scoring) {
 				conveyorMotor.set(0);
 			}
 		}
-		manual = speed != 0;
+		// manual = speed < .09 && speed > -.09;
+		manual = !(speed == 0);
 	}
 
 	public void shuffleboardInit() {
-		CONVEYOR_TAB.addDouble("Ultrasonic distance", mUltrasonic::getRangeInches);
-		CONVEYOR_TAB.addDouble("Velocity",
-				() -> conveyorMotor.getEncoder().getVelocity());
+		// CONVEYOR_TAB.addDouble("Ultrasonic distance", mUltrasonic::getRangeInches);
+		// CONVEYOR_TAB.addDouble("Velocity",
+				// () -> conveyorMotor.getEncoder().getVelocity());
+		 CONVEYOR_TAB.addDouble("Temp", () -> conveyorMotor.getMotorTemperature());
 
 	}
 
 	public int getGamePiece() {
+		updateGamePiece();
 		return gamePiece;
 	}
 

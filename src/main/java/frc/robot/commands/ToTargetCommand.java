@@ -15,8 +15,8 @@ public class ToTargetCommand extends CommandBase {
 	private final Conveyor conveyor;
 	private final Drivetrain drivetrain;
 	private final Limelight limelight;
-	private final double ERROR_AMOUNT_X = .75;
-	private final double X_OFFSET = 8.25;
+	private final double ERROR_AMOUNT_X = .75; // Error amount will need to be tuned
+	private final double X_OFFSET = 12.82; // ofset will need to be tuned
 	private final PIDController Xcontroller;
 	private boolean finished;
 
@@ -30,30 +30,24 @@ public class ToTargetCommand extends CommandBase {
 		Xcontroller.setTolerance(ERROR_AMOUNT_X);
 		Xcontroller.setSetpoint(X_OFFSET);
 		Xcontroller.disableContinuousInput();
-
+		conveyor.setEnabled(false);
 		addRequirements(this.conveyor, this.drivetrain, this.limelight);
 	}
 
 	@Override
 	public void initialize() {
-
-		// finished = !limelight.hasTarget();
-
-		// if (conveyor.getGamePiece() == 1) {
-		//     if (conveyor.getGamePiece() == 1) {
-		//         limelight.setMode("Reflective Tape");
-		//     } else if (conveyor.getGamePiece() == 2) {
-		//         limelight.setMode("AprilTag");
-		//     } else {
-		//         limelight.setMode("Reflective Tape");
-		//     }
-		// }
+		if (limelight.hasTarget() == false)
+		{
+			finished = true;
+		}else{
+			finished = false;
+		}
 	}
 
 	@Override
 	public void execute() {
 
-		if (limelight.hasTarget() && !(limelight.getBestTarget().equals(null))) {
+		if (limelight.hasTarget()) {
 
 			double xSpeed = Xcontroller.calculate(limelight.getBestTarget().getYaw(), X_OFFSET);
 
@@ -93,7 +87,7 @@ public class ToTargetCommand extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return Xcontroller.atSetpoint() || finished;
+		return Xcontroller.atSetpoint() || finished || !limelight.hasTarget();
 	}
 
 	@Override

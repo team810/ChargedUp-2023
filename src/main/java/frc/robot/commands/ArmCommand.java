@@ -26,14 +26,14 @@ public class ArmCommand extends CommandBase {
 	@Override
 	public void execute() {
 		int aDouble = m_angle.get();
-		if (aDouble == 0) {
+		if (aDouble == 90) {
 			arm.setExtenderSetpoint(arm.getExtenderSetpoint() - .2);
-		} else if (aDouble == 90) {
-			arm.setPivotSetpoint(arm.getPivotSetpoint() + .2);
 		} else if (aDouble == 180) {
-			arm.setExtenderSetpoint(arm.getExtenderSetpoint() + .5);
+			arm.setPivotSetpoint(arm.getPivotSetpoint() + .1);
 		} else if (aDouble == 270) {
-			arm.setPivotSetpoint(arm.getPivotSetpoint() - .5);
+			arm.setExtenderSetpoint(arm.getExtenderSetpoint() + .2);
+		} else if (aDouble == 0) {
+			arm.setPivotSetpoint(arm.getPivotSetpoint() - .1);
 		}
 	}
 
