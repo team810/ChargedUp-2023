@@ -202,6 +202,13 @@ public class RobotContainer {
 	public void teleopInit() {
 		m_arm.restExtender();
 		m_arm.restPivot();
+
+//		CommandScheduler.getInstance().schedule(
+//				new SequentialCommandGroup(
+//						new WaitCommand(1),
+//
+//				)
+//		);
 	}
 
 	public Command getAutonomousCommand() {

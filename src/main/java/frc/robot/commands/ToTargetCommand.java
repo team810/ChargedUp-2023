@@ -30,7 +30,7 @@ public class ToTargetCommand extends CommandBase {
 		Xcontroller.setTolerance(ERROR_AMOUNT_X);
 		Xcontroller.setSetpoint(X_OFFSET);
 		Xcontroller.disableContinuousInput();
-
+		conveyor.setEnabled(false);
 		addRequirements(this.conveyor, this.drivetrain, this.limelight);
 	}
 

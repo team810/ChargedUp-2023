@@ -58,6 +58,7 @@ public class Drivetrain extends SubsystemBase {
 				DrivetrainConstants.FRONT_LEFT_MODULE_STEER_MOTOR,
 				DrivetrainConstants.FRONT_LEFT_MODULE_STEER_ENCODER,
 				DrivetrainConstants.FRONT_LEFT_MODULE_STEER_OFFSET);
+
 		m_frontRightModule = Mk3SwerveModuleHelper.createNeo(
 				tab.getLayout("Front Right Module", BuiltInLayouts.kList)
 						.withSize(2, 4)
@@ -203,7 +204,6 @@ public class Drivetrain extends SubsystemBase {
 						* DrivetrainConstants.MAX_VOLTAGE)
 						* DrivetrainConstants.SPEED_LIMIT,
 				state[3].angle.getRadians());
-
 		modules[0] = m_frontLeftModule;
 		modules[1] = m_frontRightModule;
 		modules[2] = m_backLeftModule;

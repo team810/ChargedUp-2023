@@ -28,7 +28,6 @@ public class Limelight extends SubsystemBase {
 		CameraServer.startAutomaticCapture();
 
 		feed = new HttpCamera("photonvision", "http://10.8.10.11:5800/");
-		// feed = new HttpCamera("photonvision", "https://172.22.11.1:58");
 
 		CameraServer.startAutomaticCapture(feed);
 

@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ConveyorConstants;
@@ -97,7 +96,7 @@ public class Conveyor extends SubsystemBase {
 		// CONVEYOR_TAB.addDouble("Ultrasonic distance", mUltrasonic::getRangeInches);
 		// CONVEYOR_TAB.addDouble("Velocity",
 				// () -> conveyorMotor.getEncoder().getVelocity());
-		// CONVEYOR_TAB.addDouble("Temp", () -> conveyorMotor.getMotorTemperature());
+		 CONVEYOR_TAB.addDouble("Temp", () -> conveyorMotor.getMotorTemperature());
 
 	}
 
