@@ -3,7 +3,6 @@ package frc.robot;
 import com.controller.StadiaController;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -75,10 +74,10 @@ public final class Constants {
 		public final static double MAX_VOLTAGE = 12;// 12
 
 		// Theoritcal speed cap XY
-		public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
-				SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
-				SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
-
+//		public static final double MAX_VELOCITY_METERS_PER_SECOND = 11000.0 / 60.0 *
+//				SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
+//				SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+		public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.8;
 		// Theorital rot speed cap
 		public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
 				Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
@@ -139,7 +138,7 @@ public final class Constants {
 				.withPosition(0, 0).withSize(2,
 						4);
 		public static final int EXTENDING_MOTOR = 11;
-		public static final PIDController EXTENDER_CONTROLLER = new PIDController(.2, .02, 0);
+		public static final PIDController EXTENDER_CONTROLLER = new PIDController(.25, .02, 0);
 
 		// PIVOT
 		public static final ShuffleboardLayout PIVOT = ARM_TAB.getLayout("PIVOT", BuiltInLayouts.kList)
@@ -193,7 +192,7 @@ public final class Constants {
 		public static final int LEFT_INTAKE_MOTOR = 9;
 		public static final int RIGHT_INTAKE_MOTOR = 15;
 
-		public static final double INTAKE_MOTOR_SPEED = .45;
+		public static final double INTAKE_MOTOR_SPEED = .75;
 	}
 
 	public static final class ColorSensorConstants {

@@ -85,7 +85,7 @@ public class RaiseArmCommand extends SequentialCommandGroup {
 					arm.setExtenderSetpoint(-2.5);
 					break;
 				case 2:
-					arm.setExtenderSetpoint(5);
+					arm.setExtenderSetpoint(2);
 					break;
 				case 3:
 					arm.setExtenderSetpoint(20.5);

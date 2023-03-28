@@ -18,13 +18,9 @@ public class RobotContainer {
 	private final Arm m_arm = new Arm();
 	// private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_lime, m_hardStop);
 	private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_hardStop);
-	private final double FAST = .8;
-	private final double SLOW = .3;
-	private final double speed;
 
 	public RobotContainer() {
 		CameraServer.startAutomaticCapture();
-		speed = FAST;
 		// m_lime.setMode("Reflective Tape");
 
 		m_drive.setDefaultCommand(new DefaultDriveCommand(
@@ -213,7 +209,8 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand() {
 
-		return m_autos.genPath("RedRight2");
+//		return m_autos.genPath("RedRight2");
+		return null;
 		// return new ScoreCommand(m_arm, m_drive, m_gripper, m_conveyor, m_intake, 3, 2);
 		// return null;
 	}
