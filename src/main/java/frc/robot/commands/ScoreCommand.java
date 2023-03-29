@@ -12,10 +12,11 @@ public class ScoreCommand extends SequentialCommandGroup {
 	private final Conveyor conveyor;
 	// private final ToTargetCommand toTarget;
 	private final int target;
+	private final HardStopSubsystem m_hardStop;
 	private int gamePiece;
 
 	public ScoreCommand(Arm arm, Drivetrain drivetrain, Gripper gripper,
-	                    Conveyor conveyor, Intake intake, int target, int targetGrid) {
+	                    Conveyor conveyor, Intake intake, int target, int targetGrid, HardStopSubsystem mHardStop) {
 		this.arm = arm;
 		this.drivetrain = drivetrain;
 		this.gripper = gripper;
@@ -25,7 +26,12 @@ public class ScoreCommand extends SequentialCommandGroup {
 		//  this.toTarget = new ToTargetCommand(conveyor, drivetrain, limelight);
 
 		this.target = target;
+		m_hardStop = mHardStop;
 		addCommands(
+				new InstantCommand(m_hardStop::in),
+				new InstantCommand(() -> conveyor.setEnabled(true)),
+				new WaitCommand(.5),
+				new InstantCommand(() -> conveyor.setEnabled(false)),
 				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
 				//  toTarget,
 				new InstantCommand(() -> gripper.setMotor(.4)),

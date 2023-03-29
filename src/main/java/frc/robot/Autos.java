@@ -28,7 +28,7 @@ public class Autos {
 		m_conveyor = conveyor;
 		m_hardStop = hardStop;
 
-		score = new ScoreCommand(arm, drivetrain, gripper, conveyor, intake, 3, 2);
+		score = new ScoreCommand(arm, drivetrain, gripper, conveyor, intake, 3, 2, hardStop);
 
 
 		addMethods();

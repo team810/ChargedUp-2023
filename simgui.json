@@ -1,17 +1,17 @@
 {
   "HALProvider": {
+    "Analog Inputs": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
+      "Compressor[0]": {
+        "header": {
+          "open": true
+        }
+      },
       "REV Color Sensor V3[0,82]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [15]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [6]": {
         "header": {
           "open": true
         }
@@ -28,6 +28,16 @@
       },
       "RoboRIO Input": {
         "open": true
+      },
+      "window": {
+        "visible": true
+      }
+    },
+    "Solenoids": {
+      "0": {
+        "header": {
+          "open": true
+        }
       },
       "window": {
         "visible": true
@@ -51,6 +61,13 @@
         "window": {
           "visible": true
         }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "photonvision": {
+        "open": true
       }
     }
   }
