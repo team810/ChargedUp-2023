@@ -68,8 +68,8 @@ public class RobotContainer {
 		return value;
 	}
 
-	private void configureButtonBindings() {
-		//Zero gyro
+	void primaryButtons()
+	{
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(6)).onTrue(
 				new InstantCommand(m_drive::zeroGyroscope));
 
@@ -79,12 +79,16 @@ public class RobotContainer {
 						() -> m_drive.slow()
 				)
 		);
-
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getLeftTriggerAxis() > .75).onTrue(
 				new InstantCommand(
 						() -> m_drive.fast()
 				)
 		);
+	}
+	private void configureButtonBindings() {
+		primaryButtons();
+		
+		//Zero gyro
 
 		// Primary
 		// Intake forward
@@ -186,9 +190,9 @@ public class RobotContainer {
 								new InstantCommand(() -> m_arm.restPivot()))));
 
 
-		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).onTrue(
-				new ToTargetCommand(m_conveyor, m_drive, m_lime)
-		);
+//		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).onTrue(
+//				new ToTargetCommand(m_conveyor, m_drive, m_lime)
+//		);
 		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getAButton()).onTrue(
 				new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
 		);
