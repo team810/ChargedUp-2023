@@ -213,8 +213,8 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand() {
 
-//		return m_autos.genPath("RedRight2");
-		return null;
+		return m_autos.genPath("RedCharge");
+//		return null;
 		// return new ScoreCommand(m_arm, m_drive, m_gripper, m_conveyor, m_intake, 3, 2);
 		// return null;
 	}

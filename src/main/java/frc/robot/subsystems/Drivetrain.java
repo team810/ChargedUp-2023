@@ -231,7 +231,7 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	public void fast() {
-		DrivetrainConstants.SPEED_LIMIT = .85;
+		DrivetrainConstants.SPEED_LIMIT = .9;
 	}
 
 	public void normal() {
