@@ -28,11 +28,9 @@ public class ScoreCommand extends SequentialCommandGroup {
 		this.target = target;
 		m_hardStop = mHardStop;
 		addCommands(
-				new InstantCommand(m_hardStop::in),
-				new InstantCommand(() -> conveyor.setEnabled(true)),
-				new WaitCommand(.5),
-				new InstantCommand(() -> conveyor.setEnabled(false)),
-				new InstantCommand(() -> arm.setExtenderSetpoint(-.5)),
+				new InstantCommand(m_hardStop::out),
+				new WaitCommand(0.5),
+				new InstantCommand(() -> arm.setExtenderSetpoint(-1.7)),
 				//  toTarget,
 				new InstantCommand(() -> gripper.setMotor(.4)),
 				new WaitCommand(.25),
@@ -40,10 +38,14 @@ public class ScoreCommand extends SequentialCommandGroup {
 				new RaiseArmCommand(arm, target, targetGrid),
 				new WaitCommand(1.1),
 				new InstantCommand(() -> gripper.setMotor(-.1)),
-				new WaitCommand(.2),
+				new WaitCommand(.1),
 				new InstantCommand(() -> gripper.setMotor(0)),
 				new WaitCommand(.5),
-				new InstantCommand(arm::restExtender),
+				new InstantCommand(() -> gripper.setMotor(0.2)), 
+				new WaitCommand(0.5), 
+				new InstantCommand(() -> gripper.setMotor(0)), 
+				new WaitCommand(0.5),
+				new InstantCommand(() -> arm.setExtenderSetpoint(-3.5)),
 				new WaitCommand(.8),
 				new InstantCommand(arm::restPivot),
 				new WaitCommand(2));
