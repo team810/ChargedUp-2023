@@ -40,7 +40,7 @@ public class Autos {
 				DrivetrainConstants.KINEMATICS,
 				DrivetrainConstants.Auto.XY_CONSTANTS,
 				DrivetrainConstants.Auto.THETA_CONSTANTS,
-				m_drivetrain::setStates,
+				m_drivetrain::setStatesAuto,
 				this.eventMap,
 				false,
 				m_drivetrain);

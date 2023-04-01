@@ -97,7 +97,7 @@ public final class Constants {
 			// Auto
 			public static final PIDConstants XY_CONSTANTS = new PIDConstants(25, 0, 0);
 			public static final PIDConstants THETA_CONSTANTS = new PIDConstants(15, 0, 0);
-			public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.8, 3);
+			public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(.3, 3);
 		}
 	}
 

@@ -223,6 +223,8 @@ public class Drivetrain extends SubsystemBase {
 						* DrivetrainConstants.MAX_VOLTAGE),
 //						* DrivetrainConstants.SPEED_LIMIT,
 				state[3].angle.getRadians());
+
+
 		modules[0] = m_frontLeftModule;
 		modules[1] = m_frontRightModule;
 		modules[2] = m_backLeftModule;
@@ -239,24 +241,24 @@ public class Drivetrain extends SubsystemBase {
 	public void setStatesAuto(SwerveModuleState[] state)
 	{
 		m_frontLeftModule.set(
-				(state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+				(- state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
 						* DrivetrainConstants.MAX_VOLTAGE
-						* .5),
+						* .2),
 				state[0].angle.getRadians());
 		m_frontRightModule.set(
-				(state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+				( -state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
 						* DrivetrainConstants.MAX_VOLTAGE
-						* .5),
+						* .2),
 				state[1].angle.getRadians());
 		m_backLeftModule.set(
-				(state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+				( - state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
 						* DrivetrainConstants.MAX_VOLTAGE
-						* .5),
+						* .2),
 				state[2].angle.getRadians());
 		m_backRightModule.set(
-				(state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+				(-state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
 						* DrivetrainConstants.MAX_VOLTAGE
-						* .5),
+						* .2),
 				state[3].angle.getRadians());
 		modules[0] = m_frontLeftModule;
 		modules[1] = m_frontRightModule;
@@ -346,6 +348,5 @@ public class Drivetrain extends SubsystemBase {
 		modulePositions[3] = getPosition(3);
 
 		odometry.update(getGyroscopeRotation(), modulePositions);
-
 	}
 }
