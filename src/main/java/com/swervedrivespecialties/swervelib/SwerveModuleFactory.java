@@ -56,6 +56,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
 		@Override
 		public void setDriveMotorIdleState(CANSparkMax.IdleMode idleState) {
 			driveController.setIdleMode(idleState);
+			steerController.setIleMode(CANSparkMax.IdleMode.kBrake);
 		}
 
 		@Override

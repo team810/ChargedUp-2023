@@ -123,6 +123,11 @@ public final class NeoSteerControllerFactoryBuilder {
 
 			return motorAngleRadians;
 		}
+
+		@Override
+		public void setIleMode(CANSparkMax.IdleMode mIdleState) {
+			motor.setIdleMode(mIdleState);
+		}
 	}
 
 	public class FactoryImplementation<T> implements SteerControllerFactory<ControllerImplementation, NeoSteerConfiguration<T>> {

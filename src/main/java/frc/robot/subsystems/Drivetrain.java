@@ -158,10 +158,10 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	public void lockWheels() {
-		m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-		m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-		m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-		m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+//		m_frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+//		m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+//		m_backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
+//		m_frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
 	}
 
 	public void unlockWheels() {
@@ -183,25 +183,42 @@ public class Drivetrain extends SubsystemBase {
 		// if(life > 50)
 		// {
 
+//		m_frontLeftModule.set(
+//				state[0].speedMetersPerSecond,
+//				state[0].angle.getRadians()
+//		);
+//		m_frontRightModule.set(
+//				state[1].speedMetersPerSecond,
+//				state[1].angle.getRadians()
+//		);
+//		m_backLeftModule.set(
+//				state[2].speedMetersPerSecond,
+//				state[2].angle.getRadians()
+//		);
+//		m_backRightModule.set(
+//				state[3].speedMetersPerSecond,
+//				state[3].angle.getRadians()
+//		);
+
 		m_frontLeftModule.set(
 				(state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE)
-						* DrivetrainConstants.SPEED_LIMIT,
+						* DrivetrainConstants.MAX_VOLTAGE),
+//						* DrivetrainConstants.SPEED_LIMIT,
 				state[0].angle.getRadians());
 		m_frontRightModule.set(
 				(state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE)
-						* DrivetrainConstants.SPEED_LIMIT,
+						* DrivetrainConstants.MAX_VOLTAGE),
+//						* DrivetrainConstants.SPEED_LIMIT,
 				state[1].angle.getRadians());
 		m_backLeftModule.set(
 				(state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE)
-						* DrivetrainConstants.SPEED_LIMIT,
+						* DrivetrainConstants.MAX_VOLTAGE),
+//						* DrivetrainConstants.SPEED_LIMIT,
 				state[2].angle.getRadians());
 		m_backRightModule.set(
 				(state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE)
-						* DrivetrainConstants.SPEED_LIMIT,
+						* DrivetrainConstants.MAX_VOLTAGE),
+//						* DrivetrainConstants.SPEED_LIMIT,
 				state[3].angle.getRadians());
 		modules[0] = m_frontLeftModule;
 		modules[1] = m_frontRightModule;
@@ -225,13 +242,14 @@ public class Drivetrain extends SubsystemBase {
 		// This is for sim
 		// return new SwerveModulePosition(
 		// modulePositions[moduleNumber].distanceMeters +
-		// moduleState[moduleNumber].speedMetersPerSecond * .02,
+		// moduleState[moduleNumber].speedMetersPerSeco9nd * .02,
 		// moduleState[moduleNumber].angle
 		// );
 	}
 
 	public void fast() {
-		DrivetrainConstants.SPEED_LIMIT = .9;
+		DrivetrainConstants.SPEED_LIMIT = DrivetrainConstants.SPEED_DEFFULT;
+		DrivetrainConstants.ANGULAR_SPEED_LIMIT = DrivetrainConstants.ANGULAR_SPEED_DEFAULT;
 	}
 
 	public void normal() {
@@ -239,7 +257,8 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	public void slow() {
-		DrivetrainConstants.SPEED_LIMIT = .3;
+		DrivetrainConstants.SPEED_LIMIT = .2;
+		DrivetrainConstants.ANGULAR_SPEED_LIMIT = .1625;
 	}
 
 	public void setStatesNoSpeedMod(SwerveModuleState[] state) {

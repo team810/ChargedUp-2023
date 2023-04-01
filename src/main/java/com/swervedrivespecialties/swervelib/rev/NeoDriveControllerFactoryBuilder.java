@@ -42,6 +42,10 @@ public final class NeoDriveControllerFactoryBuilder {
 		private ControllerImplementation(CANSparkMax motor, RelativeEncoder encoder) {
 			this.motor = motor;
 			this.encoder = encoder;
+
+			motor.restoreFactoryDefaults();
+			motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+			motor.setSmartCurrentLimit(40);
 		}
 
 		@Override

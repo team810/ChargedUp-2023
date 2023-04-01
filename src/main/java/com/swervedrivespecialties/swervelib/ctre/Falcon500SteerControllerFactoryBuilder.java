@@ -3,6 +3,7 @@ package com.swervedrivespecialties.swervelib.ctre;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.revrobotics.CANSparkMax;
 import com.swervedrivespecialties.swervelib.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
@@ -148,6 +149,11 @@ public final class Falcon500SteerControllerFactoryBuilder {
 			}
 
 			return motorAngleRadians;
+		}
+
+		@Override
+		public void setIleMode(CANSparkMax.IdleMode mIdleState) {
+
 		}
 	}
 

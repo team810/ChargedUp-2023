@@ -20,18 +20,19 @@ public class RobotContainer {
 	private final Autos m_autos = new Autos(m_drive, m_intake, m_conveyor, m_arm, m_gripper, m_hardStop);
 
 	public RobotContainer() {
+		m_drive.unlockWheels();
 		CameraServer.startAutomaticCapture();
 		// m_lime.setMode("Reflective Tape");
 
 		m_drive.setDefaultCommand(new DefaultDriveCommand(
 				m_drive,
-				() -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftY() *
+				() -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftY() *
 						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * DrivetrainConstants.SPEED_LIMIT),
-				() -> -modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX() *
+				() -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX() *
 						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * DrivetrainConstants.SPEED_LIMIT),
-				() -> -modifyAxis(
+				() -> modifyAxisX(
 						OIConstants.DRIVE_GAMEPAD.getRightX() *
-								DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * .65));
+								DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * DrivetrainConstants.ANGULAR_SPEED_LIMIT));
 
 		m_gripper.setDefaultCommand(
 				new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .45));
@@ -62,6 +63,14 @@ public class RobotContainer {
 	private static double modifyAxis(double value) {
 		// Deadband
 		value = deadband(value, .2);
+		// Cubed the axis, smoother driving
+		value = Math.pow(value, 3);
+
+		return value;
+	}
+	private static double modifyAxisX(double value) {
+		// Deadband
+		value = deadband(value, .5);
 		// Cubed the axis, smoother driving
 		value = Math.pow(value, 3);
 
@@ -200,6 +209,7 @@ public class RobotContainer {
 	}
 
 	public void teleopInit() {
+//		m_drive.unlockWheels();
 		m_arm.restExtender();
 		m_arm.restPivot();
 
@@ -211,11 +221,10 @@ public class RobotContainer {
 //		);
 	}
 
-	public Command getAutonomousCommand() {
-
-		return m_autos.genPath("RedCharge");
+	public Command getAutonomousCommand(){
+//		m_drive.lockWheels();
+//		return m_autos.genPath("BlueCube3");
+		return new ScoreCommand(m_arm,m_drive, m_gripper, m_conveyor, m_intake, 3,2,m_hardStop);
 //		return null;
-		// return new ScoreCommand(m_arm, m_drive, m_gripper, m_conveyor, m_intake, 3, 2);
-		// return null;
 	}
 }
