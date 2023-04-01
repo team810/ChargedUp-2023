@@ -12,7 +12,7 @@ public class RobotContainer {
 	private final Intake m_intake = new Intake();
 	private final Conveyor m_conveyor = new Conveyor();
 	private final Gripper m_gripper = new Gripper();
-	private final Limelight m_lime = new Limelight();
+
 	private final HardStopSubsystem m_hardStop = new HardStopSubsystem();
 	private final Drivetrain m_drive = new Drivetrain();
 	private final Arm m_arm = new Arm();
@@ -83,7 +83,7 @@ public class RobotContainer {
 				new InstantCommand(m_drive::zeroGyroscope));
 
 		// switch between slow and fast mode
-		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).whileTrue(
+		new Trigger(() -> OIConstants.DRIVE_GAMEPAD.getRawButton(5)).onTrue(
 				new InstantCommand(
 						() -> m_drive.slow()
 				)
@@ -223,8 +223,8 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand(){
 //		m_drive.lockWheels();
-//		return m_autos.genPath("BlueCube3");
-		return new ScoreCommand(m_arm,m_drive, m_gripper, m_conveyor, m_intake, 3,2,m_hardStop);
+		return m_autos.genPath("BlueCharge");
+//		return new ScoreCommand(m_arm,m_drive, m_gripper, m_conveyor, m_intake, 3,2,m_hardStop);
 //		return null;
 	}
 }
