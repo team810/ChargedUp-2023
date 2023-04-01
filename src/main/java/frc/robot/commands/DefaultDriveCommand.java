@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -32,12 +33,15 @@ public class DefaultDriveCommand extends CommandBase {
 
 		// this is for driving controls and setting the angle easily.
 
-		m_drivetrainSubsystem.drive(
-				ChassisSpeeds.fromFieldRelativeSpeeds(
-						m_translationXSupplier.getAsDouble(),
-						m_translationYSupplier.getAsDouble(),
-						m_rotationSupplier.getAsDouble(),
-						m_drivetrainSubsystem.getGyroscopeRotation()));
+		if (RobotState.isTeleop())
+		{
+			m_drivetrainSubsystem.drive(
+					ChassisSpeeds.fromFieldRelativeSpeeds(
+							m_translationXSupplier.getAsDouble(),
+							m_translationYSupplier.getAsDouble(),
+							m_rotationSupplier.getAsDouble(),
+							m_drivetrainSubsystem.getGyroscopeRotation()));
+		}
 
 		// // m_drivetrainSubsystem.drive(
 		// new ChassisSpeeds(

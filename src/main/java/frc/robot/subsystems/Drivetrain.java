@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
@@ -111,10 +112,11 @@ public class Drivetrain extends SubsystemBase {
 		// Rotation (should be 0)
 		// and the current positions, each should be 0 still here
 		odometry = new SwerveDriveOdometry(DrivetrainConstants.KINEMATICS,
-				m_navx.getRotation2d(), modulePositions);
+				new Rotation2d(0), modulePositions);
 
 
 		resetPose(new Pose2d(0, 0, new Rotation2d(0)));
+		unlockWheels();
 	}
 
 	// Resetting
@@ -137,6 +139,7 @@ public class Drivetrain extends SubsystemBase {
 		modules[3].getDriveEncoder().setPosition(0);
 
 
+//		odometry.resetPosition(new Rotation2d(0), modulePositions, pose);
 		odometry.resetPosition(getGyroscopeRotation(), modulePositions, pose);
 	}
 
@@ -225,7 +228,46 @@ public class Drivetrain extends SubsystemBase {
 		modules[2] = m_backLeftModule;
 		modules[3] = m_backRightModule;
 
+		SmartDashboard.putNumber("Front Left Speed", state[0].speedMetersPerSecond);
+		SmartDashboard.putNumber("Front Right Speed", state[1].speedMetersPerSecond);
+		SmartDashboard.putNumber("Back Left Speed", state[2].speedMetersPerSecond);
+		SmartDashboard.putNumber("Back Right Speed", state[3].speedMetersPerSecond);
+
 		// }
+	}
+
+	public void setStatesAuto(SwerveModuleState[] state)
+	{
+		m_frontLeftModule.set(
+				(state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+						* DrivetrainConstants.MAX_VOLTAGE
+						* .5),
+				state[0].angle.getRadians());
+		m_frontRightModule.set(
+				(state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+						* DrivetrainConstants.MAX_VOLTAGE
+						* .5),
+				state[1].angle.getRadians());
+		m_backLeftModule.set(
+				(state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+						* DrivetrainConstants.MAX_VOLTAGE
+						* .5),
+				state[2].angle.getRadians());
+		m_backRightModule.set(
+				(state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
+						* DrivetrainConstants.MAX_VOLTAGE
+						* .5),
+				state[3].angle.getRadians());
+		modules[0] = m_frontLeftModule;
+		modules[1] = m_frontRightModule;
+		modules[2] = m_backLeftModule;
+		modules[3] = m_backRightModule;
+
+		SmartDashboard.putNumber("Front Left Speed", state[0].speedMetersPerSecond);
+		SmartDashboard.putNumber("Front Right Speed", state[1].speedMetersPerSecond);
+		SmartDashboard.putNumber("Back Left Speed", state[2].speedMetersPerSecond);
+		SmartDashboard.putNumber("Back Right Speed", state[3].speedMetersPerSecond);
+
 	}
 
 	public double getPitch() {
@@ -290,7 +332,7 @@ public class Drivetrain extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-
+		SmartDashboard.putData("Navx", m_navx);
 		if (RobotState.isTeleop()) {
 			setSpeeds(this.m_chassisSpeeds);
 			setStates(moduleStates);

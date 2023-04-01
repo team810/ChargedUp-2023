@@ -223,7 +223,8 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand(){
 //		m_drive.lockWheels();
-		return m_autos.genPath("BlueCharge");
+		return m_autos.genPath("New Path");
+
 //		return new ScoreCommand(m_arm,m_drive, m_gripper, m_conveyor, m_intake, 3,2,m_hardStop);
 //		return null;
 	}
