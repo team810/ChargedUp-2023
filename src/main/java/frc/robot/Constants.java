@@ -84,8 +84,8 @@ public final class Constants {
 						DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
 		// Max speed is scary
-		public static final double SPEED_DEFFULT = .8;
-		public static final double ANGULAR_SPEED_DEFAULT = 0.65;
+		public static final double SPEED_DEFFULT = .5;
+		public static final double ANGULAR_SPEED_DEFAULT = 0.5;
 		public static double SPEED_LIMIT = SPEED_DEFFULT;
 		public static double ANGULAR_SPEED_LIMIT = ANGULAR_SPEED_DEFAULT;
 
