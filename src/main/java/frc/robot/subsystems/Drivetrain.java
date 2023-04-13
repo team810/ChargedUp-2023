@@ -302,7 +302,7 @@ public class Drivetrain extends SubsystemBase {
 
 	public void slow() {
 		DrivetrainConstants.SPEED_LIMIT = .2;
-		DrivetrainConstants.ANGULAR_SPEED_LIMIT = .1625;
+		DrivetrainConstants.ANGULAR_SPEED_LIMIT = .05;
 	}
 
 	public void setStatesNoSpeedMod(SwerveModuleState[] state) {
