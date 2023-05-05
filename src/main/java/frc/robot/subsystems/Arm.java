@@ -78,7 +78,7 @@ public class Arm extends SubsystemBase {
 
 	public void restExtender() {
 		extenderController.reset();
-		extenderSetpoint = -1.9;
+		extenderSetpoint = -2.2;
 	}
 
 	private double getExtenderLength() {

@@ -31,8 +31,8 @@ public class RobotContainer {
 				() -> modifyAxis(OIConstants.DRIVE_GAMEPAD.getLeftX() *
 						DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * DrivetrainConstants.SPEED_LIMIT),
 				() -> modifyAxisX(
-						OIConstants.DRIVE_GAMEPAD.getRightX() *
-								DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * DrivetrainConstants.ANGULAR_SPEED_LIMIT));
+						OIConstants.DRIVE_GAMEPAD.getRightX() )));
+//								DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND) * DrivetrainConstants.ANGULAR_SPEED_LIMIT));
 
 		m_gripper.setDefaultCommand(
 				new GripperSetpoint(m_gripper, () -> OIConstants.SECONDARY_GAMEPAD.getRawAxis(1) * .45));

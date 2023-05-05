@@ -54,7 +54,8 @@
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/navX-Sensor[1]": "Gyro",
-      "/Shuffleboard/Drivetrain/Field": "Field2d"
+      "/Shuffleboard/Drivetrain/Field": "Field2d",
+      "/SmartDashboard/Navx": "Gyro"
     },
     "windows": {
       "/FMSInfo": {
