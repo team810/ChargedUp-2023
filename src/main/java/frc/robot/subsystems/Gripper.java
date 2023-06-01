@@ -14,7 +14,9 @@ public class Gripper extends SubsystemBase {
 	public Gripper() {
 		gripperMotor = new CANSparkMax(GripperConstants.GRIPPER_MOTOR, MotorType.kBrushless);
 
-		gripperMotor.setSmartCurrentLimit(30);
+		gripperMotor.restoreFactoryDefaults();
+
+		gripperMotor.setSmartCurrentLimit(20);
 
 		gripperMotor.setIdleMode(IdleMode.kBrake);
 		shuffleboardInit();
