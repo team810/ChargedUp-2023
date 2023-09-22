@@ -20,11 +20,8 @@ public final class Constants {
 
 	public final static PneumaticHub PNEUMATIC_HUB = new PneumaticHub(18);
 
-	public static final class OIConstants {
+	public static final class IOConstants {
 		public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
-		// public static final Joystick SECONDARY_GAMEPAD = new Joystick(1);
-
-		// public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
 		public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
 	}
 
@@ -84,10 +81,15 @@ public final class Constants {
 						DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
 		// Max speed is scary
-		public static final double SPEED_DEFFULT = .8;
-		public static final double ANGULAR_SPEED_DEFAULT = 0.65;
+		public static final double SPEED_DEFFULT = 3.6; // In meters per second
+		public static final double ANGULAR_SPEED_DEFAULT = 3.6; // Rotations per second
 		public static double SPEED_LIMIT = SPEED_DEFFULT;
 		public static double ANGULAR_SPEED_LIMIT = ANGULAR_SPEED_DEFAULT;
+
+		// New code that will be implemented for speed MPS
+		public static final double NORMAL_SPEED = 3.6;
+		public static final double SLOW_SPEED = 1.5;
+
 
 		public static final class Auto {
 			// TeleOP

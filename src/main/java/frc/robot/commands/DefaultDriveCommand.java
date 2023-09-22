@@ -3,53 +3,86 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.Speed;
+import lib.Deadband;
 
 import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
 	private final Drivetrain m_drivetrainSubsystem;
 
-	private final DoubleSupplier m_translationXSupplier;
-	private final DoubleSupplier m_translationYSupplier;
-	private final DoubleSupplier m_rotationSupplier;
+	private final DoubleSupplier xSupplier;
+	private final DoubleSupplier ySupplier;
+	private final DoubleSupplier zSupplier;
+
+	private final Deadband xDeadband;
+	private final Deadband yDeadband;
+	private final Deadband zDeadband;
 
 	public DefaultDriveCommand(Drivetrain drivetrainSubsystem,
 	                           DoubleSupplier translationXSupplier,
 	                           DoubleSupplier translationYSupplier,
 	                           DoubleSupplier rotationSupplier) {
 		this.m_drivetrainSubsystem = drivetrainSubsystem;
-		this.m_translationXSupplier = translationXSupplier;
-		this.m_translationYSupplier = translationYSupplier;
-		this.m_rotationSupplier = rotationSupplier;
+		this.xSupplier = translationXSupplier;
+		this.ySupplier = translationYSupplier;
+		this.zSupplier = rotationSupplier;
+
+		xDeadband = new Deadband(.02, 0);
+		yDeadband = new Deadband(.02, 0);
+		zDeadband = new Deadband(.02, 0);
 
 		addRequirements(drivetrainSubsystem);
 	}
 
 	@Override
 	public void execute() {
-		// You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of
-		// field-oriented movement
 
-		// this is for driving controls and setting the angle easily.
+		double x;
+		double y;
+		double z;
+
+		// Moving the input into a local var
+		x = xSupplier.getAsDouble();
+		y = ySupplier.getAsDouble();
+		z = zSupplier.getAsDouble();
+
+		// Deadband needs to be applied to raw input
+		x = xDeadband.apply(x);
+		y = yDeadband.apply(y);
+		z = zDeadband.apply(z);
+
+		// This is adding a curve
+		x = Math.pow(x, 3);
+		y = Math.pow(y, 3);
+		z = Math.pow(z, 3);
+
+		// Multiplying to make the units into meters per second
+		if (m_drivetrainSubsystem.getSpeed_mode() == Speed.Normal)
+		{
+			x = x * Constants.DrivetrainConstants.NORMAL_SPEED;
+			y = y * Constants.DrivetrainConstants.NORMAL_SPEED;
+			z = z * Constants.DrivetrainConstants.NORMAL_SPEED;
+		}
+		if (m_drivetrainSubsystem.getSpeed_mode() == Speed.Slow)
+		{
+			x = x * Constants.DrivetrainConstants.SLOW_SPEED;
+			y = y * Constants.DrivetrainConstants.SLOW_SPEED;
+			z = z * Constants.DrivetrainConstants.SLOW_SPEED;
+		}
 
 		if (RobotState.isTeleop())
 		{
 			m_drivetrainSubsystem.drive(
 					ChassisSpeeds.fromFieldRelativeSpeeds(
-							m_translationXSupplier.getAsDouble(),
-							m_translationYSupplier.getAsDouble(),
-							m_rotationSupplier.getAsDouble(),
+							x,
+							y,
+							z,
 							m_drivetrainSubsystem.getGyroscopeRotation()));
 		}
 
-		// // m_drivetrainSubsystem.drive(
-		// new ChassisSpeeds(
-		// m_translationXSupplier.getAsDouble(),
-		// m_translationYSupplier.getAsDouble(),
-		// m_rotationSupplier.getAsDouble()
-		// )
-		// );
 	}
 
 	@Override
