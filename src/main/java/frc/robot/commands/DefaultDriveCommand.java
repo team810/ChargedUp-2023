@@ -45,9 +45,9 @@ public class DefaultDriveCommand extends CommandBase {
 		double z;
 
 		// Moving the input into a local var
-		x = xSupplier.getAsDouble();
-		y = ySupplier.getAsDouble();
-		z = zSupplier.getAsDouble();
+		y = -xSupplier.getAsDouble();
+		x = -ySupplier.getAsDouble();
+		z = -zSupplier.getAsDouble();
 
 		// Deadband needs to be applied to raw input
 		x = xDeadband.apply(x);
@@ -59,19 +59,6 @@ public class DefaultDriveCommand extends CommandBase {
 		y = Math.pow(y, 3);
 		z = Math.pow(z, 3);
 
-		// Multiplying to make the units into meters per second
-		if (m_drivetrainSubsystem.getSpeed_mode() == Speed.Normal)
-		{
-			x = x * Constants.DrivetrainConstants.NORMAL_SPEED;
-			y = y * Constants.DrivetrainConstants.NORMAL_SPEED;
-			z = z * Constants.DrivetrainConstants.NORMAL_SPEED;
-		}
-		if (m_drivetrainSubsystem.getSpeed_mode() == Speed.Slow)
-		{
-			x = x * Constants.DrivetrainConstants.SLOW_SPEED;
-			y = y * Constants.DrivetrainConstants.SLOW_SPEED;
-			z = z * Constants.DrivetrainConstants.SLOW_SPEED;
-		}
 
 		if (RobotState.isTeleop())
 		{

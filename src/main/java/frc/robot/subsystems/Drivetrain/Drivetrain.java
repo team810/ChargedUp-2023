@@ -125,92 +125,114 @@ public class Drivetrain extends SubsystemBase {
 	// We set the speeds we want from joystick values
 	private void setSpeeds(ChassisSpeeds chassisSpeeds) {
 		SwerveModuleState[] states = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-		SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+		SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.NORMAL_SPEED);
 		// Update virtual states
 		moduleStates = states;
 	}
 
-
-	public void setModuleStates(SwerveModuleState[] states) {
-		moduleStates = states;
-
-	}
-	// int life = 0;
-
-	// Setting each module to be that speed
 	public void drive(ChassisSpeeds chassisSpeeds) {
 		m_chassisSpeeds = chassisSpeeds;
 	}
 
 	public void setStates(SwerveModuleState[] state) {
 
-		frontLeftModule.set(
-				(state[0].speedMetersPerSecond / DrivetrainConstants.NORMAL_SPEED * 12),
-				state[0].angle.getRadians()
-		);
-
-		frontLeftModule.set(
-				(state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE),
-				state[0].angle.getRadians());
-		frontRightModule.set(
-				(state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE),
-//						* DrivetrainConstants.SPEED_LIMIT,
-				state[1].angle.getRadians());
-		backLeftModule.set(
-				(state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE),
-//						* DrivetrainConstants.SPEED_LIMIT,
-				state[2].angle.getRadians());
-		backRightModule.set(
-				(state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE),
-//						* DrivetrainConstants.SPEED_LIMIT,
-				state[3].angle.getRadians());
+		if (speed_mode == Speed.Normal)
+		{
+			frontLeftModule.set(
+					(- state[0].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[0].angle.getRadians());
+			frontRightModule.set(
+					( -state[1].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[1].angle.getRadians());
+			backLeftModule.set(
+					( - state[2].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[2].angle.getRadians());
+			backRightModule.set(
+					(-state[3].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[3].angle.getRadians());
+		}
+		if (speed_mode == Speed.Slow)
+		{
+			frontLeftModule.set(
+					(- state[0].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[0].angle.getRadians());
+			frontRightModule.set(
+					( -state[1].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[1].angle.getRadians());
+			backLeftModule.set(
+					( - state[2].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[2].angle.getRadians());
+			backRightModule.set(
+					(-state[3].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[3].angle.getRadians());
+		}
 
 
 		SmartDashboard.putNumber("Front Left Speed", state[0].speedMetersPerSecond);
 		SmartDashboard.putNumber("Front Right Speed", state[1].speedMetersPerSecond);
 		SmartDashboard.putNumber("Back Left Speed", state[2].speedMetersPerSecond);
 		SmartDashboard.putNumber("Back Right Speed", state[3].speedMetersPerSecond);
+		SmartDashboard.putString("Mode", getSpeed_mode().toString());
 	}
 
 	public void setStatesAuto(SwerveModuleState[] state)
 	{
-		frontLeftModule.set(
-				(- state[0].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE
-						* .2),
-				state[0].angle.getRadians());
-		frontRightModule.set(
-				( -state[1].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE
-						* .2),
-				state[1].angle.getRadians());
-		backLeftModule.set(
-				( - state[2].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE
-						* .2),
-				state[2].angle.getRadians());
-		backRightModule.set(
-				(-state[3].speedMetersPerSecond / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND
-						* DrivetrainConstants.MAX_VOLTAGE
-						* .2),
-				state[3].angle.getRadians());
+		if (speed_mode == Speed.Normal)
+		{
+			frontLeftModule.set(
+					(- state[0].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[0].angle.getRadians());
+			frontRightModule.set(
+					( -state[1].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[1].angle.getRadians());
+			backLeftModule.set(
+					( - state[2].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[2].angle.getRadians());
+			backRightModule.set(
+					(-state[3].speedMetersPerSecond
+							* DrivetrainConstants.NORMAL_SPEED),
+					state[3].angle.getRadians());
+		}
+		if (speed_mode == Speed.Slow)
+		{
+			frontLeftModule.set(
+					(- state[0].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[0].angle.getRadians());
+			frontRightModule.set(
+					( -state[1].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[1].angle.getRadians());
+			backLeftModule.set(
+					( - state[2].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[2].angle.getRadians());
+			backRightModule.set(
+					(-state[3].speedMetersPerSecond
+							* DrivetrainConstants.SLOW_SPEED),
+					state[3].angle.getRadians());
+		}
 
 		SmartDashboard.putNumber("Front Left Speed", state[0].speedMetersPerSecond);
 		SmartDashboard.putNumber("Front Right Speed", state[1].speedMetersPerSecond);
 		SmartDashboard.putNumber("Back Left Speed", state[2].speedMetersPerSecond);
 		SmartDashboard.putNumber("Back Right Speed", state[3].speedMetersPerSecond);
-
-
 	}
 
 	public double getPitch() {
 		return m_navx.getPitch();
 	}
-	// Positions
 
 	public SwerveModulePosition getPosition(int moduleNumber) {
 

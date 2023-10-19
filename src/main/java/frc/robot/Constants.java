@@ -80,15 +80,10 @@ public final class Constants {
 				Math.hypot(DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
 						DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
-		// Max speed is scary
-		public static final double SPEED_DEFFULT = 3.6; // In meters per second
-		public static final double ANGULAR_SPEED_DEFAULT = 3.6; // Rotations per second
-		public static double SPEED_LIMIT = SPEED_DEFFULT;
-		public static double ANGULAR_SPEED_LIMIT = ANGULAR_SPEED_DEFAULT;
 
 		// New code that will be implemented for speed MPS
-		public static final double NORMAL_SPEED = 3.6;
-		public static final double SLOW_SPEED = 1.5;
+		public static final double NORMAL_SPEED = 12;
+		public static final double SLOW_SPEED = 6;
 
 
 		public static final class Auto {

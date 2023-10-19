@@ -6,6 +6,7 @@ import frc.robot.Constants.IOConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.Speed;
 
 public class RobotContainer {
 	private final Intake m_intake = new Intake();
@@ -46,12 +47,12 @@ public class RobotContainer {
 
 		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getRawButton(5)).onTrue(
 				new InstantCommand(
-						m_drive::slow
+						() -> m_drive.setSpeed_mode(Speed.Normal)
 				)
 		);
-		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getLeftTriggerAxis() > .75).onTrue(
+		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getRawAxis(2) > .75).onTrue(
 				new InstantCommand(
-						m_drive::fast
+						() -> m_drive.setSpeed_mode(Speed.Slow)
 				)
 		);
 		new Trigger(IOConstants.DRIVE_GAMEPAD::getAButton).onTrue(
