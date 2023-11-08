@@ -3,9 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
-import frc.robot.subsystems.Drivetrain.Speed;
 import lib.Deadband;
 
 import java.util.function.DoubleSupplier;
@@ -32,7 +30,7 @@ public class DefaultDriveCommand extends CommandBase {
 
 		xDeadband = new Deadband(.02, 0);
 		yDeadband = new Deadband(.02, 0);
-		zDeadband = new Deadband(.02, 0);
+		zDeadband = new Deadband(.1, 0);
 
 		addRequirements(drivetrainSubsystem);
 	}

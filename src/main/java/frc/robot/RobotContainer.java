@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IOConstants;
@@ -18,6 +19,10 @@ public class RobotContainer {
 	private final Arm m_arm = new Arm();
 
 	public RobotContainer() {
+
+		CameraServer.startAutomaticCapture();
+		CameraServer.startAutomaticCapture();
+
 
 		m_drive.setDefaultCommand(new DefaultDriveCommand(
 				m_drive,
@@ -168,6 +173,6 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand(){
-		return new ScoreCommand(m_arm,m_drive, m_gripper, m_conveyor, m_intake, 3,2,m_hardStop);
+		return new ScoreCommand(m_arm, m_drive, m_gripper, m_conveyor, m_intake, 3,2,m_hardStop);
 	}
 }
