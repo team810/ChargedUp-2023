@@ -1,6 +1,8 @@
 package lib;
 
 
+import edu.wpi.first.math.MathUtil;
+
 public class Deadband {
 
 	private final double deadBand; // The dead band range
@@ -12,13 +14,6 @@ public class Deadband {
 	}
 
 	public double apply(double input) {
-		if (Math.abs(input) <= deadBand) {
-			return defaultValue; // Input within the dead band, return the default value
-		} else {
-			// Add your own logic here to calculate the output outside the dead band
-			// For example, you can return the input value itself or any other desired output.
-			// Replace the line below with the desired logic:
-			return input;
-		}
+		return MathUtil.applyDeadband(input, deadBand);
 	}
 }
