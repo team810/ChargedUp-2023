@@ -28,9 +28,9 @@ public class DefaultDriveCommand extends CommandBase {
 		this.ySupplier = translationYSupplier;
 		this.zSupplier = rotationSupplier;
 
-		xDeadband = new Deadband(.02, 0);
-		yDeadband = new Deadband(.02, 0);
-		zDeadband = new Deadband(.1, 0);
+		xDeadband = new Deadband(.02);
+		yDeadband = new Deadband(.02);
+		zDeadband = new Deadband(.1);
 
 		addRequirements(drivetrainSubsystem);
 	}

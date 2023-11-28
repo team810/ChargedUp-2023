@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Drivetrain;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -280,17 +279,5 @@ public class Drivetrain extends SubsystemBase {
 
 	public void setSpeed_mode(Speed mSpeed_mode) {
 		speed_mode = mSpeed_mode;
-	}
-	public void lockWheels() {
-		frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-		frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-		backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-		frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kBrake);
-	}
-	public void unlockWheels() {
-		frontLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-		frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-		backLeftModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
-		frontRightModule.setDriveMotorIdleState(CANSparkMax.IdleMode.kCoast);
 	}
 }
