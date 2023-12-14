@@ -4,13 +4,12 @@ import com.controller.StadiaController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.XboxController;
 
 public final class Constants {
 	public final static PneumaticHub PNEUMATIC_HUB = new PneumaticHub(18);
 
 	public static final class IOConstants {
-		public static final XboxController DRIVE_GAMEPAD = new XboxController(0);
+		public static final StadiaController DRIVE_GAMEPAD = new StadiaController(0);
 		public static final StadiaController SECONDARY_GAMEPAD = new StadiaController(1);
 	}
 

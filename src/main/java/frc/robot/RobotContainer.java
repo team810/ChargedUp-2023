@@ -55,7 +55,7 @@ public class RobotContainer {
 						() -> m_drive.setSpeed_mode(Speed.Normal)
 				)
 		);
-		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getRawAxis(2) > .75).onTrue(
+		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getRawButton(13)).onTrue(
 				new InstantCommand(
 						() -> m_drive.setSpeed_mode(Speed.Slow)
 				)
@@ -67,21 +67,21 @@ public class RobotContainer {
 
 	void secondaryConfig()
 	{
-		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).whileTrue(
-				new StartEndCommand(
-						m_intake::runIntake,
-						m_intake::stopIntake,
-						m_intake).alongWith(
-						new StartEndCommand(
-								() -> {
-									m_conveyor.setReversed(false);
-									m_conveyor.setEnabled(true);
-								},
-								() -> {
-									m_conveyor.setReversed(false);
-									m_conveyor.setEnabled(false);
-								},
-								m_conveyor)));
+//		new Trigger(() -> IOConstants.DRIVE_GAMEPAD.getRightTriggerAxis() > .75).whileTrue(
+//				new StartEndCommand(
+//						m_intake::runIntake,
+//						m_intake::stopIntake,
+//						m_intake).alongWith(
+//						new StartEndCommand(
+//								() -> {
+//									m_conveyor.setReversed(false);
+//									m_conveyor.setEnabled(true);
+//								},
+//								() -> {
+//									m_conveyor.setReversed(false);
+//									m_conveyor.setEnabled(false);
+//								},
+//								m_conveyor)));
 
 		new Trigger(() -> IOConstants.SECONDARY_GAMEPAD.getRawButton(6)).whileTrue(
 				new StartEndCommand(
@@ -92,7 +92,7 @@ public class RobotContainer {
 		);
 
 		// Intake Reverse
-		new Trigger(() -> IOConstants.SECONDARY_GAMEPAD.getYButton()).whileTrue(
+		new Trigger(IOConstants.SECONDARY_GAMEPAD::getYButton).whileTrue(
 				new ParallelCommandGroup(
 						new StartEndCommand(
 								m_intake::runIntakeReversed,
@@ -127,7 +127,7 @@ public class RobotContainer {
 								m_conveyor)));
 
 		new Trigger(IOConstants.SECONDARY_GAMEPAD::getBButton).onTrue(
-				new InstantCommand(() -> m_hardStop.in()));
+				new InstantCommand(m_hardStop::in));
 
 		new Trigger(IOConstants.SECONDARY_GAMEPAD::getXButton).toggleOnTrue(
 				new InstantCommand(m_hardStop::out));
@@ -136,7 +136,6 @@ public class RobotContainer {
 				.toggleOnTrue(
 						new SequentialCommandGroup(
 								new InstantCommand(m_hardStop::out),
-//								new ToTargetCommand(m_conveyor,m_drive,m_lime),
 								new RaiseArmCommand(m_arm, 2, 1)
 						)
 				);
@@ -145,11 +144,9 @@ public class RobotContainer {
 				.toggleOnTrue(
 						new SequentialCommandGroup(
 								new InstantCommand(m_hardStop::out),
-//							new ToTargetCommand(m_conveyor,m_drive,m_lime),
 								new RaiseArmCommand(m_arm, 3, 1)
 						)
 				);
-
 		// Run after scoring
 		new Trigger(() -> IOConstants.SECONDARY_GAMEPAD.getRawButton(13)).toggleOnTrue(
 				new ParallelCommandGroup(
@@ -158,8 +155,8 @@ public class RobotContainer {
 									m_arm.restExtender();
 									m_hardStop.out();
 								}),
-								new WaitCommand(.75),
-								new InstantCommand(() -> m_arm.restPivot()))));
+								new WaitUntilCommand(m_arm::extenderAtSetpoint),
+								new InstantCommand(m_arm::restPivot))));
 
 	}
 	private void configureButtonBindings() {

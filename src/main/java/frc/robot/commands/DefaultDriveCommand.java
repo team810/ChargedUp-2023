@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,6 +20,10 @@ public class DefaultDriveCommand extends CommandBase {
 	private final Deadband yDeadband;
 	private final Deadband zDeadband;
 
+	private final SlewRateLimiter xRateLimiter;
+	private final SlewRateLimiter yRateLimiter;
+	private final SlewRateLimiter thetaRateLimiter;
+
 	public DefaultDriveCommand(Drivetrain drivetrainSubsystem,
 	                           DoubleSupplier translationXSupplier,
 	                           DoubleSupplier translationYSupplier,
@@ -30,7 +35,11 @@ public class DefaultDriveCommand extends CommandBase {
 
 		xDeadband = new Deadband(.02);
 		yDeadband = new Deadband(.02);
-		zDeadband = new Deadband(.1);
+		zDeadband = new Deadband(.15);
+
+		xRateLimiter = new SlewRateLimiter(1,0,0);
+		yRateLimiter = new SlewRateLimiter(1,0,0);
+		thetaRateLimiter = new SlewRateLimiter(1,0,0);
 
 		addRequirements(drivetrainSubsystem);
 	}

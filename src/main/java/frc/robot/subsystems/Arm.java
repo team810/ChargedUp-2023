@@ -81,7 +81,7 @@ public class Arm extends SubsystemBase {
 	public void periodic() {
 		if (RobotState.isEnabled()) {
 			extendingMotor.set(
-					Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.55), .55));
+					Math.min(Math.max(extenderController.calculate(getExtenderLength(), this.extenderSetpoint), -.75), .75));
 
 			pivotMotor.set(
 					Math.min(Math.max(
@@ -103,5 +103,15 @@ public class Arm extends SubsystemBase {
 	public void runPivot(double speed) {
 		this.isManual = true;
 		pivotMotor.set(speed);
+	}
+
+	public boolean extenderAtSetpoint()
+	{
+		return extenderController.atSetpoint();
+	}
+
+	public boolean pivotAtSetpoint()
+	{
+		return pivotController.atSetpoint();
 	}
 }
